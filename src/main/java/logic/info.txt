@@ -1,0 +1,4 @@
+hier kann so etwas rein wie die Klassen die die Methoden haben, die die Funktionalität
+regeln, also so sachen wie, drücke diesen buchstaben um gewisse waren anzusehen oder
+in den warenkorb zu gehen oder zurück zugehen
+Ein Klasse für die Bedienung vielleicht, welche Taste für was drücken.
