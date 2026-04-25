@@ -1,0 +1,2 @@
+hier kommen so klassen rein wie kunde, mitarbeiter und produkt
+vielleicht auch interface für verschiedene produkte
