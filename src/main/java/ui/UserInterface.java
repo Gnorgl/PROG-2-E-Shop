@@ -23,7 +23,7 @@ public class UserInterface {
     public static void navigation(String input) {
         //Wenn bestimmer Buchstabe eingegeben wurde, dann Stage
         //bzw. Klasse mit der jeweiligen Funktionalität öffnen.
-        switch (input) {
+        switch (input.toLowerCase()) {
             case "w" -> warenkatalog();
             case "b" -> bestellverlauf();
             case "a" -> abmelden();
