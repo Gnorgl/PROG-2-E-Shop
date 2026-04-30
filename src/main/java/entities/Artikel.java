@@ -11,21 +11,24 @@ public Artikel (int artikelNummer, string bezeichnung, int bestand) {
     this.bezeichnung = bezeichnung;
     this.bestand = bestand;
 }
-public int getartikelNummer() {
+public int getArtikelNummer() {
     return artikelNummer;
 }
 
-public string getbezeichnung() {
+public string getBezeichnung() {
     retunr bezeichnung;
 }
 
-public void setbezeichnung (string bezeichnung) {
+public void setBezeichnung (string bezeichnung) {
     this.bezeichnung = bezeichnung;
 }
 
-public int getbestand() {
+public int getBestand() {
     return bestand;
 }
-public void setbestand(int bestand) {
+public void setBestand(int bestand) {
     this.bestand = bestand;
 }
+
+@override
+public string
