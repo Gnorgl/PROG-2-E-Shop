@@ -14,10 +14,18 @@ public Artikel (int artikelNummer, string bezeichnung, int bestand) {
 public int getartikelNummer() {
     return artikelNummer;
 }
+
 public string getbezeichnung() {
     retunr bezeichnung;
 }
 
 public void setbezeichnung (string bezeichnung) {
     this.bezeichnung = bezeichnung;
+}
+
+public int getbestand() {
+    return bestand;
+}
+public void setbestand(int bestand) {
+    this.bestand = bestand;
 }
