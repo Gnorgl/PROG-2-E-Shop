@@ -2,11 +2,11 @@ package entities;
 
 public class Artikel {
     private int artikelNummer;
-    private string bezeichnung;
+    private String bezeichnung;
     private int bestand;
-}
 
-public Artikel (int artikelNummer, string bezeichnung, int bestand) {
+
+public Artikel (int artikelNummer, String bezeichnung, int bestand) {
     this.artikelNummer = artikelNummer;
     this.bezeichnung = bezeichnung;
     this.bestand = bestand;
@@ -15,11 +15,11 @@ public int getArtikelNummer() {
     return artikelNummer;
 }
 
-public string getBezeichnung() {
-    retunr bezeichnung;
+public String getBezeichnung() {
+    return bezeichnung;
 }
 
-public void setBezeichnung (string bezeichnung) {
+public void setBezeichnung (String bezeichnung) {
     this.bezeichnung = bezeichnung;
 }
 
@@ -30,5 +30,9 @@ public void setBestand(int bestand) {
     this.bestand = bestand;
 }
 
-@override
-public string
+@Override
+public String toString() {
+return "Artikelnummer:" + artikelNummer + "Bezeichnung:"
+        + bezeichnung + "Bestand" + bestand;
+}
+};
