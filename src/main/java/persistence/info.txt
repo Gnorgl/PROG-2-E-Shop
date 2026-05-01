@@ -1,2 +1,0 @@
-Hier sollen so Sachen rein wie etwa die Abspeicherung von Benutzer Informationen
-auf ArrayList und so weiter

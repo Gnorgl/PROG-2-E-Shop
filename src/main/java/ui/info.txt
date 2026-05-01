@@ -1,2 +1,0 @@
-hier die UI-klasse, mit der die stage und die scene für das grafische
-user interface berechnet wird.
