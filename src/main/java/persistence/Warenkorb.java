@@ -1,4 +1,4 @@
-package entities;
+package persistence;
 
 public class Warenkorb {
 }
