@@ -1,6 +1,11 @@
 package logic;
 
 public class UserManager {
+
+
+    public boolean login(String username, String password) {
+        return true;
+    }
 }
 
 //Funktionen für Passwort Abgleich, möglicherweise Erstellung von Kunden und Mitarbeitern

@@ -4,10 +4,18 @@ import entities.Kunde;
 import entities.Mitarbeiter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserList {
-    private ArrayList<Kunde> kunden;
-    private ArrayList<Mitarbeiter> mitarbeiter;
-}
+    private Map<String, Kunde> kunden;
+    private Map<String, Mitarbeiter> mitarbeiter;
 
-//Um zu sehen wie viele Mitarbeiter oder wie viele Kunden es insgesamt registriert gibt.
+    public UserList() {
+        this.kunden = new HashMap<>();
+        this.mitarbeiter = new HashMap<>();
+    }
+}
+//Wichtig!!! Getter Methode, damit UserManager auf die Elemente zugreifen kann für login und
+//KundenVerwaltung und MitarbeiterVerwaltung für die Erstellung der Benutzer!!!
+
