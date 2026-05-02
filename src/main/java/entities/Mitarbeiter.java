@@ -9,4 +9,12 @@ public class Mitarbeiter extends Benutzer{
         super(email, passwort, nachname, vorname);
         this.mitarbeiterID = mitarbeiterID;
     }
+
+    public void setMitarbeiterID(String input) {
+        this.mitarbeiterID = input;
+    }
+
+    public String getMitarbeiterID() {
+        return this.mitarbeiterID;
+    }
 }

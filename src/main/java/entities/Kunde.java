@@ -9,4 +9,12 @@ public class Kunde extends Benutzer{
         super(email, passwort, nachname, vorname);
         this.adresse = adresse;
     }
+
+    public void setAdresse(String input) {
+        this.adresse = input;
+    }
+
+    public String getAdresse() {
+        return this.adresse;
+    }
 }
