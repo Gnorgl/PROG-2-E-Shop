@@ -4,11 +4,13 @@ public class Artikel {
     final int artikelNummer;
     private String bezeichnung;
     private int bestand;
+    private double preis;
 
-    public Artikel (int artikelNummer, String bezeichnung, int bestand) {
+    public Artikel (int artikelNummer, String bezeichnung, int bestand, double preis) {
         this.artikelNummer = artikelNummer;
         this.bezeichnung = bezeichnung;
         this.bestand = bestand;
+        this.preis = preis;
     }
     public int getArtikelNummer() {
         return artikelNummer;
@@ -29,10 +31,18 @@ public class Artikel {
         this.bestand = bestand;
     }
 
+    public double getPreis() {
+        return preis;
+    }
+
+    public void setPreis(double preis){
+        this.preis = preis;
+    }
+
     @Override
     public String toString() {
     return "Artikelnummer: " + artikelNummer + "Bezeichnung: "
-            + bezeichnung + "Bestand: " + bestand;
+            + bezeichnung + "Bestand: " + bestand + "Preis:  " + preis;
     }
 
 }
