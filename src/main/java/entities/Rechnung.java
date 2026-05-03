@@ -13,7 +13,8 @@ public class Rechnung {
 
 
 
-        public Rechnung(Kunde kunde, List<Artikel> korb ) {
+        public Rechnung(int rechnungsNummer, Kunde kunde, List<Artikel> korb, double nettoSumme,
+                        double mwstBetrag, double bruttoSumme) {
         this.datum = LocalDate.now();
         this.kunde = kunde;
         this.rechnungsNummer = rechnungsNummer;
@@ -23,6 +24,8 @@ public class Rechnung {
         this.bruttoSumme = bruttoSumme;
 
     }
+
+
 
     public int getRechnungsNummer() { return rechnungsNummer; }
     public Kunde getKunde() { return kunde; }
