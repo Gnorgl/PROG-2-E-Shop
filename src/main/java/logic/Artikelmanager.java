@@ -26,7 +26,7 @@ public class Artikelmanager {
 
     }
 
-    public void loeschen()
+    public void loeschen() {}
 
     public void bestandErhoehen ( int nr, int anzahl) {
         for (Artikel a : artikelBestand) {
