@@ -9,16 +9,16 @@ public class Rechnung {
         private double nettoSumme;
         private double mwstBetrag;
         private double bruttoSumme;
-        private List<Artikel> korb;
+        private List<Artikel> artikel;
 
 
 
-        public Rechnung(int rechnungsNummer, Kunde kunde, List<Artikel> korb, double nettoSumme,
+        public Rechnung(int rechnungsNummer, Kunde kunde, List<Artikel> artikel, double nettoSumme,
                         double mwstBetrag, double bruttoSumme) {
         this.datum = LocalDate.now();
         this.kunde = kunde;
         this.rechnungsNummer = rechnungsNummer;
-        this.korb = korb;
+        this.artikel = artikel;
         this.nettoSumme = nettoSumme;
         this.mwstBetrag = mwstBetrag;
         this.bruttoSumme = bruttoSumme;
@@ -29,7 +29,7 @@ public class Rechnung {
 
     public int getRechnungsNummer() { return rechnungsNummer; }
     public Kunde getKunde() { return kunde; }
-    public List<Artikel> getkorb() { return korb;}
+    public List<Artikel> getArtikel() { return artikel;}
     public LocalDate getDatum() { return datum; }
     public double getNettosumme() { return nettoSumme; }
     public double getMwstBetrag() { return mwstBetrag; }

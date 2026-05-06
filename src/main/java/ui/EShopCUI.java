@@ -1,8 +1,10 @@
 package ui;
 
+import logic.Artikelmanager;
+
 import java.util.Scanner;
 
-public class UserInterface {
+public class EShopCUI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -35,6 +37,13 @@ public class UserInterface {
     }
 
     public static void warenkatalog() {
+        Artikelmanager mng = new Artikelmanager();
+        mng.legeArtikelan(1, "Cola", 10, 2.00);
+        mng.legeArtikelan(2, "Fanta", 3, 2.50);
+        mng.legeArtikelan(3, "Sprite", 21, 1.99);
+        mng.legeArtikelan(4, "Mexomix", 30, 1.59);
+        mng.legeArtikelan(5, "Spezi", 40, 2.99);
+
     }
     public static void bestellverlauf() {
     }
