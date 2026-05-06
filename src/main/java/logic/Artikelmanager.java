@@ -25,6 +25,9 @@ public class Artikelmanager {
         return true;
 
     }
+
+    public void loeschen()
+
     public void bestandErhoehen ( int nr, int anzahl) {
         for (Artikel a : artikelBestand) {
             if (a.getArtikelNummer() == nr) {

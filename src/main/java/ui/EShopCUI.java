@@ -43,7 +43,7 @@ public class EShopCUI {
         mng.legeArtikelan(3, "Sprite", 21, 1.99);
         mng.legeArtikelan(4, "Mexomix", 30, 1.59);
         mng.legeArtikelan(5, "Spezi", 40, 2.99);
-
+        mng.legeArtikelan(1, "Cola", 10, 2.00);
     }
     public static void bestellverlauf() {
     }
