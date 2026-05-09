@@ -1,6 +1,6 @@
 package logic;
 
-public class UserManager {
+public class BenutzerVerwaltung {
 
 
     public boolean login(String username, String password) {

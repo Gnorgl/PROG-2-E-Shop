@@ -1,11 +1,11 @@
 package logic;
 
 public class Eshop {
-    private Artikelmanager artikelmanager = new Artikelmanager();
+    private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
     private KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
     private MitarbeiterVerwaltung mitarbeiter = new MitarbeiterVerwaltung();
-    private ShoppingService shoppingService = new ShoppingService();
-    private UserManager userManager = new UserManager();
+    private ShoppingVerwaltung shoppingVerwaltung = new ShoppingVerwaltung();
+    private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
     public Eshop() {}
 

@@ -3,15 +3,14 @@ package persistence;
 import entities.Kunde;
 import entities.Mitarbeiter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserList {
+public class BenutzerList {
     private Map<String, Kunde> kunden;
     private Map<String, Mitarbeiter> mitarbeiter;
 
-    public UserList() {
+    public BenutzerList() {
         this.kunden = new HashMap<>();
         this.mitarbeiter = new HashMap<>();
     }

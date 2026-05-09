@@ -3,14 +3,14 @@ package logic;
 import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
-import persistence.Warenkorb;
+import persistence.WarenkorbList;
 
 import java.util.List;
 
-public class ShoppingService {
+public class ShoppingVerwaltung {
 
-    public Rechnung checkOut(Kunde kunde, Warenkorb warenkorb) {
-        List<Artikel> gekaufteArtikel = warenkorb.getAlleArtikel();
+    public Rechnung checkOut(Kunde kunde, WarenkorbList warenkorbList) {
+        List<Artikel> gekaufteArtikel = warenkorbList.getAlleArtikel();
 
         double netto = 0;
         for(Artikel artikel : gekaufteArtikel){

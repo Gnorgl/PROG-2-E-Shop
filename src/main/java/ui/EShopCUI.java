@@ -1,6 +1,6 @@
 package ui;
 
-import logic.Artikelmanager;
+import logic.ArtikelVerwaltung;
 
 import java.util.Scanner;
 
@@ -37,7 +37,7 @@ public class EShopCUI {
     }
 
     public static void warenkatalog() {
-        Artikelmanager mng = new Artikelmanager();
+        ArtikelVerwaltung mng = new ArtikelVerwaltung();
         mng.legeArtikelan(1, "Cola", 10, 2.00);
         mng.legeArtikelan(2, "Fanta", 3, 2.50);
         mng.legeArtikelan(3, "Sprite", 21, 1.99);

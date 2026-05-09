@@ -6,12 +6,14 @@ import exceptions.ArtikelExistiertBereits;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Artikelmanager {
+public class ArtikelVerwaltung {
     private List<Artikel> artikelBestand;
 
-    public Artikelmanager () {
+    public ArtikelVerwaltung() {
         this.artikelBestand = new ArrayList<>();
     }
+
+
 
     public boolean legeArtikelan(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
         // Liste durchsuchen ob Artikel bereit exisistiert.

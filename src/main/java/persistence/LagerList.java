@@ -4,7 +4,7 @@ import entities.Artikel;
 
 import java.util.ArrayList;
 
-public class Lager {
+public class LagerList {
     private ArrayList<Artikel> artikelImLager; //Vielleicht auch HashMap, jedes Item hat Artikelnummer als Key
 }
 
