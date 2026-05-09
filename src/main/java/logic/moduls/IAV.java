@@ -1,6 +1,7 @@
 package logic.moduls;
 
 import exceptions.ArtikelExistiertBereits;
+import persistence.ArtikelListe;
 
 public interface IAV {
 
@@ -9,5 +10,5 @@ public interface IAV {
 
     void bestandErhoehen(int nr, int anzahl);
 
-    void loeschen();
+    void loeschen(int nr);
 }

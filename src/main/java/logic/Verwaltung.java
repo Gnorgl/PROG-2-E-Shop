@@ -1,21 +1,53 @@
 package logic;
 
 import logic.management.*;
+import persistence.ArtikelListe;
 
-public abstract class Verwaltung {
+public class Verwaltung{
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
     private KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
-    private MitarbeiterVerwaltung mitarbeiter = new MitarbeiterVerwaltung();
+    private MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
     private ShoppingVerwaltung shoppingVerwaltung = new ShoppingVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
-    public Verwaltung() {
+    //Nur Verwaltungsklassen initialisieren.
+    //Verwaltungsklassen selber initialisieren ihre Listen Klassen.
 
+    public Verwaltung() {}
+
+    public ArtikelVerwaltung getArtikelVerwaltung() {
+        return artikelVerwaltung;
+        //Use-Case in Main-Method:
+        // Verwaltung eshop = new Verwaltung();
+        // eshop.getArtikelVerwaltung().legeArtikelAn(int nr, String name, int bestand, double preis);
     }
 
-    public void artikelAnlegenOderSo(int nr, String name, int bestand, double preis) {
-        boolean test = artikelVerwaltung.legeArtikelAn(nr, name, bestand, preis);
-        System.out.println("Status des Anlegens der Artikel: " + test);
+    public BenutzerVerwaltung getBenutzerVerwaltung() {
+        return benutzerVerwaltung;
     }
+
+    public KundenVerwaltung getKundenVerwaltung() {
+        return kundenVerwaltung;
+    }
+
+    public MitarbeiterVerwaltung getMitarbeiterVerwaltung() {
+        return mitarbeiterVerwaltung;
+    }
+
+    public ShoppingVerwaltung getShoppingVerwaltung() {
+        return shoppingVerwaltung;
+    }
+
+
+
+
 
 }
+
+//Bündelt alle anderen Logic Komponenten und kommuniziert direkt mit UI.
+// Hier werden alle anderen Logik Objekte erstellt. Und Admin Mitarbeiter wird erstellt.
+// Konstruktor für alle Interfaces? Attribute werden weiter gegeben, damit man die Methoden nutzen kann.
+
+//Verwaltungsklassen können keine Interfaces sein, da ein Interface keine Attribute haben kann.
+//Die Klassen brauchen aber Attribute für die Methoden.
+//Nutzen stattdessen Komposition.

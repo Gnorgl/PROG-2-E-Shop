@@ -2,36 +2,46 @@ package logic.management;
 
 import entities.Artikel;
 import exceptions.ArtikelExistiertBereits;
+import logic.moduls.IAV;
+import persistence.ArtikelListe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
-public class ArtikelVerwaltung {
-    private List<Artikel> artikelBestand;
 
-    public ArtikelVerwaltung() {
-        this.artikelBestand = new ArrayList<>();
+public class ArtikelVerwaltung implements IAV{
+    private ArtikelListe artikelListe;
+
+
+    public ArtikelVerwaltung () {
+        this.artikelListe = new ArtikelListe();
     }
-
-
-    @Override
     public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
-        // Liste durchsuchen ob Artikel bereit exisistiert.
-        for (Artikel a : artikelBestand) {
+        for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
                 throw new ArtikelExistiertBereits(name);
             }
         }
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
-        artikelBestand.add(neuerArtikel);
+        artikelListe.fuegeArtikelInsLagerHinzu(neuerArtikel);
         return true;
-
     }
 
-    public void loeschen() {}
+    public void loeschen(int nr) {
+        Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
+        while (it.hasNext()) {
+            Artikel artikel = it.next();
 
-    public void bestandErhoehen ( int nr, int anzahl) {
-        for (Artikel a : artikelBestand) {
+            if (artikel.getArtikelNummer() == nr) {
+            it.remove();
+            break;
+            }
+
+        }
+    }
+
+    @Override
+    public void bestandErhoehen ( int nr, int anzahl ) {
+        for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
                 int neuerBestand = anzahl;
                 break;

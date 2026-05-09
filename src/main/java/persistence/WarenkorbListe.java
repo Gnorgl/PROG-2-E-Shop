@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 
 
-public class WarenkorbList {
+public class WarenkorbListe {
 
     private HashMap<Integer, Artikel> datenbankTabelle = new HashMap<>();
     private int idZaehler = 1;

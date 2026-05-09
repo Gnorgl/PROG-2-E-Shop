@@ -4,14 +4,15 @@ import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
 import logic.moduls.ISV;
-import persistence.WarenkorbList;
+import persistence.WarenkorbListe;
 
 import java.util.List;
 
 public class ShoppingVerwaltung implements ISV {
 
-    public Rechnung checkOut(Kunde kunde, WarenkorbList warenkorbList) {
-        List<Artikel> gekaufteArtikel = warenkorbList.getAlleArtikel();
+    @Override
+    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe) {
+        List<Artikel> gekaufteArtikel = warenkorbListe.getAlleArtikel();
 
         double netto = 0;
         for(Artikel artikel : gekaufteArtikel){

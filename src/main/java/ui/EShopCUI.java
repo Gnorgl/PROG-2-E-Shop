@@ -1,6 +1,7 @@
 package ui;
 
-import logic.ArtikelVerwaltung;
+import logic.Verwaltung;
+
 
 import java.util.Scanner;
 
@@ -9,6 +10,8 @@ public class EShopCUI {
         Scanner scanner = new Scanner(System.in);
 
         //Hier Login oder User Creation Bildschirm erstellen
+
+
 
         System.out.println("Willkommen im E-Shop!");
         while (true) {
@@ -37,13 +40,6 @@ public class EShopCUI {
     }
 
     public static void warenkatalog() {
-        ArtikelVerwaltung mng = new ArtikelVerwaltung();
-        mng.legeArtikelan(1, "Cola", 10, 2.00);
-        mng.legeArtikelan(2, "Fanta", 3, 2.50);
-        mng.legeArtikelan(3, "Sprite", 21, 1.99);
-        mng.legeArtikelan(4, "Mexomix", 30, 1.59);
-        mng.legeArtikelan(5, "Spezi", 40, 2.99);
-        mng.legeArtikelan(1, "Cola", 10, 2.00);
     }
     public static void bestellverlauf() {
     }
