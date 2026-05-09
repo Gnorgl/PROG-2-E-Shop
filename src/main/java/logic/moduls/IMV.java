@@ -4,5 +4,4 @@ public interface IMV {
 
     boolean createNewMitarbeiter();
 
-    void artikelAnlegen();
 }
