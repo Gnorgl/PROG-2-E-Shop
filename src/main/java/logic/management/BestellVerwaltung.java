@@ -8,7 +8,7 @@ import persistence.WarenkorbListe;
 
 import java.util.List;
 
-public class ShoppingVerwaltung implements ISV {
+public class BestellVerwaltung implements ISV {
 
     @Override
     public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe) {
@@ -25,7 +25,8 @@ public class ShoppingVerwaltung implements ISV {
 
 
 
-        //Placeholder, hier muss noch return neueRechnung
+        //Placeholder, hier muss noch return neueRechnung.
+        //Immer wenn eine Rechnung ausgestellt wird, wird diese in RechnungsListe gespeichert, in neuer Methode mir checkOut() als Parameter.
         return null;
     }
 }

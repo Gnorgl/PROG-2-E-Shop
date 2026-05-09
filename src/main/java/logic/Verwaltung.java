@@ -1,13 +1,12 @@
 package logic;
 
 import logic.management.*;
-import persistence.ArtikelListe;
 
 public class Verwaltung{
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
     private KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
     private MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
-    private ShoppingVerwaltung shoppingVerwaltung = new ShoppingVerwaltung();
+    private BestellVerwaltung bestellVerwaltung = new BestellVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
     //Nur Verwaltungsklassen initialisieren.
@@ -34,8 +33,8 @@ public class Verwaltung{
         return mitarbeiterVerwaltung;
     }
 
-    public ShoppingVerwaltung getShoppingVerwaltung() {
-        return shoppingVerwaltung;
+    public BestellVerwaltung getShoppingVerwaltung() {
+        return bestellVerwaltung;
     }
 
 
