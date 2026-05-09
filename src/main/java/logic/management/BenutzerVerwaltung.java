@@ -25,6 +25,7 @@ public class BenutzerVerwaltung implements IBV {
         } else if (this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(benutzer.getNummer())) {
             return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(benutzer.getNummer()).getPasswort().equals(benutzer.getPasswort());
         }
+        //man soll sich über einen benutzernamen einloggen können, abgleich über benutzerNummer-Liste!
         return false;
     }
 }
