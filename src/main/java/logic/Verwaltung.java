@@ -4,8 +4,6 @@ import logic.management.*;
 
 public class Verwaltung{
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
-    private KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
-    private MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
@@ -25,20 +23,9 @@ public class Verwaltung{
         return benutzerVerwaltung;
     }
 
-    public KundenVerwaltung getKundenVerwaltung() {
-        return kundenVerwaltung;
-    }
-
-    public MitarbeiterVerwaltung getMitarbeiterVerwaltung() {
-        return mitarbeiterVerwaltung;
-    }
-
     public CheckOutVerwaltung getBestellVerwaltungV() {
         return checkOutVerwaltung;
     }
-
-
-
 
 
 }
