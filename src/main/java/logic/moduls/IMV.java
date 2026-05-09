@@ -6,6 +6,6 @@ public interface IMV {
 
     MitarbeiterListe getMitarbeiterListe();
 
-    boolean createNewMitarbeiter();
+    boolean createNewMitarbeiter(String nummer, String email, String passwort, String nachname,String vorname);
 
 }

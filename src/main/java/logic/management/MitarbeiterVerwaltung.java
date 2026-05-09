@@ -14,7 +14,7 @@ public class MitarbeiterVerwaltung implements IMV {
     }
 
     @Override
-    public boolean createNewMitarbeiter() {
+    public boolean createNewMitarbeiter(String nummer, String email, String passwort, String nachname,String vorname) {
         return true;
     }
 

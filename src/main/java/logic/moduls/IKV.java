@@ -6,5 +6,5 @@ public interface IKV {
 
     KundenListe getKundenListe();
 
-    boolean createNewKunden();
+    boolean createNewKunden(String nummer, String email, String passwort, String nachname, String vorname, String adresse);
 }

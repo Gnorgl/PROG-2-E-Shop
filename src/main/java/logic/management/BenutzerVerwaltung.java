@@ -4,8 +4,8 @@ import entities.Benutzer;
 import logic.moduls.IBV;
 
 public class BenutzerVerwaltung implements IBV {
-    private KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
-    private MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
+    private final KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
+    private final MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
 
     public BenutzerVerwaltung() {}
 
@@ -17,13 +17,13 @@ public class BenutzerVerwaltung implements IBV {
         return mitarbeiterVerwaltung;
     }
 
-    //Methode wird Benutzer übergeben, ruft dann getter Methoden für username und password auf
+    //Der Methode wird ein Benutzer übergeben, ruft dann getter Methoden für username und password auf:
     @Override
     public boolean login(Benutzer benutzer) {
-        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(benutzer.getVorname())) { //gut verschachtelt
-            return this.kundenVerwaltung.getKundenListe().getKunden().get(benutzer.getVorname()).getPasswort().equals(benutzer.getPasswort());
-        } else if (this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(benutzer.getVorname())) {
-            return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(benutzer.getVorname()).getPasswort().equals(benutzer.getPasswort());
+        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(benutzer.getNummer())) { //gut verschachtelt
+            return this.kundenVerwaltung.getKundenListe().getKunden().get(benutzer.getNummer()).getPasswort().equals(benutzer.getPasswort());
+        } else if (this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(benutzer.getNummer())) {
+            return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(benutzer.getNummer()).getPasswort().equals(benutzer.getPasswort());
         }
         return false;
     }
@@ -38,3 +38,5 @@ public class BenutzerVerwaltung implements IBV {
 //PasswordManager Klasse für Abgleich von Passwörtern bei User Input im AnmeldeFeld
 
 //Exception Klassen erstellen
+
+//Eigene Liste, damit man sich mit username anmelden kann, hat username als key und benutzerNummer als value
