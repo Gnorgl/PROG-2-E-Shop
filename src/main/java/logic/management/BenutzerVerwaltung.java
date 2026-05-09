@@ -1,6 +1,8 @@
-package logic;
+package logic.management;
 
-public class BenutzerVerwaltung {
+import logic.moduls.IBV;
+
+public class BenutzerVerwaltung implements IBV {
 
 
     public boolean login(String username, String password) {

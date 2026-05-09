@@ -1,13 +1,14 @@
-package logic;
+package logic.management;
 
 import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
+import logic.moduls.ISV;
 import persistence.WarenkorbList;
 
 import java.util.List;
 
-public class ShoppingVerwaltung {
+public class ShoppingVerwaltung implements ISV {
 
     public Rechnung checkOut(Kunde kunde, WarenkorbList warenkorbList) {
         List<Artikel> gekaufteArtikel = warenkorbList.getAlleArtikel();

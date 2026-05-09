@@ -1,4 +1,4 @@
-package logic;
+package logic.management;
 
 import entities.Artikel;
 import exceptions.ArtikelExistiertBereits;
@@ -14,8 +14,8 @@ public class ArtikelVerwaltung {
     }
 
 
-
-    public boolean legeArtikelan(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
+    @Override
+    public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
         // Liste durchsuchen ob Artikel bereit exisistiert.
         for (Artikel a : artikelBestand) {
             if (a.getArtikelNummer() == nr) {

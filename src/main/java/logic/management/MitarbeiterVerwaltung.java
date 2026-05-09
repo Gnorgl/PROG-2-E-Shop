@@ -1,6 +1,8 @@
-package logic;
+package logic.management;
 
-public class MitarbeiterVerwaltung {
+import logic.moduls.IMV;
+
+public class MitarbeiterVerwaltung implements IMV {
 
 
 
