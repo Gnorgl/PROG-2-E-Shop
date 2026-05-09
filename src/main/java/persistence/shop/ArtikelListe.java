@@ -1,4 +1,4 @@
-package persistence;
+package persistence.shop;
 
 import entities.Artikel;
 

@@ -3,7 +3,7 @@ package logic.management;
 import entities.Artikel;
 import exceptions.artikel.ArtikelExistiertBereits;
 import logic.moduls.IAV;
-import persistence.ArtikelListe;
+import persistence.shop.ArtikelListe;
 
 import java.util.Iterator;
 

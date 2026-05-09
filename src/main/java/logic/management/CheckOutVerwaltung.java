@@ -4,7 +4,7 @@ import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
 import logic.moduls.ICV;
-import persistence.WarenkorbListe;
+import persistence.shop.WarenkorbListe;
 
 import java.util.List;
 

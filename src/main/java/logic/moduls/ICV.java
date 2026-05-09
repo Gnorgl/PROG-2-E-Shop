@@ -2,7 +2,7 @@ package logic.moduls;
 
 import entities.Kunde;
 import entities.Rechnung;
-import persistence.WarenkorbListe;
+import persistence.shop.WarenkorbListe;
 
 public interface ICV {
 
