@@ -1,7 +1,7 @@
 package logic.management;
 
 import entities.Artikel;
-import exceptions.ArtikelExistiertBereits;
+import exceptions.artikel.ArtikelExistiertBereits;
 import logic.moduls.IAV;
 import persistence.ArtikelListe;
 

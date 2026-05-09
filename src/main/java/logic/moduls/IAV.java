@@ -1,7 +1,6 @@
 package logic.moduls;
 
-import exceptions.ArtikelExistiertBereits;
-import persistence.ArtikelListe;
+import exceptions.artikel.ArtikelExistiertBereits;
 
 public interface IAV {
 

@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.artikel;
 
 public class ArtikelExistiertBereits extends RuntimeException {
     public ArtikelExistiertBereits(String artikelBezeichnung) {
