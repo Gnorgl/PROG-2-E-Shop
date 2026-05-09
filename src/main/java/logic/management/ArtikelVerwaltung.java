@@ -9,12 +9,14 @@ import java.util.Iterator;
 
 
 public class ArtikelVerwaltung implements IAV{
-    private ArtikelListe artikelListe;
+    private ArtikelListe artikelListe = new ArtikelListe();;
 
 
     public ArtikelVerwaltung () {
-        this.artikelListe = new ArtikelListe();
+
     }
+
+    @Override
     public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
         for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
@@ -22,10 +24,11 @@ public class ArtikelVerwaltung implements IAV{
             }
         }
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
-        artikelListe.fuegeArtikelInsLagerHinzu(neuerArtikel);
+        artikelListe.getArtikelImLager().add(neuerArtikel);
         return true;
     }
 
+    @Override
     public void loeschen(int nr) {
         Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
         while (it.hasNext()) {

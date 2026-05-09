@@ -6,7 +6,7 @@ public class Verwaltung{
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
     private KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
     private MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
-    private BestellVerwaltung bestellVerwaltung = new BestellVerwaltung();
+    private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
     //Nur Verwaltungsklassen initialisieren.
@@ -33,8 +33,8 @@ public class Verwaltung{
         return mitarbeiterVerwaltung;
     }
 
-    public BestellVerwaltung getShoppingVerwaltung() {
-        return bestellVerwaltung;
+    public CheckOutVerwaltung getBestellVerwaltungV() {
+        return checkOutVerwaltung;
     }
 
 

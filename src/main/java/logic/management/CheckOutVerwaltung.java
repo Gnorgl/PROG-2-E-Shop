@@ -3,12 +3,12 @@ package logic.management;
 import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
-import logic.moduls.ISV;
+import logic.moduls.ICV;
 import persistence.WarenkorbListe;
 
 import java.util.List;
 
-public class BestellVerwaltung implements ISV {
+public class CheckOutVerwaltung implements ICV {
 
     @Override
     public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe) {

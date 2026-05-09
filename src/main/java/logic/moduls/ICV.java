@@ -4,7 +4,7 @@ import entities.Kunde;
 import entities.Rechnung;
 import persistence.WarenkorbListe;
 
-public interface ISV {
+public interface ICV {
 
     Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe);
 

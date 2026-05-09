@@ -15,10 +15,6 @@ public class ArtikelListe {
         return artikelImLager;
     }
 
-    public void fuegeArtikelInsLagerHinzu(Artikel artikel) {
-        this.artikelImLager.add(artikel);
-    }
-
 }
 
 //Gesamter Bestand aller existierenden Produkte sind hier aufgelistet
