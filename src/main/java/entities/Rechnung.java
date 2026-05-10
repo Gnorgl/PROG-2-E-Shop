@@ -11,8 +11,6 @@ public class Rechnung {
         private double bruttoSumme;
         private List<Artikel> artikel;
 
-
-
         public Rechnung(int rechnungsNummer, Kunde kunde, List<Artikel> artikel, double nettoSumme,
                         double mwstBetrag, double bruttoSumme) {
         this.datum = LocalDate.now();
@@ -22,22 +20,22 @@ public class Rechnung {
         this.nettoSumme = nettoSumme;
         this.mwstBetrag = mwstBetrag;
         this.bruttoSumme = bruttoSumme;
+        }
 
-    }
+        public int getRechnungsNummer() { return rechnungsNummer; }
 
+        public Kunde getKunde() { return kunde; }
 
+        public List<Artikel> getArtikel() { return artikel;}
 
-    public int getRechnungsNummer() { return rechnungsNummer; }
-    public Kunde getKunde() { return kunde; }
-    public List<Artikel> getArtikel() { return artikel;}
-    public LocalDate getDatum() { return datum; }
-    public double getNettosumme() { return nettoSumme; }
-    public double getMwstBetrag() { return mwstBetrag; }
-    public double getBruttoSumme() { return bruttoSumme; }
+        public LocalDate getDatum() { return datum; }
 
+        public double getNettosumme() { return nettoSumme; }
 
+        public double getMwstBetrag() { return mwstBetrag; }
 
+        public double getBruttoSumme() { return bruttoSumme; }
 
-    }
+}
 
 
