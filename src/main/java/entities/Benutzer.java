@@ -1,14 +1,15 @@
 package entities;
 
 public abstract class Benutzer {
-    //protected String benutzerName;
+    protected String benutzerName;
     protected String nummer;
     protected String email;
     protected String passwort;
     protected String nachname;
     protected String vorname;
     //....
-    protected Benutzer (String nummer, String email, String passwort, String nachname,String vorname){
+    protected Benutzer (String benutzerName, String nummer, String email, String passwort, String nachname,String vorname){
+        this.benutzerName = benutzerName;
         this.nummer = nummer;
         this.email = email;
         this.passwort = passwort;
@@ -17,6 +18,10 @@ public abstract class Benutzer {
     }
 
     //Setter-Methoden
+    public void setBenutzerName(String benutzerName){
+        this.benutzerName = benutzerName;
+    }
+
     public void setNummer (String nummer) {
         this.nummer = nummer;
     }
@@ -39,6 +44,11 @@ public abstract class Benutzer {
     }
 
     //Getter-Methoden
+
+    public String getBenutzerName() {
+        return this.benutzerName;
+    }
+
     public String getNummer () {
         return this.nummer;
     }

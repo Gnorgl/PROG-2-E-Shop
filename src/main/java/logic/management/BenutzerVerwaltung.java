@@ -17,17 +17,31 @@ public class BenutzerVerwaltung implements IBV {
         return mitarbeiterVerwaltung;
     }
 
+    @Override
+    public Benutzer userExists(String input) { //input ist entweder E-Mail oder benutzerName.
+        return this.kundenVerwaltung.getKundenListe().getKunden().get(input); //man muss vom benutzerNamen auf die E-Mail schließen können.
+        //Liste die für jeden benutzerNamen eine dazugehörige E-Mail eingespeichert hat.
+    }
+
     //Der Methode wird ein Benutzer übergeben, ruft dann getter Methoden für username und password auf:
     @Override
     public boolean login(Benutzer benutzer) {
-        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(benutzer.getNummer())) { //gut verschachtelt
-            return this.kundenVerwaltung.getKundenListe().getKunden().get(benutzer.getNummer()).getPasswort().equals(benutzer.getPasswort());
-        } else if (this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(benutzer.getNummer())) {
-            return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(benutzer.getNummer()).getPasswort().equals(benutzer.getPasswort());
+        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(benutzer.getEmail())) { //gut verschachtelt ||containsKey.benutzer.getBenutzerName()
+            return this.kundenVerwaltung.getKundenListe().getKunden().get(benutzer.getEmail()).getPasswort().equals(benutzer.getPasswort());
+        } else if (this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(benutzer.getEmail())) {
+            return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(benutzer.getEmail()).getPasswort().equals(benutzer.getPasswort());
         }
         //man soll sich über einen benutzernamen einloggen können, abgleich über benutzerNummer-Liste!
+        //wenn ich einen benutzernamen eingebe, wird dieser automatisch mit der abgespeicherten E-Mail gleichgesetzt
+        //die E-Mail wird dann als key genutzt, um den user tatsächlich anzumelden. Über Benutzernamen wird in anderer Methode der user gefunden und
+        //dann als Benutzer der Methode login(Benutzer benutzer) übergeben.
+
+        //da man aus dem use input den user namen und die E-Mail zwischengespeichert hat, kann man als key value paar
+        //benutzernamen = key und E-Mail = value machen. benutzername || E-Mail login möglich beide checken hashmap. Einzigartiger Benutzername muss!
         return false;
     }
+
+
 }
 
 //Button im UI für mitarbeiter erstellung oder kundenerstellung
@@ -41,3 +55,5 @@ public class BenutzerVerwaltung implements IBV {
 //Exception Klassen erstellen
 
 //Eigene Liste, damit man sich mit username anmelden kann, hat username als key und benutzerNummer als value
+
+//Kommentare clean machen.
