@@ -26,6 +26,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
             String nummer = generateBenutzerNummer();
             //benutzernamen generierung
             this.mitarbeiterListe.getMitarbeiter().put(email, new Mitarbeiter(benutzerName, nummer, email, passwort, nachname, vorname));
+            this.mitarbeiterListe.getBenutzerNameUndEmail().put(benutzerName, email);
             return true;
         }
     }

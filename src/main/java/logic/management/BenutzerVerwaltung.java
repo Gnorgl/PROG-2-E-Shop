@@ -19,7 +19,14 @@ public class BenutzerVerwaltung implements IBV {
 
     @Override
     public Benutzer userExists(String input) { //input ist entweder E-Mail oder benutzerName.
-        return this.kundenVerwaltung.getKundenListe().getKunden().get(input); //man muss vom benutzerNamen auf die E-Mail schließen können.
+        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(input)) {
+            return this.kundenVerwaltung.getKundenListe().getKunden().get(input);
+        } else if (this.kundenVerwaltung.getKundenListe().getBenutzerNameUndEmail().containsKey(input)) {
+            String email = this.kundenVerwaltung.getKundenListe().getBenutzerNameUndEmail().get(input);
+            return this.kundenVerwaltung.getKundenListe().getKunden().get(email);
+        }
+        return null;
+        //man muss vom benutzerNamen auf die E-Mail schließen können.
         //Liste die für jeden benutzerNamen eine dazugehörige E-Mail eingespeichert hat.
     }
 
