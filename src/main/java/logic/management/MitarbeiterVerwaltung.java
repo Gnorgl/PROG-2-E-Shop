@@ -26,10 +26,9 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     @Override
     public boolean createNewMitarbeiter(String benutzerName, String email, String passwort, String nachname,String vorname) {
         if (this.mitarbeiterListe.getMitarbeiter().containsKey(email)) {
-            return false;
+            return false; //Exception hier.
         } else {
             String nummer = generateBenutzerNummer();
-            //benutzernamen generierung
             this.mitarbeiterListe.getMitarbeiter().put(email, new Mitarbeiter(benutzerName, nummer, email, passwort, nachname, vorname));
             return true;
         }

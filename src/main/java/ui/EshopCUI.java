@@ -33,11 +33,17 @@ public class EshopCUI {
     }
 
     private void menu() {
-        System.out.println("Wählen Sie aus:");
-        System.out.println("Warenkatalog: w");
-        System.out.println("Bestellverlauf: b");
-        System.out.println("Abmelden: a");
-        System.out.println("Kundensupport: s");
+        System.out.println("------MENÜ------");
+        if (this.angemeldeterBenutzer == null) {
+            System.out.println("Login: l");
+            System.out.println("Registrieren: r");
+        } else {
+            System.out.println("Wählen Sie aus:");
+            System.out.println("Warenkatalog: w");
+            System.out.println("Bestellverlauf: b");
+            System.out.println("Kundensupport: k");
+            System.out.println("Abmelden: a");
+        }
         System.out.println("Beenden: e");
     }
 
@@ -45,10 +51,12 @@ public class EshopCUI {
         //Wenn bestimmer Buchstabe eingegeben wurde, dann Stage
         //bzw. Klasse mit der jeweiligen Funktionalität öffnen.
         switch (input.toLowerCase()) {
+            case "l" -> login();
+            case "r" -> benutzerErstellen();
             case "w" -> warenkatalog();
             case "b" -> bestellverlauf();
-            case "a" -> abmelden();
-            case "s" -> kundensupport();
+            case "a" -> logout();
+            case "k" -> kundensupport();
             case "e" -> programmBeenden();
             default -> {
                 System.out.println("Unbekannter Befehl!");
@@ -70,7 +78,7 @@ public class EshopCUI {
 
         if (benutzer != null) {
             System.out.println("Passwort:");
-            String passwort = scanner.nextLine();
+            String passwort = scanner.nextLine(); //Darf nicht empty sein!
 
             if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
                 this.angemeldeterBenutzer = benutzer;
@@ -96,10 +104,6 @@ public class EshopCUI {
         System.out.println("Bestellverlauf:");
     }
 
-    private void abmelden() {
-        System.out.println("Sie wurden abgemeldet!");
-    }
-
     private void kundensupport() {
         System.out.println("Kontaktmöglichkeiten:");
     }
@@ -115,7 +119,6 @@ public class EshopCUI {
         EshopCUI eShopCUI = new EshopCUI(eshop);
         eShopCUI.start();
 
-        //Nach dem Anmeldungsprozess muss ein
     }
 }
 

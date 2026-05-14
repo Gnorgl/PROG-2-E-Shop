@@ -22,17 +22,21 @@ public class BenutzerVerwaltung implements IBV {
         Benutzer kunde = kundenVerwaltung.getKunde(email);
         if (kunde != null) {
             return kunde;
-        } else {
-            return mitarbeiterVerwaltung.getMitarbeiter(email);
         }
+        Benutzer mitarbeiter = mitarbeiterVerwaltung.getMitarbeiter(email);
+        if (mitarbeiter != null) {
+            return mitarbeiter;
+        }
+        //hier eine exception einbauen
+        return null;
     }
 
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
         if (benutzer == null || password == null) {
-            return false; //Exception check hier mit Benutzer existiert nicht.
+            return false; //Exception check hier mit Benutzer existiert nicht. Fehlende Eingabe.
         }
-        return benutzer.getPasswort().equals(password);
+        return benutzer.getPasswort().equals(password); //hier exception falls false.
     }
 
 }
