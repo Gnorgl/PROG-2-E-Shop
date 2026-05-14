@@ -10,7 +10,7 @@ public class EShopCUI {
         Scanner scanner = new Scanner(System.in);
 
         //Hier Login oder User Creation Bildschirm erstellen.
-        //Wenn mir Exceptions gearbeitet wird, dann muss mit try catch?
+        //Wenn mir Exceptions gearbeitet wird, dann muss mit try catch? Nein, da wir runtime exception nutzen!
 
 
         System.out.println("Willkommen im E-Shop!");
