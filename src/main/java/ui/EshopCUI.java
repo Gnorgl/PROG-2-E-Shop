@@ -80,6 +80,8 @@ public class EshopCUI {
         Eshop eshop = new Eshop();
         EshopCUI eShopCUI = new EshopCUI(eshop);
         eShopCUI.start();
+
+        //Nach dem Anmeldungsprozess muss ein
     }
 }
 

@@ -18,26 +18,22 @@ public class BenutzerVerwaltung implements IBV {
     }
 
     @Override
-    public boolean benutzerExistiert(String email) {
-        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(email)) {
-            return true;
-        }   else return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(email);
+    public Benutzer benutzerExistiert(String email) {
+        if (kundenVerwaltung.getKundenListe().getKunden().containsKey(email)) {
+            return kundenVerwaltung.getKundenListe().getKunden().get(email);
+        }
+        if (mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(email)) {
+            return mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(email);
+        }
+        return null; // mit exception
     }
 
     @Override
     public boolean login(String email, String password) {
-        if (this.kundenVerwaltung.getKundenListe().getKunden().get(email).getPasswort().equals(password)) {
-            return true;
-        }   else return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(email).getPasswort().equals(password);
+        return benutzerExistiert(email).getPasswort().equals(password);
     }
 
     //Methode um zu wissen, welcher User gerade angemeldet ist:
-
-    @Override
-    public Benutzer dieserBenutzerIstAngemeldet(String email) {
-        return this.kundenVerwaltung.getKundenListe().getKunden().get(email);
-    }
-
 
 }
 
