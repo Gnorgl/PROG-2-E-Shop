@@ -8,6 +8,6 @@ public interface IBV {
 
     boolean login(String email, String password);
 
-
+    Benutzer dieserBenutzerIstAngemeldet(String email);
 
 }
