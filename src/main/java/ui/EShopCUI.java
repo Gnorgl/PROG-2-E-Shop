@@ -6,26 +6,40 @@ import logic.Verwaltung;
 import java.util.Scanner;
 
 public class EShopCUI {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        //Hier Login oder User Creation Bildschirm erstellen.
-        //Wenn mir Exceptions gearbeitet wird, dann muss mit try catch? → Nein, da wir runtime exception nutzen!
+    private final Verwaltung verwaltung;
+    private boolean running = true;
+    private final Scanner scanner = new Scanner(System.in);
 
+    public EShopCUI(Verwaltung verwaltung) {
+        this.verwaltung = verwaltung;
+    }
+
+    public void start() {
 
         System.out.println("Willkommen im E-Shop!");
-        while (true) {
-            System.out.println("Wählen Sie aus:");
-            System.out.println("Warenkatalog: w");
-            System.out.println("Bestellverlauf: b");
-            System.out.println("Abmelden: a");
-            System.out.println("Kundensupport: s");
 
-            String input = scanner.nextLine();
+        while (running) {
+            menu();
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                return;
+            }
             navigation(input);
         }
+        scanner.close();
     }
-    public static void navigation(String input) {
+
+    private void menu() {
+        System.out.println("Wählen Sie aus:");
+        System.out.println("Warenkatalog: w");
+        System.out.println("Bestellverlauf: b");
+        System.out.println("Abmelden: a");
+        System.out.println("Kundensupport: s");
+        System.out.println("Beenden: e");
+    }
+
+    private void navigation(String input) {
         //Wenn bestimmer Buchstabe eingegeben wurde, dann Stage
         //bzw. Klasse mit der jeweiligen Funktionalität öffnen.
         switch (input.toLowerCase()) {
@@ -33,18 +47,40 @@ public class EShopCUI {
             case "b" -> bestellverlauf();
             case "a" -> abmelden();
             case "s" -> kundensupport();
+            case "e" -> programmBeenden();
             default -> {
                 System.out.println("Unbekannter Befehl!");
             }
         }
     }
 
-    public static void warenkatalog() {
+    private void warenkatalog() {
+        System.out.println("Warenkatalog:");
     }
-    public static void bestellverlauf() {
+
+    private void bestellverlauf() {
+        System.out.println("Bestellverlauf:");
     }
-    public static void abmelden() {
+
+    private void abmelden() {
+        System.out.println("Sie wurden abgemeldet!");
     }
-    public static void kundensupport() {
+
+    private void kundensupport() {
+        System.out.println("Kontaktmöglichkeiten:");
+    }
+
+    private void programmBeenden() {
+        System.out.println("Programm wird beendet!");
+        this.running = false;
+    }
+
+    //Main-Methode
+    public static void main(String[] args) {
+        Verwaltung verwaltung = new Verwaltung();
+        EShopCUI eShopCUI = new EShopCUI(verwaltung);
+        eShopCUI.start();
     }
 }
+
+
