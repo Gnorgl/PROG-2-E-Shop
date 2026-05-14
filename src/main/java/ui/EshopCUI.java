@@ -1,18 +1,18 @@
 package ui;
 
-import logic.Verwaltung;
+import logic.Eshop;
 
 
 import java.util.Scanner;
 
-public class EShopCUI {
+public class EshopCUI {
 
-    private final Verwaltung verwaltung;
+    private final Eshop eshop;
     private boolean running = true;
     private final Scanner scanner = new Scanner(System.in);
 
-    public EShopCUI(Verwaltung verwaltung) {
-        this.verwaltung = verwaltung;
+    public EshopCUI(Eshop eshop) {
+        this.eshop = eshop;
     }
 
     public void start() {
@@ -77,8 +77,8 @@ public class EShopCUI {
 
     //Main-Methode
     public static void main(String[] args) {
-        Verwaltung verwaltung = new Verwaltung();
-        EShopCUI eShopCUI = new EShopCUI(verwaltung);
+        Eshop eshop = new Eshop();
+        EshopCUI eShopCUI = new EshopCUI(eshop);
         eShopCUI.start();
     }
 }

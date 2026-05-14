@@ -2,12 +2,12 @@ package logic;
 
 import logic.management.*;
 
-public class Verwaltung{
+public class Eshop {
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
-    public Verwaltung() {}
+    public Eshop() {}
 
     public ArtikelVerwaltung getArtikelVerwaltung() {
         return artikelVerwaltung;
