@@ -28,7 +28,7 @@ public class KundenVerwaltung implements IKV, IUC {
     @Override
     public boolean createNewKunden(String benutzerName, String email, String passwort, String nachname, String vorname, String adresse) {
         if (this.kundenListe.getKunden().containsKey(email)) {
-            return false; //Exception Benutzer existiert bereits!
+            return false;
         } else {
             String nummer = generateBenutzerNummer();
             this.kundenListe.getKunden().put(email, new Kunde(benutzerName, nummer, email, passwort, nachname, vorname, adresse));
