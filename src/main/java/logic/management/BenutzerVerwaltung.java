@@ -17,6 +17,7 @@ public class BenutzerVerwaltung implements IBV {
         return mitarbeiterVerwaltung;
     }
 
+    @Override
     public Benutzer benutzerCheck(String email) {
         Benutzer kunde = kundenVerwaltung.getKunde(email);
         if (kunde != null) {
@@ -26,14 +27,13 @@ public class BenutzerVerwaltung implements IBV {
         }
     }
 
+    @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
         if (benutzer == null || password == null) {
             return false; //Exception check hier mit Benutzer existiert nicht.
         }
         return benutzer.getPasswort().equals(password);
     }
-
-    //Methode um zu wissen, welcher User gerade angemeldet ist:
 
 }
 
