@@ -1,5 +1,6 @@
 package ui;
 
+import entities.Benutzer;
 import logic.Eshop;
 
 
@@ -8,6 +9,7 @@ import java.util.Scanner;
 public class EshopCUI {
 
     private final Eshop eshop;
+    private Benutzer angemeldeterBenutzer = null; //Später festlegen, wenn Benutzer angemeldet ist.
     private boolean running = true;
     private final Scanner scanner = new Scanner(System.in);
 
@@ -52,6 +54,38 @@ public class EshopCUI {
                 System.out.println("Unbekannter Befehl!");
             }
         }
+    }
+
+    private void benutzerErstellen() {
+        System.out.println("Erstellen Sie einen Benutzer!");
+    }
+
+    private void login() {
+        System.out.println("Anmelden:");
+        System.out.println("E-Mail:");
+
+        String email = scanner.nextLine();
+
+        Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+
+        if (benutzer != null) {
+            System.out.println("Passwort:");
+            String passwort = scanner.nextLine();
+
+            if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
+                this.angemeldeterBenutzer = benutzer;
+                System.out.println("Willkommen zurück " + this.angemeldeterBenutzer.getVorname());
+            } else {
+                System.out.println("Falsches Passwort!");
+            }
+        } else {
+            System.out.println("Benutzer nicht gefunden!");
+        }
+    }
+
+    private void logout() {
+        this.angemeldeterBenutzer = null;
+        System.out.println("Sie wurden abgemeldet!");
     }
 
     private void warenkatalog() {
