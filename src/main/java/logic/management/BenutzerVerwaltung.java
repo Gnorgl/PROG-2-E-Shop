@@ -29,7 +29,6 @@ public class BenutzerVerwaltung implements IBV {
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
         if (benutzer == null || password == null) {
-            System.err.println("Fehlende Eingabe!");
             return false;
         }
         return benutzer.getPasswort().equals(password);
