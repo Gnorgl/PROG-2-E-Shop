@@ -18,21 +18,17 @@ public class BenutzerVerwaltung implements IBV {
     }
 
     @Override
-    public Benutzer userExists(String input) { //input ist entweder E-Mail oder benutzerName.
-        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(input)) {
-            return this.kundenVerwaltung.getKundenListe().getKunden().get(input);
-        }
-        return null;
+    public boolean benutzerExistiert(String email) {
+        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(email)) {
+            return true;
+        }   else return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(email);
     }
 
     @Override
-    public boolean login(Benutzer benutzer) {
-        if (this.kundenVerwaltung.getKundenListe().getKunden().containsKey(benutzer.getEmail())) { //gut verschachtelt ||containsKey.benutzer.getBenutzerName()
-            return this.kundenVerwaltung.getKundenListe().getKunden().get(benutzer.getEmail()).getPasswort().equals(benutzer.getPasswort());
-        } else if (this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().containsKey(benutzer.getEmail())) {
-            return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(benutzer.getEmail()).getPasswort().equals(benutzer.getPasswort());
-        }
-        return false;
+    public boolean login(String email, String password) {
+        if (this.kundenVerwaltung.getKundenListe().getKunden().get(email).getPasswort().equals(password)) {
+            return true;
+        }   else return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(email).getPasswort().equals(password);
     }
 
 

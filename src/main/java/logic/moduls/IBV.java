@@ -4,9 +4,9 @@ import entities.Benutzer;
 
 public interface IBV {
 
-    Benutzer userExists (String input);
+    boolean benutzerExistiert(String email);
 
-    boolean login(Benutzer benutzer);
+    boolean login(String email, String password);
 
 
 
