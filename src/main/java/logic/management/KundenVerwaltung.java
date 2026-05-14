@@ -27,9 +27,8 @@ public class KundenVerwaltung implements IKV, IUC {
 
     @Override
     public boolean createNewKunden(String benutzerName, String email, String passwort, String nachname, String vorname, String adresse) {
-        //nummer wird automatisch generiert, am Ende wird nach username gefragt, welcher für login genutzt werden kann, da er mit nummer auf Liste? verknüpft ist.
         if (this.kundenListe.getKunden().containsKey(email)) {
-            return false;
+            return false; //Exception Benutzer existiert bereits!
         } else {
             String nummer = generateBenutzerNummer();
             this.kundenListe.getKunden().put(email, new Kunde(benutzerName, nummer, email, passwort, nachname, vorname, adresse));
