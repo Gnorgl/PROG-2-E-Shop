@@ -31,6 +31,8 @@ public class BenutzerVerwaltung implements IBV {
         }   else return this.mitarbeiterVerwaltung.getMitarbeiterListe().getMitarbeiter().get(email).getPasswort().equals(password);
     }
 
+    //Methode um zu wissen, welcher User gerade angemeldet ist...
+
 
 }
 
