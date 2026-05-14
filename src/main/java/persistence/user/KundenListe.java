@@ -7,20 +7,15 @@ import java.util.Map;
 
 public class KundenListe {
     private final Map<String, Kunde> kunden;
-    private final Map<String, String> benutzerNameUndEmail;
 
     public KundenListe() {
         this.kunden = new HashMap<>();
-        this.benutzerNameUndEmail = new HashMap<>();
     }
 
     public Map<String, Kunde> getKunden() {
         return kunden;
     }
 
-    public Map<String, String> getBenutzerNameUndEmail() {
-        return benutzerNameUndEmail;
-    }
 
 }
 

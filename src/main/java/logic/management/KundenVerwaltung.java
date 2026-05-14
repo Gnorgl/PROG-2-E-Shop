@@ -29,7 +29,6 @@ public class KundenVerwaltung implements IKV, IUC {
             String nummer = generateBenutzerNummer();
             //username creation
             this.kundenListe.getKunden().put(email, new Kunde(benutzerName, nummer, email, passwort, nachname, vorname, adresse));
-            this.kundenListe.getBenutzerNameUndEmail().put(benutzerName, email);
             //verknüpfung von nummer und username -> neue persistence class erstellen
             return true;
         }
