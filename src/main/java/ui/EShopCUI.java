@@ -9,8 +9,8 @@ public class EShopCUI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        //Hier Login oder User Creation Bildschirm erstellen
-
+        //Hier Login oder User Creation Bildschirm erstellen.
+        //Wenn mir Exceptions gearbeitet wird, dann muss mit try catch?
 
 
         System.out.println("Willkommen im E-Shop!");
