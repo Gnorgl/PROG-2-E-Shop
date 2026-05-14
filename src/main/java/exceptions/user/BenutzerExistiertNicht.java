@@ -5,3 +5,5 @@ public class BenutzerExistiertNicht extends RuntimeException {
         super(message);
     }
 }
+
+//Falsche E-Mail oder falscher Benutzername.
