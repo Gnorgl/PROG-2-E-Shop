@@ -7,16 +7,10 @@ public class Verwaltung{
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
 
-    //Nur Verwaltungsklassen initialisieren.
-    //Verwaltungsklassen selber initialisieren ihre Listen Klassen.
-
     public Verwaltung() {}
 
     public ArtikelVerwaltung getArtikelVerwaltung() {
         return artikelVerwaltung;
-        //Use-Case in Main-Method:
-        // Verwaltung eshop = new Verwaltung();
-        // eshop.getArtikelVerwaltung().legeArtikelAn(int nr, String name, int bestand, double preis);
     }
 
     public BenutzerVerwaltung getBenutzerVerwaltung() {
@@ -26,7 +20,6 @@ public class Verwaltung{
     public CheckOutVerwaltung getBestellVerwaltungV() {
         return checkOutVerwaltung;
     }
-
 
 }
 
