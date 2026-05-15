@@ -9,6 +9,7 @@ public class BenutzerVerwaltung implements IBV {
 
     public BenutzerVerwaltung() {}
 
+    //getter-Methoden
     public KundenVerwaltung getKundenVerwaltung() {
         return kundenVerwaltung;
     }
@@ -17,6 +18,8 @@ public class BenutzerVerwaltung implements IBV {
         return mitarbeiterVerwaltung;
     }
 
+    //Methode um zu überprüfen, ob ein Benutzer existiert. Überprüfung anhand der eingegebenen E-Mail.
+    //Gibt ein Benutzer Objekt zurück.
     @Override
     public Benutzer benutzerCheck(String email) {
         Benutzer kunde = kundenVerwaltung.getKunde(email);
@@ -26,6 +29,8 @@ public class BenutzerVerwaltung implements IBV {
         return mitarbeiterVerwaltung.getMitarbeiter(email);
     }
 
+    //Methode um zu überprüfen, ob ein eingegebenes Password mit dem Password des aktuellen Benutzers übereinstimmt.
+    //Gibt einen Boolean Wert zurück.
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
         if (benutzer == null || password == null) {
