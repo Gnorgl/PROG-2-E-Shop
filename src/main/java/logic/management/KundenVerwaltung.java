@@ -15,6 +15,8 @@ public class KundenVerwaltung implements IKV, IUC {
 
     public KundenVerwaltung() {}
 
+    //Getter-Methoden
+
     @Override
     public KundenListe getKundenListe() {
         return kundenListe;
@@ -24,6 +26,8 @@ public class KundenVerwaltung implements IKV, IUC {
     public Kunde getKunde(String email) {
         return this.kundenListe.getKunden().get(email);
     }
+
+    //Methode um einen neuen Kunden zu erstellen. Gibt einen Boolean Wert wieder.
 
     @Override
     public boolean createNewKunden(String email, String passwort, String nachname, String vorname, String adresse) {
@@ -36,6 +40,8 @@ public class KundenVerwaltung implements IKV, IUC {
         }
     }
 
+    //Methode um eine Kunden-ID-Nummer zu generieren. ID wird gezählt.
+
     @Override
     public String generateBenutzerNummer() {
         this.idCounter++;
@@ -43,5 +49,4 @@ public class KundenVerwaltung implements IKV, IUC {
     }
 
     //Kunden ID-Generator andere kennzeichnung als mitarbeiter ID, etwa KD-234324 und Mitarbeiter MB-234324, random generated lange nummer.
-    //check if id already contains as key, if true -> generate again.
 }

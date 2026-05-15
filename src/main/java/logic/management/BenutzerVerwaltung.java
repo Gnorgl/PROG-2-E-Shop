@@ -9,7 +9,8 @@ public class BenutzerVerwaltung implements IBV {
 
     public BenutzerVerwaltung() {}
 
-    //getter-Methoden
+    //Getter-Methoden
+
     public KundenVerwaltung getKundenVerwaltung() {
         return kundenVerwaltung;
     }
@@ -20,6 +21,7 @@ public class BenutzerVerwaltung implements IBV {
 
     //Methode um zu überprüfen, ob ein Benutzer existiert. Überprüfung anhand der eingegebenen E-Mail.
     //Gibt ein Benutzer Objekt zurück.
+
     @Override
     public Benutzer benutzerCheck(String email) {
         Benutzer kunde = kundenVerwaltung.getKunde(email);
@@ -31,6 +33,7 @@ public class BenutzerVerwaltung implements IBV {
 
     //Methode um zu überprüfen, ob ein eingegebenes Password mit dem Password des aktuellen Benutzers übereinstimmt.
     //Gibt einen Boolean Wert zurück.
+
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
         if (benutzer == null || password == null) {
@@ -41,27 +44,3 @@ public class BenutzerVerwaltung implements IBV {
 
 }
 
-//Button im UI für mitarbeiter erstellung oder kundenerstellung
-//Kunden können selber konto erstellen, nur angemeldete mitarbeiter können andere mitarbeiter erstellen
-//Methoden für user creation jeweils in kundenverwaltung und mitarbeiterverwaltung!
-
-//Funktionen für Passwort Abgleich, möglicherweise Erstellung von Kunden und Mitarbeitern
-//Vlt extra für Kunde und Mitarbeiter eine Verwaltungsklasse erstellung und
-//PasswordManager Klasse für Abgleich von Passwörtern bei User Input im AnmeldeFeld
-
-//Exception Klassen erstellen
-
-//Eigene Liste, damit man sich mit username anmelden kann, hat username als key und benutzerNummer als value
-
-//Kommentare clean machen.
-
-//man soll sich über einen benutzernamen einloggen können, abgleich über benutzerNummer-Liste!
-//wenn ich einen benutzernamen eingebe, wird dieser automatisch mit der abgespeicherten E-Mail gleichgesetzt
-//die E-Mail wird dann als key genutzt, um den user tatsächlich anzumelden. Über Benutzernamen wird in anderer Methode der user gefunden und
-//dann als Benutzer der Methode login(Benutzer benutzer) übergeben.
-
-//da man aus dem use input den user namen und die E-Mail zwischengespeichert hat, kann man als key value paar
-//benutzernamen = key und E-Mail = value machen. benutzername || E-Mail login möglich beide checken hashmap. Einzigartiger Benutzername muss!
-
-//man muss vom benutzerNamen auf die E-Mail schließen können.
-//Liste die für jeden benutzerNamen eine dazugehörige E-Mail eingespeichert hat.

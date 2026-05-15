@@ -13,6 +13,8 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
     public MitarbeiterVerwaltung() {}
 
+    //Getter-Methoden
+
     @Override
     public MitarbeiterListe getMitarbeiterListe() {
         return mitarbeiterListe;
@@ -22,6 +24,8 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     public Mitarbeiter getMitarbeiter(String email) {
         return this.mitarbeiterListe.getMitarbeiter().get(email);
     }
+
+    //Methode um einen neuen Mitarbeiter zu erstellen. Gibt einen Boolean Wert wieder.
 
     @Override
     public boolean createNewMitarbeiter(String email, String passwort, String nachname,String vorname) {
@@ -33,6 +37,8 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
             return true;
         }
     }
+
+    //Methode um eine Mitarbeiter-ID-Nummer zu generieren. ID wird gezählt.
 
     @Override
     public String generateBenutzerNummer() {
