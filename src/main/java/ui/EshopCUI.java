@@ -12,19 +12,29 @@ public class EshopCUI {
     private final Eshop eshop;
     private final Scanner scanner = new Scanner(System.in);
 
+    //SessionManager
+    private final SessionManager session = new SessionManager();
+
     private Benutzer angemeldeterBenutzer = null;
     private boolean running = true;
 
     //Management Klassen:
-    private final GeneralService generalService = new GeneralService();
-    private final LoginLogoutManager loginLogoutManager = new LoginLogoutManager();
-    private final ShoppingService shoppingService = new ShoppingService();
-    private final UserManager userManager = new UserManager();
-    private final WindowManager windowManager = new WindowManager();
+    private final GeneralService generalService;
+    private final LoginLogoutManager loginLogoutManager;
+    private final ShoppingService shoppingService;
+    private final UserManager userManager;
+    private final WindowManager windowManager;
 
     public EshopCUI(Eshop eshop) {
-        //eshop als Parameter, damit selber eshop an weitere ansicht gegeben werden kann.
+        //eshop als Parameter, damit selber eshop an weitere Ansicht gegeben werden kann.
         this.eshop = eshop;
+
+        //Management Klassen:
+        this.generalService = new GeneralService(eshop, scanner, session);
+        this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
+        this.shoppingService = new ShoppingService(eshop, scanner, session);
+        this.userManager = new UserManager(eshop, scanner, session);
+        this.windowManager = new WindowManager(eshop, scanner, session);
     }
 
     public void start() {
