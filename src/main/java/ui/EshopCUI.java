@@ -44,9 +44,12 @@ public class EshopCUI {
         while (running) {
             menu();
             String input = scanner.nextLine().trim();
-            if (input.isEmpty()) {
-                return;
+
+            while (input.isEmpty() && running) {
+                System.out.print("> ");
+                input = scanner.nextLine().trim();
             }
+
             navigation(input);
         }
         scanner.close();
