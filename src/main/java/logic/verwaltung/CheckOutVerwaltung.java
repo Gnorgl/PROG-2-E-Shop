@@ -26,7 +26,7 @@ public class CheckOutVerwaltung implements ICV {
 
 
         //Placeholder, hier muss noch return neueRechnung.
-        //Immer wenn eine Rechnung ausgestellt wird, wird diese in RechnungsListe gespeichert, in neuer Methode mir checkOut() als Parameter.
+        //Immer wenn eine Rechnung ausgestellt wird, wird diese in OrderListe gespeichert, in neuer Methode mir checkOut() als Parameter.
         return null;
     }
 }
