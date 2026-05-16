@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 public class EshopCUI {
 
-    private final Eshop eshop;
     private final Scanner scanner = new Scanner(System.in);
     private boolean running = true;
 
@@ -26,7 +25,6 @@ public class EshopCUI {
 
     //Konstruktor
     public EshopCUI(Eshop eshop) {
-        this.eshop = eshop;
 
         //Management Klassen:
         this.generalServiceManager = new GeneralServiceManager(eshop, scanner, session);
