@@ -15,6 +15,7 @@ public class EshopCUI {
     private Benutzer angemeldeterBenutzer = null;
     private boolean running = true;
 
+    //Management Klassen:
     private final GeneralService generalService = new GeneralService();
     private final LoginLogoutManager loginLogoutManager = new LoginLogoutManager();
     private final ShoppingService shoppingService = new ShoppingService();
