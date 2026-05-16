@@ -24,6 +24,7 @@ public class EshopCUI {
     private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
     private final WindowManager windowManager; //Für die Erstellung und Verwaltung der Anwendungsfenster im GUI.
 
+    //Konstruktor
     public EshopCUI(Eshop eshop) {
         this.eshop = eshop;
 
