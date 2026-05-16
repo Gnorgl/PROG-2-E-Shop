@@ -1,7 +1,7 @@
 package ui;
 
-import entities.Benutzer;
-import entities.Mitarbeiter;
+import entities.*;
+import ui.navigation.*;
 import logic.Eshop;
 
 
