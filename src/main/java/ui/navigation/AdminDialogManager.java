@@ -21,12 +21,6 @@ public class AdminDialogManager {
         System.out.println("----------------");
     }
 
-    public void kundenKontoErstellen() {
-        System.out.println("----------------");
-        System.out.println("Erstellen Sie ein Benutzer-Konto!");
-        System.out.println("----------------");
-    }
-
     public void produktErstellen() {
         System.out.println("------Neues Produkt------");
     }
