@@ -17,21 +17,22 @@ public class EshopCUI {
     private final SessionManager session = new SessionManager();
 
     //Management Klassen:
-    private final GeneralServiceManager generalServiceManager;
-    private final LoginLogoutManager loginLogoutManager;
-    private final ShoppingServiceManager shoppingServiceManager;
-    private final MitarbeiterManager mitarbeiterManager;
-    private final WindowManager windowManager;
+    private final GeneralServiceManager generalServiceManager; //Alle service Methoden, wie Support.
+    private final RegistrationManager registrationManager; //Für Erstellung von Benutzern.
+    private final LoginLogoutManager loginLogoutManager; //Für den An- und Abmeldeprozess.
+    private final ShoppingServiceManager shoppingServiceManager; //Alle shopping Methoden.
+    private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
+    private final WindowManager windowManager; //Für die Erstellung und Verwaltung der Anwendungsfenster im GUI.
 
     public EshopCUI(Eshop eshop) {
-        //eshop als Parameter, damit selber eshop an weitere Ansicht gegeben werden kann.
         this.eshop = eshop;
 
         //Management Klassen:
         this.generalServiceManager = new GeneralServiceManager(eshop, scanner, session);
+        this.registrationManager = new RegistrationManager(eshop, scanner, session);
         this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
         this.shoppingServiceManager = new ShoppingServiceManager(eshop, scanner, session);
-        this.mitarbeiterManager = new MitarbeiterManager(eshop, scanner, session);
+        this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
         this.windowManager = new WindowManager(eshop, scanner, session);
     }
 
