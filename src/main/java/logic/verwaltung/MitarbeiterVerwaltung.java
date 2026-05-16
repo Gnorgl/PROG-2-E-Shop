@@ -1,6 +1,5 @@
-package logic.management;
+package logic.verwaltung;
 
-import entities.Kunde;
 import entities.Mitarbeiter;
 import logic.moduls.IMV;
 import logic.moduls.IUC;

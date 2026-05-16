@@ -1,4 +1,4 @@
-package logic.management;
+package logic.verwaltung;
 
 import entities.Benutzer;
 import logic.moduls.IBV;

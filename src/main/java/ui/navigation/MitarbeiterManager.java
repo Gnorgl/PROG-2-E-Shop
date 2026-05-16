@@ -4,12 +4,12 @@ import logic.Eshop;
 
 import java.util.Scanner;
 
-public class UserManager {
+public class MitarbeiterManager {
     private final Eshop eshop;
     private final Scanner scanner;
     private final SessionManager session;
 
-    public UserManager(Eshop eshop, Scanner scanner, SessionManager session) {
+    public MitarbeiterManager(Eshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;

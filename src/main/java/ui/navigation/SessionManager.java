@@ -14,7 +14,7 @@ public class SessionManager {
         return this.angemeldeterBenutzer;
     }
 
-    //Aktueller Benutzer Check
+    //Aktueller Benutzer Check, ob ein Benutzer angemeldet ist
     public boolean benutzerCheck() {
         return this.angemeldeterBenutzer != null;
     }
