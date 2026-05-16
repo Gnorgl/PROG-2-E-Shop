@@ -14,4 +14,28 @@ public class AdminDialogManager {
         this.scanner = scanner;
         this.session = session;
     }
+
+    public void mitarbeiterKontoErstellen() {
+        System.out.println("----------------");
+        System.out.println("Erstellen Sie einen Mitarbeiter!");
+        System.out.println("----------------");
+    }
+
+    public void kundenKontoErstellen() {
+        System.out.println("----------------");
+        System.out.println("Erstellen Sie ein Benutzer-Konto!");
+        System.out.println("----------------");
+    }
+
+    public void produktErstellen() {
+        System.out.println("------Neues Produkt------");
+    }
+
+    public void orderVerlauf() {
+        System.out.println("------Orderverlauf------");
+    }
+
+
+
+
 }

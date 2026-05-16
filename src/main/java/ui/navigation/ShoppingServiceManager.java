@@ -14,4 +14,12 @@ public class ShoppingServiceManager {
         this.scanner = scanner;
         this.session = session;
     }
+
+    public void warenkatalog() {
+        System.out.println("------Warenkatalog------");
+    }
+
+    public void bestellverlauf() {
+        System.out.println("------Bestellverlauf------");
+    }
 }

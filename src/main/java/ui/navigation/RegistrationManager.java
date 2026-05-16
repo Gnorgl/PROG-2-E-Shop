@@ -14,4 +14,16 @@ public class RegistrationManager {
         this.scanner = scanner;
         this.session = session;
     }
+
+    public void mitarbeiterKontoErstellen() {
+        System.out.println("----------------");
+        System.out.println("Erstellen Sie einen Mitarbeiter!");
+        System.out.println("----------------");
+    }
+
+    public void kundenKontoErstellen() {
+        System.out.println("----------------");
+        System.out.println("Erstellen Sie ein Benutzer-Konto!");
+        System.out.println("----------------");
+    }
 }

@@ -90,13 +90,15 @@ public class EshopCUI {
         //Für nicht angemeldete Benutzer
         switch (eingabe) {
             case "l" -> {
-                if (session.getBenutzer() == null) login(); return;
+                if (session.getBenutzer() == null) {
+                    loginLogoutManager.login();
+                }
             }
             case "e" -> {
-                programmBeenden(); return;
+                programmBeenden();
             }
             case "r" -> {
-                kundenKontoErstellen(); return;
+                registrationManager.kundenKontoErstellen();
             }
         }
 
@@ -112,16 +114,16 @@ public class EshopCUI {
             //Für Mitarbeiter-Befehle
             case Mitarbeiter mitarbeiter -> {
                 switch (eingabe) {
-                    case "p" -> produktErstellen();
-                    case "i" -> orderVerlauf();
-                    case "m" -> mitarbeiterKontoErstellen();
+                    case "p" -> adminDialogManager.produktErstellen();
+                    case "i" -> adminDialogManager.orderVerlauf();
+                    case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
                 }
             }
             //Für Kunden-Befehle
             case entities.Kunde kunde -> {
                 switch (eingabe) {
-                    case "b" -> bestellverlauf();
-                    case "s" -> kundensupport();
+                    case "b" -> shoppingServiceManager.bestellverlauf();
+                    case "s" -> generalServiceManager.kundensupport();
                 }
             }
             default -> {
@@ -132,8 +134,8 @@ public class EshopCUI {
         }
         //Für Benutzer-Befehle
         switch (eingabe) {
-            case "w" -> warenkatalog();
-            case "a" -> logout();
+            case "w" -> shoppingServiceManager.warenkatalog();
+            case "a" -> loginLogoutManager.logout();
 
             default -> {
                 System.out.println("----------------");
@@ -143,77 +145,6 @@ public class EshopCUI {
         }
     }
 
-    private void mitarbeiterKontoErstellen() {
-        System.out.println("----------------");
-        System.out.println("Erstellen Sie einen Mitarbeiter!");
-        System.out.println("----------------");
-    }
-
-    private void kundenKontoErstellen() {
-        System.out.println("----------------");
-        System.out.println("Erstellen Sie ein Benutzer-Konto!");
-        System.out.println("----------------");
-    }
-
-    private void produktErstellen() {
-        System.out.println("------Neues Produkt------");
-    }
-
-    private void orderVerlauf() {
-        System.out.println("------Orderverlauf------");
-    }
-
-    private void login() {
-        System.out.println("------Login------");
-        System.out.println("E-Mail:");
-
-        String email = scanner.nextLine();
-
-        Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
-        //Technisch gesehen hier ein Loop, falls man sich verschreibt.
-        //Aber sonst muss es mehrere Eingaben geben damit man zum Anfang zurückkommt.
-        //Dies wird implementiert, wenn wir Buttons im GUI benutzen.
-        if (benutzer != null) {
-            System.out.println("Passwort:");
-            String passwort = scanner.nextLine(); //Darf nicht empty sein!
-
-            if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
-                session.login(benutzer);
-            } else {
-                System.out.println("----------------");
-                System.out.println("Falsches Passwort!");
-                System.out.println("----------------");
-            }
-        } else {
-            System.out.println("----------------");
-            System.out.println("Benutzer nicht gefunden!");
-            System.out.println("----------------");
-        }
-        System.out.format("Willkommen im Eshop %s (%s)\n",
-                session.getBenutzer().getVorname(),
-                session.istBenutzerEinMitarbeiter() ? "Mitarbeiter" : "Kunde");
-    }
-
-    private void logout() {
-        session.logout();
-        System.out.println("----------------");
-        System.out.println("Sie wurden abgemeldet!");
-        System.out.println("----------------");
-    }
-
-    private void warenkatalog() {
-        System.out.println("------Warenkatalog------");
-    }
-
-    private void bestellverlauf() {
-        System.out.println("------Bestellverlauf------");
-    }
-
-    private void kundensupport() {
-        System.out.println("------Kontaktmöglichkeiten------");
-    }
-
-    //In CUI Klasse lassen
     private void programmBeenden() {
         System.out.println("----------------");
         System.out.println("Programm wird beendet!");

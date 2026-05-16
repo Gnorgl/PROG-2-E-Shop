@@ -14,4 +14,8 @@ public class GeneralServiceManager {
         this.scanner = scanner;
         this.session = session;
     }
+
+    public void kundensupport() {
+        System.out.println("------Kontaktmöglichkeiten------");
+    }
 }
