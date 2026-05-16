@@ -10,11 +10,19 @@ import java.util.Scanner;
 public class EshopCUI {
 
     private final Eshop eshop;
-    private Benutzer angemeldeterBenutzer = null; //Später festlegen, wenn Benutzer angemeldet ist.
-    private boolean running = true;
     private final Scanner scanner = new Scanner(System.in);
 
+    private Benutzer angemeldeterBenutzer = null;
+    private boolean running = true;
+
+    private final GeneralService generalService = new GeneralService();
+    private final LoginLogoutManager loginLogoutManager = new LoginLogoutManager();
+    private final ShoppingService shoppingService = new ShoppingService();
+    private final UserManager userManager = new UserManager();
+    private final WindowManager windowManager = new WindowManager();
+
     public EshopCUI(Eshop eshop) {
+        //eshop als Parameter, damit selber eshop an weitere ansicht gegeben werden kann.
         this.eshop = eshop;
     }
 
