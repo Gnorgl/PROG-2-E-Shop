@@ -1,6 +1,7 @@
 package ui;
 
 import entities.Benutzer;
+import entities.Mitarbeiter;
 import logic.Eshop;
 
 
@@ -33,83 +34,167 @@ public class EshopCUI {
     }
 
     private void menu() {
-        System.out.println("------MENÜ------");
+        //Nicht angemeldete Benutzer:
         if (this.angemeldeterBenutzer == null) {
-            System.out.println("Login: l");
-            System.out.println("Registrieren: r");
+            System.out.println("[L] Login");
+            System.out.println("[R] Registrieren");
+            System.out.println("[E] Beenden");
         } else {
-            System.out.println("Wählen Sie aus:");
-            System.out.println("Warenkatalog: w");
-            System.out.println("Bestellverlauf: b");
-            System.out.println("Kundensupport: k");
-            System.out.println("Abmelden: a");
+            //Angemeldete Benutzer:
+            System.out.println("-----------------");
+            System.out.println("------Eshop------");
+            System.out.println("-----------------");
+            System.out.println("[W] Warenkatalog");
+            //Benutzer ist Mitarbeiter:
+            if (angemeldeterBenutzer instanceof entities.Mitarbeiter) {
+                System.out.println("[P] Produkt hinzufügen");
+                System.out.println("[I] Orderverlauf einsehen");
+                System.out.println("[M] Neuen Mitarbeiter erstellen");
+            } else {
+                //Benutzer ist Kunde:
+                System.out.println("[B] Bestellverlauf");
+                System.out.println("[S] Support");
+            }
+            System.out.println("[A] Abmelden");
         }
-        System.out.println("Beenden: e");
+        System.out.print("> ");
     }
 
     private void navigation(String input) {
-        //Wenn bestimmer Buchstabe eingegeben wurde, dann Stage
-        //bzw. Klasse mit der jeweiligen Funktionalität öffnen.
-        switch (input.toLowerCase()) {
-            case "l" -> login();
-            case "r" -> benutzerErstellen();
-            case "w" -> warenkatalog();
-            case "b" -> bestellverlauf();
-            case "a" -> logout();
-            case "k" -> kundensupport();
-            case "e" -> programmBeenden();
+        //Navigation absichern
+
+        String eingabe = input.toLowerCase();
+
+        //Für nicht angemeldete Benutzer
+        switch (eingabe) {
+            case "l" -> {
+                if (angemeldeterBenutzer == null) login(); return;
+            }
+            case "e" -> {
+                programmBeenden(); return;
+            }
+            case "r" -> {
+                kundeErstellen(); return;
+            }
+        }
+
+        //Für angemeldete Benutzer
+
+        switch (angemeldeterBenutzer) {
+            case null -> {
+                System.out.println("----------------");
+                System.out.println("Für diese Funktion müssen Sie angemeldet sein!");
+                System.out.println("----------------");
+                return;
+            }
+            //Für Mitarbeiter-Befehle
+            case Mitarbeiter mitarbeiter -> {
+                switch (eingabe) {
+                    case "p" -> produktHinzufuegen();
+                    case "i" -> orderVerlauf();
+                    case "m" -> mitarbeiterErstellen();
+                }
+            }
+            //Für Kunden-Befehle
+            case entities.Kunde kunde -> {
+                switch (eingabe) {
+                    case "b" -> bestellverlauf();
+                    case "s" -> kundensupport();
+                }
+            }
             default -> {
+                System.out.println("----------------");
                 System.out.println("Unbekannter Befehl!");
+                System.out.println("----------------");
+            }
+        }
+        //Für Benutzer-Befehle
+        switch (eingabe) {
+            case "w" -> warenkatalog();
+            case "a" -> logout();
+
+            default -> {
+                System.out.println("----------------");
+                System.out.println("Unbekannter Befehl!");
+                System.out.println("----------------");
             }
         }
     }
 
-    private void benutzerErstellen() {
-        System.out.println("Erstellen Sie einen Benutzer!");
+    private void mitarbeiterErstellen() {
+        System.out.println("----------------");
+        System.out.println("Erstellen Sie einen Mitarbeiter!");
+        System.out.println("----------------");
+    }
+
+    private void kundeErstellen() {
+        System.out.println("----------------");
+        System.out.println("Erstellen Sie ein Benutzer-Konto!");
+        System.out.println("----------------");
+    }
+
+    private void produktHinzufuegen() {
+        System.out.println("------Neues Produkt------");
+    }
+
+    private void orderVerlauf() {
+        System.out.println("------Orderverlauf------");
     }
 
     private void login() {
-        System.out.println("Anmelden:");
+        System.out.println("------Login------");
         System.out.println("E-Mail:");
 
         String email = scanner.nextLine();
 
         Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
-
+        //Technisch gesehen hier ein Loop, falls man sich verschreibt.
+        //Aber sonst muss es mehrere Eingaben geben damit man zum Anfang zurückkommt.
+        //Dies wird implementiert, wenn wir Buttons im GUI benutzen.
         if (benutzer != null) {
             System.out.println("Passwort:");
             String passwort = scanner.nextLine(); //Darf nicht empty sein!
 
             if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
                 this.angemeldeterBenutzer = benutzer;
-                System.out.println("Willkommen zurück " + this.angemeldeterBenutzer.getVorname());
             } else {
+                System.out.println("----------------");
                 System.out.println("Falsches Passwort!");
+                System.out.println("----------------");
             }
         } else {
+            System.out.println("----------------");
             System.out.println("Benutzer nicht gefunden!");
+            System.out.println("----------------");
         }
+        System.out.format("Willkommen im Eshop %s (%s)\n",
+                angemeldeterBenutzer.getVorname(),
+                angemeldeterBenutzer instanceof entities.Mitarbeiter ? "Mitarbeiter" : "Kunde");
     }
 
     private void logout() {
         this.angemeldeterBenutzer = null;
+        System.out.println("----------------");
         System.out.println("Sie wurden abgemeldet!");
+        System.out.println("----------------");
     }
 
     private void warenkatalog() {
-        System.out.println("Warenkatalog:");
+        System.out.println("------Warenkatalog------");
     }
 
     private void bestellverlauf() {
-        System.out.println("Bestellverlauf:");
+        System.out.println("------Bestellverlauf------");
     }
 
     private void kundensupport() {
-        System.out.println("Kontaktmöglichkeiten:");
+        System.out.println("------Kontaktmöglichkeiten------");
     }
 
     private void programmBeenden() {
+        System.out.println("----------------");
         System.out.println("Programm wird beendet!");
+        System.out.println("----------------");
         this.running = false;
     }
 
@@ -117,8 +202,9 @@ public class EshopCUI {
     public static void main(String[] args) {
         Eshop eshop = new Eshop();
         EshopCUI eShopCUI = new EshopCUI(eshop);
+        eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter("admin@email.com", "123", "AI", "Admin");
+        eshop.getBenutzerVerwaltung().getKundenVerwaltung().createNewKunden("kunde@email.com", "123", "Mustermann", "Max", "Straße 123");
         eShopCUI.start();
-
     }
 }
 
