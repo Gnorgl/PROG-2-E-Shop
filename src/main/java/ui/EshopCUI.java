@@ -90,13 +90,16 @@ public class EshopCUI {
             case "l" -> {
                 if (session.getBenutzer() == null) {
                     loginLogoutManager.login();
+                    return; //Sonst läuft es weiter zum nächsten Switch.
                 }
             }
             case "e" -> {
                 programmBeenden();
+                return;
             }
             case "r" -> {
                 registrationManager.kundenKontoErstellen();
+                return;
             }
         }
 
@@ -118,7 +121,7 @@ public class EshopCUI {
                 }
             }
             //Für Kunden-Befehle
-            case entities.Kunde kunde -> {
+            case Kunde kunde -> {
                 switch (eingabe) {
                     case "b" -> shoppingServiceManager.bestellverlauf();
                     case "s" -> generalServiceManager.kundensupport();
