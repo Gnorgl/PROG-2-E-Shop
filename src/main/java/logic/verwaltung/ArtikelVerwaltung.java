@@ -13,12 +13,15 @@ import java.util.Iterator;
 
 public class ArtikelVerwaltung implements IAV {
     private ArtikelListe artikelListe = new ArtikelListe();
-    private EreignisVerwaltung ereignisVerwaltung;
+    private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
 
 
     public ArtikelVerwaltung () {
     this.artikelListe = new ArtikelListe();
-    this.ereignisVerwaltung = ereignisVerwaltung;
+    }
+
+    public void setEreignisVerwaltung(EreignisVerwaltung ereignisVerwaltung) {
+        this.ereignisVerwaltung = ereignisVerwaltung;
     }
 
     @Override

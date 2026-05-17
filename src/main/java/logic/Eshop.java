@@ -11,6 +11,7 @@ public class Eshop {
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
     private EreignisListe ereignisListe = new EreignisListe();
 
+
     public Eshop() {}
 
     public ArtikelVerwaltung getArtikelVerwaltung() {
