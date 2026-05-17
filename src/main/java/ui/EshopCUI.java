@@ -160,9 +160,6 @@ public class EshopCUI {
         eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter("admin@email.com", "123", "AI", "Admin");
         eshop.getBenutzerVerwaltung().getKundenVerwaltung().createNewKunden("kunde@email.com", "123", "Mustermann", "Max", "Straße 123");
 
-        eshop.getArtikelVerwaltung().legeArtikelAn(101, "Cola", 30, 2.00);
-        eshop.getArtikelVerwaltung().legeArtikelAn(102, "Brot", 50, 1.50);
-        eshop.getArtikelVerwaltung().legeArtikelAn(103, "Milch", 20, 0.99);
         eShopCUI.start();
 
     }
