@@ -15,6 +15,6 @@ public class EreignisVerwaltung {
     public void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) {
         Ereignis neuesEreignis = new Ereignis(artikel, anzahl, benutzer, typ);
         ereignisListe.hinzuefuegen(neuesEreignis);
-        System.out.println("Test: " +  typ + " für Artikel" + artikel.getBezeichnung() + " Anzahl: " + anzahl);
+        System.out.println("Ereignis geloggt: " +  typ + " für Artikel" + artikel.getBezeichnung() + " Anzahl: " + anzahl);
     }
 }

@@ -1,11 +1,15 @@
 package logic;
-
+import logic.verwaltung.EreignisVerwaltung;
+import persistence.shop.EreignisListe;
 import logic.verwaltung.*;
+import persistence.shop.EreignisListe;
 
 public class Eshop {
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
+    private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
+    private EreignisListe ereignisListe = new EreignisListe();
 
     public Eshop() {}
 

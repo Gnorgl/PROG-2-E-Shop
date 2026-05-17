@@ -1,17 +1,6 @@
 package logic.verwaltung;
 
-import entities.Artikel;
-import entities.Kunde;
-import entities.Rechnung;
-import logic.moduls.ICV;
-import persistence.shop.WarenkorbListe;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import java.util.List;
-
-
 
 import entities.Artikel;
 import entities.Kunde;
@@ -24,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CheckOutVerwaltung implements ICV {
-
     private int rechnungsNummerZaehler = 1;
+    private EreignisVerwaltung ereignisVerwaltung;
 
     @Override
     public double berechneNettoSumme(WarenkorbListe warenkorbListe) {
@@ -57,7 +46,8 @@ public class CheckOutVerwaltung implements ICV {
             gekaufteArtikel.add(artikel);
 
             // Artikelbestand im Lager nach dem Kauf reduzieren!!
-
+            artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
+            ereignisVerwaltung.logEreignis(artikel, menge, kunde, "AUSLAGERUNG_KAUF");
         }
 
         // MwSt und Brutto berechnen

@@ -1,19 +1,24 @@
 package logic.verwaltung;
 
-import entities.Artikel;
 import exceptions.artikel.ArtikelExistiertBereits;
 import logic.moduls.IAV;
+import logic.verwaltung.EreignisVerwaltung;
+import entities.Mitarbeiter;
+import entities.Artikel;
 import persistence.shop.ArtikelListe;
+
 
 import java.util.Iterator;
 
 
-public class ArtikelVerwaltung implements IAV{
-    private ArtikelListe artikelListe = new ArtikelListe();;
+public class ArtikelVerwaltung implements IAV {
+    private ArtikelListe artikelListe = new ArtikelListe();
+    private EreignisVerwaltung ereignisVerwaltung;
 
 
     public ArtikelVerwaltung () {
-
+    this.artikelListe = new ArtikelListe();
+    this.ereignisVerwaltung = ereignisVerwaltung;
     }
 
     @Override
@@ -23,6 +28,8 @@ public class ArtikelVerwaltung implements IAV{
         }
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
         artikelListe.getArtikelImLager().add(neuerArtikel);
+        Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
+        ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
         return true;
     }
 
@@ -45,6 +52,8 @@ public class ArtikelVerwaltung implements IAV{
         if (a != null) {
 
             a.setBestand(a.getBestand() + anzahl);
+            Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
+            ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "EINLAGERUNG_M");
         }
     }
 
@@ -53,7 +62,14 @@ public class ArtikelVerwaltung implements IAV{
         Artikel a = findeArtikel(nr);
         if (a != null && a.getBestand() >= anzahl) {
             a.setBestand(a.getBestand() - anzahl);
+            Mitarbeiter akutellerMitarbeiter = getCurrentMitarbeiter();
+            ereignisVerwaltung.logEreignis(a, anzahl, akutellerMitarbeiter, "AUSLAGERUNG_M");
         }
+    }
+
+    //Implementierung um den eingeloggten Mitarbeiter zu erhalten
+    private Mitarbeiter getCurrentMitarbeiter() {
+        return null;
     }
 
     public ArtikelListe getArtikelListe() {
