@@ -1,12 +1,9 @@
-package logic.management;
+package logic.verwaltung;
 
 import entities.Kunde;
 import logic.moduls.IKV;
 import logic.moduls.IUC;
 import persistence.user.KundenListe;
-
-import java.math.BigInteger;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class KundenVerwaltung implements IKV, IUC {
     private final KundenListe kundenListe = new KundenListe();

@@ -1,6 +1,6 @@
 package logic;
 
-import logic.management.*;
+import logic.verwaltung.*;
 
 public class Eshop {
     private ArtikelVerwaltung artikelVerwaltung = new ArtikelVerwaltung();
