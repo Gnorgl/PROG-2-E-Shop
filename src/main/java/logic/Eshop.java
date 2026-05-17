@@ -25,6 +25,10 @@ public class Eshop {
         return checkOutVerwaltung;
     }
 
+    public EreignisVerwaltung getEreignisVerwaltung() { return ereignisVerwaltung; }
+
+    public EreignisListe getEreignisListe() { return ereignisListe; }
+
 }
 
 //Bündelt alle anderen Logic Komponenten und kommuniziert direkt mit UI.
