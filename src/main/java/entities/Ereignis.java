@@ -2,7 +2,7 @@ package entities;
 import java.time.LocalDate;
 
 public class Ereignis {
-    private int datum //Jahrestag
+    private int datum; //Jahrestag
     private Artikel artikel;
     private int anzahl;
     private Benutzer benutzer; //Kunde oder Mitarbeiter
