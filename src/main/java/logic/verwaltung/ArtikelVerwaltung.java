@@ -18,38 +18,55 @@ public class ArtikelVerwaltung implements IAV{
 
     @Override
     public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
-        for (Artikel a : artikelListe.getArtikelImLager()) {
-            if (a.getArtikelNummer() == nr) {
-                throw new ArtikelExistiertBereits(name);
-            }
+        if (findeArtikel(nr) != null) {
+            throw new ArtikelExistiertBereits(name);
         }
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
         artikelListe.getArtikelImLager().add(neuerArtikel);
         return true;
     }
 
+
     @Override
     public void loeschen(int nr) {
         Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
         while (it.hasNext()) {
             Artikel artikel = it.next();
-
             if (artikel.getArtikelNummer() == nr) {
-            it.remove();
-            break;
+                it.remove();
+                break;
             }
-
         }
     }
 
     @Override
-    public void bestandErhoehen ( int nr, int anzahl ) {
+    public void bestandErhoehen(int nr, int anzahl) {
+        Artikel a = findeArtikel(nr);
+        if (a != null) {
+
+            a.setBestand(a.getBestand() + anzahl);
+        }
+    }
+
+    //Reduziert Bestand extra beim Checkout
+    public void bestandReduzieren(int nr, int anzahl) {
+        Artikel a = findeArtikel(nr);
+        if (a != null && a.getBestand() >= anzahl) {
+            a.setBestand(a.getBestand() - anzahl);
+        }
+    }
+
+    public ArtikelListe getArtikelListe() {
+        return this.artikelListe;
+    }
+
+    public Artikel findeArtikel(int nr) {
         for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
-                int neuerBestand = anzahl;
-                break;
+                return a;
             }
         }
+        return null; // Nicht gefunden
     }
 }
 

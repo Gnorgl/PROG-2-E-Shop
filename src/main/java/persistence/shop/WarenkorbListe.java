@@ -4,38 +4,44 @@ import entities.Artikel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import logic.verwaltung.ArtikelVerwaltung;
 
 
 
 
 public class WarenkorbListe {
 
-    private HashMap<Integer, Artikel> datenbankTabelle = new HashMap<>();
-    private int idZaehler = 1;
+    private HashMap<Artikel, Integer> warenkorb = new HashMap<>();
 
-
-
-    public void hinzufuegen(Artikel artikel) {
-
-        //Artikel wird mit ID gespeichert
-        datenbankTabelle.put(idZaehler, artikel);
-
-        idZaehler++;
+    //Speichert einen Artikel mit seiner Menge
+    public void speichern(Artikel artikel, int menge) {
+        if (menge > 0) {
+            warenkorb.put(artikel, menge);
+        }
     }
 
-    //Nimmt die gespeicherten artikel aus der Map und gibt Array aus
-    //IDs gehen dabei aber verloren
-    public List<Artikel> getAlleArtikel(){
-
-        return new ArrayList<>(datenbankTabelle.values());
+    public void artikelEntfernen(Artikel artikel) {
+        warenkorb.remove(artikel);
+    }
+    //Gibt alle Artikel im Warenkorb mit ihren Mengen zurück
+    public HashMap<Artikel, Integer> getAlleArtikel() {
+        return warenkorb;
     }
 
-    //Leert HashMap nach dem Kauf
-    public void leeren(){
-
+    //Gibt die Menge eines bestimmten Artikels zurück
+    public int getMenge(Artikel artikel) {
+        return warenkorb.getOrDefault(artikel, 0);
     }
 
+    // Leert den kompletten Warenkorb
+    public void leeren() {
+        warenkorb.clear();
+    }
 
+    //Prüft, ob Warenkorb leer ist
+    public boolean istLeer() {
+        return warenkorb.isEmpty();
+    }
 
 
 }
