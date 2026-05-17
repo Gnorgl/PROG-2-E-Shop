@@ -1,6 +1,6 @@
 package logic.verwaltung;
 
-import java.util.List;
+import java.util.*;
 
 import entities.Artikel;
 import entities.Kunde;
@@ -8,13 +8,17 @@ import entities.Rechnung;
 import logic.moduls.ICV;
 import persistence.shop.WarenkorbListe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class CheckOutVerwaltung implements ICV {
     private int rechnungsNummerZaehler = 1;
-    private EreignisVerwaltung ereignisVerwaltung;
+    private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
+
+    public CheckOutVerwaltung() {
+
+    }
+
+    public void setEreignisVerwaltung(EreignisVerwaltung ereignisVerwaltung) {
+        this.ereignisVerwaltung = ereignisVerwaltung;
+    }
 
     @Override
     public double berechneNettoSumme(WarenkorbListe warenkorbListe) {
@@ -41,9 +45,13 @@ public class CheckOutVerwaltung implements ICV {
 
         List<Artikel> gekaufteArtikel = new ArrayList<>();
 
+        // HIER WIRD ANGEPASST: Artikel entsprechend ihrer Menge oft in die Liste legen
         for (Artikel artikel : warenkorbItems.keySet()) {
             int menge = warenkorbItems.get(artikel);
-            gekaufteArtikel.add(artikel);
+
+            for (int i = 0; i < menge; i++) {
+                gekaufteArtikel.add(artikel);
+            }
 
             // Artikelbestand im Lager nach dem Kauf reduzieren!!
             artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
@@ -77,16 +85,42 @@ public class CheckOutVerwaltung implements ICV {
             return;
         }
 
+        /**
+         * DATUM für die Rechnung mit Stunde und Minute
+         */
+        java.time.LocalDate tag = java.time.LocalDate.now();
+        java.time.LocalTime zeit = java.time.LocalTime.now();
+
+        String tagText = tag.format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String zeitText = zeit.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
+
+        String rechnungsDatum = tagText + " um " + zeitText + " Uhr";
+
+
         System.out.println("\n========== RECHNUNG ==========");
         System.out.println("Rechnungsnummer: " + rechnung.getRechnungsNummer());
-        System.out.println("Datum: " + rechnung.getDatum());
+        System.out.println("Datum: " + rechnungsDatum);
         System.out.println("Kunde: " + rechnung.getKunde().getNachname() + ", " + rechnung.getKunde().getVorname());
+        System.out.println("Adresse: " + rechnung.getKunde().getAdresse()); //
         System.out.println("\n--- Artikel ---");
 
+        // Hilfsliste um doppelte Konsolenausgaben zu vermeiden
+        List<Artikel> schonGedruckt = new ArrayList<>();
+
+        // Stückzahl und Gesamtpreis aus der Liste berechnen
         for (Artikel artikel : rechnung.getArtikel()) {
-            System.out.println("- " + artikel.getBezeichnung() +
-                    " (" + artikel.getArtikelNummer() + "): " +
-                    artikel.getPreis() + "€");
+            if (!schonGedruckt.contains(artikel)) {
+
+                // Collections.frequency zählt, wie oft der Artikel in der Liste vorkommt
+                int menge = Collections.frequency(rechnung.getArtikel(), artikel);
+                double gesamtPreisPosition = artikel.getPreis() * menge;
+
+                System.out.println("- " + menge + "x " + artikel.getBezeichnung() +
+                        " (" + artikel.getArtikelNummer() + "): " +
+                        gesamtPreisPosition + "€ (Einzelpreis: " + artikel.getPreis() + "€)");
+
+                schonGedruckt.add(artikel);
+            }
         }
 
         System.out.println("\n--- Summe ---");

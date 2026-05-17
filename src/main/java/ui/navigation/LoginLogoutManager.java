@@ -18,16 +18,16 @@ public class LoginLogoutManager {
 
     public void login() {
         System.out.println("------Login------");
-        System.out.println("E-Mail:");
+        System.out.print("E-Mail: ");
 
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim().toLowerCase();
 
         Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
         //Technisch gesehen hier ein Loop, falls man sich verschreibt.
         //Aber sonst muss es mehrere Eingaben geben damit man zum Anfang zurückkommt.
         //Dies wird implementiert, wenn wir Buttons im GUI benutzen.
         if (benutzer != null) {
-            System.out.println("Passwort:");
+            System.out.print("Passwort: ");
             String passwort = scanner.nextLine(); //Darf nicht empty sein!
 
             if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {

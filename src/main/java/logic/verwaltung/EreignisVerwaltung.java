@@ -6,10 +6,9 @@ import entities.Ereignis;
 import persistence.shop.EreignisListe;
 
 public class EreignisVerwaltung {
-    private EreignisListe ereignisListe;
+    private EreignisListe ereignisListe = new EreignisListe();
 
-    public EreignisVerwaltung(EreignisListe ereignisListe) {
-        this.ereignisListe = ereignisListe;
+    public EreignisVerwaltung() {
     }
 
     public void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) {

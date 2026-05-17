@@ -17,5 +17,7 @@ public class GeneralServiceManager {
 
     public void kundensupport() {
         System.out.println("------Kontaktmöglichkeiten------");
+        System.out.println("Live-Chat");
+        System.out.println("Telefon-Nummer");
     }
 }

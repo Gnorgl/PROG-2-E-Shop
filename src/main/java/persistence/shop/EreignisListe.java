@@ -1,10 +1,15 @@
 package persistence.shop;
 import entities.Ereignis;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class EreignisListe {
-    private List<Ereignis> alleEreignisse = new Arraylist<>();
+    private List<Ereignis> alleEreignisse = new ArrayList<>();
+
+    public EreignisListe() {}
+
     public void hinzuefuegen(Ereignis ereignis) {
         alleEreignisse.add(ereignis);
     }
