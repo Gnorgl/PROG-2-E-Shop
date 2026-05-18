@@ -116,6 +116,7 @@ public class EshopCUI {
             case Mitarbeiter mitarbeiter -> {
                 switch (eingabe) {
                     case "p" -> adminDialogManager.produktErstellen();
+                    case "d" -> adminDialogManager.produktLoeschen();
                     case "i" -> adminDialogManager.orderVerlauf();
                     case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
                 }

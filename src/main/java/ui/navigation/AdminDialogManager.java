@@ -64,6 +64,10 @@ public class AdminDialogManager {
         System.out.println("------Neues Produkt------");
     }
 
+    public void produktLoeschen() {
+        System.out.println("------Produkt löschen------");
+    }
+
     public void orderVerlauf() {
         System.out.println("------Orderverlauf------");
     }
