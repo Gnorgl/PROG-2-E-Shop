@@ -68,6 +68,7 @@ public class EshopCUI {
             //Benutzer ist Mitarbeiter:
             if (session.istBenutzerEinMitarbeiter()) {
                 System.out.println("[P] Produkt hinzufügen");
+                System.out.println("[D] Produkt löschen");
                 System.out.println("[I] Orderverlauf einsehen");
                 System.out.println("[M] Neuen Mitarbeiter erstellen");
             } else {

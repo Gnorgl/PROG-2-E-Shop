@@ -62,12 +62,39 @@ public class AdminDialogManager {
 
     public void produktErstellen() {
         System.out.println("------Neues Produkt------");
+        try {
+            System.out.print("Artikel-Nummer: ");
+            int nr = Integer.parseInt(scanner.nextLine().trim());
+
+            System.out.print("Name: ");
+            String name = scanner.nextLine().trim();
+
+            System.out.print("Bestand: ");
+            int bestand = Integer.parseInt(scanner.nextLine().trim());
+
+            System.out.print("Preis: ");
+            double preis = Double.parseDouble(scanner.nextLine().trim());
+
+            eshop.getArtikelVerwaltung().legeArtikelAn(nr, name, bestand, preis);
+            System.out.println("------Produkt erfolgreich erstellt------");
+        } catch (NumberFormatException e) {
+            System.out.println("Fehler: Ungueltige Eingabe!");
+        } catch (Exception e) {
+            System.out.println("Fehler: " + e.getMessage());
+        }
     }
 
     public void produktLoeschen() {
-        System.out.println("------Produkt löschen------");
+        System.out.println("------Produkt loeschen------");
+        try {
+            System.out.print("Artikel-Nummer: ");
+            int nr = Integer.parseInt(scanner.nextLine().trim());
+            eshop.getArtikelVerwaltung().loeschen(nr);
+            System.out.println("------Produkt erfolgreich geloescht------");
+        } catch (NumberFormatException e) {
+            System.out.println("Fehler: Ungueltige Artikel-Nummer!");
+        }
     }
-
     public void orderVerlauf() {
         System.out.println("------Orderverlauf------");
     }
