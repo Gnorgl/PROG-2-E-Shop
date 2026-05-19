@@ -41,6 +41,8 @@ public class LoginLogoutManager {
             System.out.println("----------------");
             System.out.println("Benutzer nicht gefunden!");
             System.out.println("----------------");
+            return;
+            //Exception was bei NullPointerException passiert
         }
         System.out.format("Willkommen im Eshop %s (%s)\n",
                 session.getBenutzer().getVorname(),

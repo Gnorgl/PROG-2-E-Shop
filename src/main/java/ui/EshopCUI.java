@@ -105,14 +105,15 @@ public class EshopCUI {
         }
 
         //Für angemeldete Benutzer
+        //Sicherheitscheck hier
+        if (session.getBenutzer() == null) {
+            System.out.println("----------------");
+            System.out.println("Für diese Funktion müssen Sie angemeldet sein!");
+            System.out.println("----------------");
+            return;
+        }
 
         switch (session.getBenutzer()) {
-            case null -> {
-                System.out.println("----------------");
-                System.out.println("Für diese Funktion müssen Sie angemeldet sein!");
-                System.out.println("----------------");
-                return;
-            }
             //Für Mitarbeiter-Befehle
             case Mitarbeiter mitarbeiter -> {
                 switch (eingabe) {
@@ -120,6 +121,9 @@ public class EshopCUI {
                     case "d" -> adminDialogManager.produktLoeschen();
                     case "i" -> adminDialogManager.orderVerlauf();
                     case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
+                    case "w" -> shoppingServiceManager.warenkatalog();
+                    case "a" -> loginLogoutManager.logout();
+                    default -> unbekannterBefehl();
                 }
             }
             //Für Kunden-Befehle
@@ -127,25 +131,19 @@ public class EshopCUI {
                 switch (eingabe) {
                     case "b" -> shoppingServiceManager.bestellverlauf();
                     case "s" -> generalServiceManager.kundensupport();
+                    case "w" -> shoppingServiceManager.warenkatalog();
+                    case "a" -> loginLogoutManager.logout();
+                    default -> unbekannterBefehl();
                 }
             }
-            default -> {
-                System.out.println("----------------");
-                System.out.println("Unbekannter Befehl!");
-                System.out.println("----------------");
-            }
+            default -> unbekannterBefehl();
         }
-        //Für Benutzer-Befehle
-        switch (eingabe) {
-            case "w" -> shoppingServiceManager.warenkatalog();
-            case "a" -> loginLogoutManager.logout();
+    }
 
-            default -> {
-                System.out.println("----------------");
-                System.out.println("Unbekannter Befehl!");
-                System.out.println("----------------");
-            }
-        }
+    private void unbekannterBefehl() {
+        System.out.println("----------------");
+        System.out.println("Unbekannter Befehl!");
+        System.out.println("----------------");
     }
 
     private void programmBeenden() {
@@ -159,11 +157,10 @@ public class EshopCUI {
     public static void main(String[] args) {
         Eshop eshop = new Eshop();
         EshopCUI eShopCUI = new EshopCUI(eshop);
-        eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter("admin@email.com", "123", "AI", "Admin");
-        eshop.getBenutzerVerwaltung().getKundenVerwaltung().createNewKunden("kunde@email.com", "123", "Mustermann", "Max", "Straße 123");
+        //Erstellung von Admin-Mitarbeiter
+        eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter("admin@email.com", "123", "Modus", "Admin");
 
         eShopCUI.start();
-
     }
 }
 
