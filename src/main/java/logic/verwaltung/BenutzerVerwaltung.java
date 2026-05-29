@@ -36,8 +36,12 @@ public class BenutzerVerwaltung implements IBV {
 
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
-        if (benutzer == null || password == null) {
-            return false;
+        if (benutzer == null) {
+            throw new IllegalArgumentException("Der Benutzer existiert nicht.");
+        } else if (password == null) {
+            throw new IllegalArgumentException("Das Passwort existiert nicht.");
+        } else if (password.isEmpty()) {
+            throw new IllegalArgumentException("Das Passwort Feld darf nicht leer sein.");
         }
         return benutzer.getPasswort().equals(password);
     }
