@@ -2,6 +2,8 @@ package ui.navigation;
 
 import entities.Benutzer;
 import entities.Mitarbeiter;
+import exceptions.user.BenutzerExistiertNichtException;
+import exceptions.user.EmailBereitsVergebenException;
 import logic.Eshop;
 
 import java.util.Scanner;
@@ -26,19 +28,25 @@ public class AdminDialogManager {
         System.out.println("Erstellen Sie ein Mitarbeiter-Konto!");
         System.out.println("----------------");
 
-        System.out.print("E-Mail: ");
-        String email = scanner.nextLine().trim().toLowerCase();
-
+        String email = "";
         String emailMuster = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$";
+        boolean emailGueltig = false;
 
-        while(!email.matches(emailMuster) || eshop.getBenutzerVerwaltung().benutzerCheck(email) != null) {
-            if (!email.matches(emailMuster)) {
-                System.out.println("Fehler: Ungueltiges E-Mail-Format! (Erlaubt ist nur: name@domain.com)");
-            } else {
-                System.out.println("Fehler: Benutzer existiert bereits!");
-            }
+        while (!emailGueltig) {
             System.out.print("E-Mail: ");
             email = scanner.nextLine().trim().toLowerCase();
+
+            if (!email.matches(emailMuster)) {
+                System.out.println("Fehler: Ungueltiges E-Mail-Format! (Erlaubt ist nur: name@domain.com)");
+                continue;
+            }
+
+            try {
+                eshop.getBenutzerVerwaltung().benutzerCheck(email);
+                System.out.println("Fehler: Benutzer existiert bereits!");
+            } catch (BenutzerExistiertNichtException e) {
+                emailGueltig = true;
+            }
         }
 
         System.out.print("Password: ");
@@ -50,14 +58,21 @@ public class AdminDialogManager {
         System.out.print("Vorname: ");
         String vorname = scanner.nextLine().trim();
 
-        eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(email, password, nachname, vorname);
+        try {
+            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(email, password, nachname, vorname);
 
-        System.out.println("----------------");
-        System.out.println("Neuen Mitarbeiter erfolgreich erstellt!");
-        System.out.println("----------------");
+            System.out.println("----------------");
+            System.out.println("Neuen Mitarbeiter erfolgreich erstellt!");
+            System.out.println("----------------");
 
-        Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
-        session.login(benutzer);
+            Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+            session.login(benutzer);
+
+        } catch (EmailBereitsVergebenException e) {
+            System.out.println("Fehler: " + e.getMessage());
+        } catch (BenutzerExistiertNichtException e) {
+            System.out.println("Systemfehler beim automatischen Login.");
+        }
     }
 
     public void produktErstellen() {

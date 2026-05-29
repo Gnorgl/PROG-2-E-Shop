@@ -1,6 +1,8 @@
 package logic.verwaltung;
 
 import entities.Mitarbeiter;
+import exceptions.user.EmailBereitsVergebenException;
+import exceptions.user.MitarbeiterNichtGefundenException;
 import logic.moduls.IMV;
 import logic.moduls.IUC;
 import persistence.user.MitarbeiterListe;
@@ -20,16 +22,20 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     }
 
     @Override
-    public Mitarbeiter getMitarbeiter(String email) {
-        return this.mitarbeiterListe.getMitarbeiter().get(email);
+    public Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException {
+        Mitarbeiter mitarbeiter = this.mitarbeiterListe.getMitarbeiter().get(email);
+        if (mitarbeiter == null) {
+            throw new MitarbeiterNichtGefundenException(email);
+        }
+        return mitarbeiter;
     }
 
     //Methode um einen neuen Mitarbeiter zu erstellen. Gibt einen Boolean Wert wieder.
 
     @Override
-    public boolean createNewMitarbeiter(String email, String passwort, String nachname,String vorname) {
+    public boolean createNewMitarbeiter(String email, String passwort, String nachname,String vorname) throws EmailBereitsVergebenException {
         if (this.mitarbeiterListe.getMitarbeiter().containsKey(email)) {
-            return false;
+            throw new EmailBereitsVergebenException(email);
         } else {
             String nummer = generateBenutzerNummer();
             this.mitarbeiterListe.getMitarbeiter().put(email, new Mitarbeiter(nummer, email, passwort, nachname, vorname));

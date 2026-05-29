@@ -1,6 +1,8 @@
 package logic.verwaltung;
 
 import entities.Kunde;
+import exceptions.user.EmailBereitsVergebenException;
+import exceptions.user.KundeNichtGefundenException;
 import logic.moduls.IKV;
 import logic.moduls.IUC;
 import persistence.user.KundenListe;
@@ -20,16 +22,20 @@ public class KundenVerwaltung implements IKV, IUC {
     }
 
     @Override
-    public Kunde getKunde(String email) {
-        return this.kundenListe.getKunden().get(email);
+    public Kunde getKunde(String email) throws KundeNichtGefundenException {
+        Kunde kunde = this.kundenListe.getKunden().get(email);
+        if (kunde == null) {
+            throw new KundeNichtGefundenException(email);
+        }
+        return kunde;
     }
 
     //Methode um einen neuen Kunden zu erstellen. Gibt einen Boolean Wert wieder.
 
     @Override
-    public boolean createNewKunden(String email, String passwort, String nachname, String vorname, String adresse) {
+    public boolean createNewKunden(String email, String passwort, String nachname, String vorname, String adresse) throws EmailBereitsVergebenException {
         if (this.kundenListe.getKunden().containsKey(email)) {
-            return false;
+            throw new EmailBereitsVergebenException(email);
         } else {
             String nummer = generateBenutzerNummer();
             this.kundenListe.getKunden().put(email, new Kunde(nummer, email, passwort, nachname, vorname, adresse));

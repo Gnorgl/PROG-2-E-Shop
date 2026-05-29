@@ -1,6 +1,9 @@
 package logic.verwaltung;
 
 import entities.Benutzer;
+import exceptions.user.BenutzerExistiertNichtException;
+import exceptions.user.KundeNichtGefundenException;
+import exceptions.user.MitarbeiterNichtGefundenException;
 import logic.moduls.IBV;
 
 public class BenutzerVerwaltung implements IBV {
@@ -23,12 +26,16 @@ public class BenutzerVerwaltung implements IBV {
     //Gibt ein Benutzer Objekt zurück.
 
     @Override
-    public Benutzer benutzerCheck(String email) {
-        Benutzer kunde = kundenVerwaltung.getKunde(email);
-        if (kunde != null) {
-            return kunde;
+    public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
+        try {
+            return kundenVerwaltung.getKunde(email);
+        } catch (KundeNichtGefundenException e) {
+            try {
+                return mitarbeiterVerwaltung.getMitarbeiter(email);
+            } catch (MitarbeiterNichtGefundenException ex) {
+                throw new BenutzerExistiertNichtException(email);
+            }
         }
-        return mitarbeiterVerwaltung.getMitarbeiter(email);
     }
 
     //Methode um zu überprüfen, ob ein eingegebenes Password mit dem Password des aktuellen Benutzers übereinstimmt.

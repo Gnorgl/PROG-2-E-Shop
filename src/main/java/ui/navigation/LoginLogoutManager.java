@@ -1,6 +1,7 @@
 package ui.navigation;
 
 import entities.Benutzer;
+import exceptions.user.BenutzerExistiertNichtException;
 import logic.Eshop;
 
 import java.util.Scanner;
@@ -19,34 +20,37 @@ public class LoginLogoutManager {
     public void login() {
         System.out.println("------Login------");
         System.out.print("E-Mail: ");
-
         String email = scanner.nextLine().trim().toLowerCase();
 
-        Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
-        //Technisch gesehen hier ein Loop, falls man sich verschreibt.
-        //Aber sonst muss es mehrere Eingaben geben damit man zum Anfang zurückkommt.
-        //Dies wird implementiert, wenn wir Buttons im GUI benutzen.
-        if (benutzer != null) {
+        try {
+            // Wenn der Benutzer nicht existiert
+            Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+
             System.out.print("Passwort: ");
-            String passwort = scanner.nextLine(); //Darf nicht empty sein!
+            String passwort = scanner.nextLine();
+
+            //Mit Loop gegebenenfalls damit man neu eingeben kann → GUI
 
             if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
                 session.login(benutzer);
+
+                System.out.format("Willkommen im Eshop %s (%s)\n",
+                        session.getBenutzer().getVorname(),
+                        session.istBenutzerEinMitarbeiter() ? "Mitarbeiter" : "Kunde");
             } else {
                 System.out.println("----------------");
                 System.out.println("Falsches Passwort!");
                 System.out.println("----------------");
             }
-        } else {
+
+        } catch (BenutzerExistiertNichtException e) {
             System.out.println("----------------");
-            System.out.println("Benutzer nicht gefunden!");
+            System.out.println("Fehler: " + e.getMessage());
             System.out.println("----------------");
-            return;
-            //Exception was bei NullPointerException passiert
+        } catch (IllegalArgumentException e) {
+            // Ungültiges Password hier dann
+            System.out.println("Fehler bei der Eingabe: " + e.getMessage());
         }
-        System.out.format("Willkommen im Eshop %s (%s)\n",
-                session.getBenutzer().getVorname(),
-                session.istBenutzerEinMitarbeiter() ? "Mitarbeiter" : "Kunde");
     }
 
     public void logout() {
