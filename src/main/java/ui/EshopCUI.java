@@ -1,6 +1,7 @@
 package ui;
 
 import entities.*;
+import exceptions.user.EmailBereitsVergebenException;
 import ui.navigation.*;
 import logic.Eshop;
 
@@ -157,8 +158,17 @@ public class EshopCUI {
     public static void main(String[] args) {
         Eshop eshop = new Eshop();
         EshopCUI eShopCUI = new EshopCUI(eshop);
-        //Erstellung von Admin-Mitarbeiter
-        eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter("admin@email.com", "123", "Modus", "Admin");
+
+        try {
+            // Erstellung von Admin-Mitarbeiter
+            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung()
+                    .createNewMitarbeiter("admin@email.com", "123", "Modus", "Admin");
+            System.out.println("Standard-Admin erfolgreich angelegt.");
+
+        } catch (EmailBereitsVergebenException e) {
+            // Nicht schlimm: Der Admin existiert offenbar schon im System
+            System.out.println("Hinweis: " + e.getMessage());
+        }
 
         eShopCUI.start();
     }
