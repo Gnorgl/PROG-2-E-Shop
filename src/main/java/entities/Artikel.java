@@ -39,6 +39,10 @@ public class Artikel {
         this.preis = preis;
     }
 
+    public boolean istMengeGueltig(int menge) {
+        return menge > 0;
+    }
+
     @Override
     public String toString() {
     return "Artikelnummer: " + artikelNummer + "Bezeichnung: "

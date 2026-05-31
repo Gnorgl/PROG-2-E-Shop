@@ -1,7 +1,9 @@
 package entities;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Ereignis {
+    private LocalDateTime zeitstempel;
     private int datum; //Jahrestag
     private Artikel artikel;
     private int anzahl;
@@ -9,10 +11,40 @@ public class Ereignis {
     private String typ;
 
     public Ereignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) {
+        this.zeitstempel = LocalDateTime.now();
         this.datum = LocalDate.now().getDayOfYear();
         this.artikel = artikel;
         this.anzahl = anzahl;
         this.benutzer = benutzer;
         this.typ = typ;
+    }
+
+    public LocalDateTime getzeitstempel() {
+        return zeitstempel;
+    }
+
+    public int getdatum() {
+        return datum;
+    }
+
+    public Artikel getArtikel() {
+        return artikel;
+    }
+
+    public int getanzahl() {
+        return anzahl;
+    }
+
+    public Benutzer getBenutzer() {
+        return benutzer;
+    }
+
+    public String getTyp() {
+        return typ;
+    }
+
+    @Override
+    public String toString() {
+        return zeitstempel + " | " + typ + " | " + artikel.getBezeichnung() + " | " + anzahl;
     }
 }

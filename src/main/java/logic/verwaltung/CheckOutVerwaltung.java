@@ -5,6 +5,7 @@ import java.util.*;
 import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
+import exceptions.artikel.ArtikelNichtGefunden;
 import logic.moduls.ICV;
 import persistence.shop.WarenkorbListe;
 
@@ -33,7 +34,7 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, ArtikelVerwaltung artikelVerwaltung) {
+    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, ArtikelVerwaltung artikelVerwaltung) throws ArtikelNichtGefunden {
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
 
         if (warenkorbItems.isEmpty()) {

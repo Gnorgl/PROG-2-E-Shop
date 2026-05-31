@@ -5,6 +5,9 @@ import entities.Benutzer;
 import entities.Ereignis;
 import persistence.shop.EreignisListe;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class EreignisVerwaltung {
     private EreignisListe ereignisListe = new EreignisListe();
 
@@ -15,5 +18,12 @@ public class EreignisVerwaltung {
         Ereignis neuesEreignis = new Ereignis(artikel, anzahl, benutzer, typ);
         ereignisListe.hinzuefuegen(neuesEreignis);
         System.out.println("Ereignis geloggt: " +  typ + " für Artikel" + artikel.getBezeichnung() + " Anzahl: " + anzahl);
+    }
+
+    public List<Ereignis> getEreignisseFuerArtikel(int artikelNr) {
+        return ereignisListe.getAlleEreignisse()
+                .stream()
+                .filter(e -> e.getArtikel().getArtikelNummer() == artikelNr)
+                .collect(Collectors.toList());
     }
 }
