@@ -1,9 +1,6 @@
 package logic.verwaltung;
 
 import entities.Benutzer;
-import exceptions.user.BenutzerExistiertNichtException;
-import exceptions.user.KundeNichtGefundenException;
-import exceptions.user.MitarbeiterNichtGefundenException;
 import logic.moduls.IBV;
 
 public class BenutzerVerwaltung implements IBV {
@@ -23,18 +20,24 @@ public class BenutzerVerwaltung implements IBV {
     }
 
     //Methode um zu überprüfen, ob ein Benutzer existiert. Überprüfung anhand der eingegebenen E-Mail.
-    //Gibt ein Benutzer Objekt zurück.
+    //Gibt ein Benutzer Objekt zurück oder null wenn nicht gefunden.
 
     @Override
-    public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
+    public Benutzer benutzerCheck(String email) {
         try {
-            return kundenVerwaltung.getKunde(email);
-        } catch (KundeNichtGefundenException e) {
-            try {
-                return mitarbeiterVerwaltung.getMitarbeiter(email);
-            } catch (MitarbeiterNichtGefundenException ex) {
-                throw new BenutzerExistiertNichtException(email);
+            Benutzer kunde = kundenVerwaltung.getKunde(email);
+            if (kunde != null) {
+                return kunde;
             }
+        } catch (Exception e) {
+            // Kunde nicht gefunden, weitersuchen in Mitarbeiter
+        }
+
+        try {
+            return mitarbeiterVerwaltung.getMitarbeiter(email);
+        } catch (Exception e) {
+            // Mitarbeiter auch nicht gefunden
+            return null;
         }
     }
 
@@ -43,12 +46,8 @@ public class BenutzerVerwaltung implements IBV {
 
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
-        if (benutzer == null) {
-            throw new IllegalArgumentException("Der Benutzer existiert nicht.");
-        } else if (password == null) {
-            throw new IllegalArgumentException("Das Passwort existiert nicht.");
-        } else if (password.isEmpty()) {
-            throw new IllegalArgumentException("Das Passwort Feld darf nicht leer sein.");
+        if (benutzer == null || password == null) {
+            return false;
         }
         return benutzer.getPasswort().equals(password);
     }

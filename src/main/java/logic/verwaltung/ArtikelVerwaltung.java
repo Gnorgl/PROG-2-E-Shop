@@ -32,7 +32,9 @@ public class ArtikelVerwaltung implements IAV {
             throw new ArtikelExistiertBereits(name);
         }
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
+        // Artikel zur Artikelliste hinzufügen
         artikelListe.getArtikelImLager().add(neuerArtikel);
+        // Logge das Ereignis der Einlagerung und übergebe den aktuellen Mitarbeiter
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
         ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
         return true;
@@ -41,9 +43,11 @@ public class ArtikelVerwaltung implements IAV {
 
     @Override
     public void loeschen(int nr) {
+        //durchlaufe die Artikelliste mit einem Iterator, um den Artikel mit der gegebenen Nummer zu finden und zu entfernen
         Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
         while (it.hasNext()) {
             Artikel artikel = it.next();
+            //suchen nach dem Artikel mit der gegebenen Nummer
             if (artikel.getArtikelNummer() == nr) {
                 it.remove();
                 break;
@@ -63,17 +67,24 @@ public class ArtikelVerwaltung implements IAV {
 
         Massengutartikel neuerArtikel = new Massengutartikel(nr, bezeichnung, bestand, preis, packungsGroesse);
         artikelListe.getArtikelImLager().add(neuerArtikel);
-
-        Benutzer aktuellerBenutzer = getCurrentBenutzer();
+        Benutzer aktuellerBenutzer = getCurrentMitarbeiter();
         ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerBenutzer, "EINLAGERUNG");
         return true;
     }
 
     @Override
-    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden {
+    public void bestandErhoehen(int nr, int anzahl) {
         Artikel a = findeArtikel(nr);
+        // wenn der Artikel gefunden wird
         if (a != null) {
+            // Validierung: prüfe Menge über Entity-Methode
+            if (!a.istMengeGueltig(anzahl)) {
+                throw new IllegalArgumentException("Ungültige Menge! " + (a instanceof Massengutartikel ?
+                        "Muss Vielfaches von " + ((Massengutartikel) a).getPackungsGroesse() + " sein" :
+                        "Menge muss > 0 sein"));
+            }
 
+            // alterbestand + anzahl
             a.setBestand(a.getBestand() + anzahl);
             Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
             ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "EINLAGERUNG_M");
@@ -81,9 +92,17 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     //Reduziert Bestand extra beim Checkout
-    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden {
+    public void bestandReduzieren(int nr, int anzahl) {
         Artikel a = findeArtikel(nr);
+        // Prüfen ob genügend Bestand vorhanden ist
         if (a != null && a.getBestand() >= anzahl) {
+            // Validierung: prüfe Menge
+            if (!a.istMengeGueltig(anzahl)) {
+                throw new IllegalArgumentException("Ungültige Menge! " + (a instanceof Massengutartikel ?
+                        "Muss Vielfaches von " + ((Massengutartikel) a).getPackungsGroesse() + " sein" :
+                        "Menge muss > 0 sein"));
+            }
+
             a.setBestand(a.getBestand() - anzahl);
             Mitarbeiter akutellerMitarbeiter = getCurrentMitarbeiter();
             ereignisVerwaltung.logEreignis(a, anzahl, akutellerMitarbeiter, "AUSLAGERUNG_M");
@@ -92,7 +111,7 @@ public class ArtikelVerwaltung implements IAV {
 
     public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) {
         Artikel artikel = findeArtikel(artikelNr);
-        if (artikel != null) {
+        if (artikel == null) {
             return new HashMap<>();
         }
         Map<LocalDate, Integer> historie = new LinkedHashMap<>();
@@ -100,7 +119,7 @@ public class ArtikelVerwaltung implements IAV {
         LocalDate heute =  LocalDate.now();
 
         LocalDateTime vor30Tagen = LocalDateTime.now().minusDays(30);
-        List<Ereignis> relevantEreignis = ereignisVerwaltung
+        List<Ereignis> relevantEreignisse = ereignisVerwaltung
                 .getEreignisseFuerArtikel(artikelNr)
                 .stream()
                 .filter(e -> e.getZeitstempel().isAfter(vor30Tagen))
@@ -111,7 +130,7 @@ public class ArtikelVerwaltung implements IAV {
         for (int tag = 0; tag < 30; tag++) {
             LocalDate datum = heute.minusDays(tag);
 
-            List<Ereignis> tagesEreignisse = relevantEreignis
+            List<Ereignis> tagesEreignisse = relevantEreignisse
                     .stream()
                     .filter(e -> e.getZeitstempel().toLocalDate().equals(datum))
                     .collect(Collectors.toList());
@@ -154,20 +173,20 @@ public class ArtikelVerwaltung implements IAV {
 
     //Implementierung um den eingeloggten Mitarbeiter zu erhalten
     private Mitarbeiter getCurrentMitarbeiter() {
-        return null;
+        return null; // TODO: SessionManager/ Eshop-Integration
     }
 
     public ArtikelListe getArtikelListe() {
         return this.artikelListe;
     }
 
-    public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
+    public Artikel findeArtikel(int nr) {
         for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
                 return a;
             }
         }
-        throw new ArtikelNichtGefunden(nr); // Nicht gefunden
+        return null; // Nicht gefunden
     }
 }
 

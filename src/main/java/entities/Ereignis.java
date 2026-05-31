@@ -19,11 +19,11 @@ public class Ereignis {
         this.typ = typ;
     }
 
-    public LocalDateTime getzeitstempel() {
+    public LocalDateTime getZeitstempel() {
         return zeitstempel;
     }
 
-    public int getdatum() {
+    public int getDatum() {
         return datum;
     }
 
@@ -31,7 +31,7 @@ public class Ereignis {
         return artikel;
     }
 
-    public int getanzahl() {
+    public int getAnzahl() {
         return anzahl;
     }
 

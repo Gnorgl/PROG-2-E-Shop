@@ -15,6 +15,7 @@ public class EreignisVerwaltung {
     }
 
     public void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) {
+        // Erstellen eines neuen Ereignisses mit den übergebenen Informationen
         Ereignis neuesEreignis = new Ereignis(artikel, anzahl, benutzer, typ);
         ereignisListe.hinzuefuegen(neuesEreignis);
         System.out.println("Ereignis geloggt: " +  typ + " für Artikel" + artikel.getBezeichnung() + " Anzahl: " + anzahl);

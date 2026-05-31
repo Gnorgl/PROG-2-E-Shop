@@ -24,6 +24,7 @@ public class CheckOutVerwaltung implements ICV {
     @Override
     public double berechneNettoSumme(WarenkorbListe warenkorbListe) {
         double netto = 0;
+        //durchlaufe alle Artikel im Warenkorb und berechne die Summe (Preis * Menge)
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
 
         for (Artikel artikel : warenkorbItems.keySet()) {
