@@ -1,5 +1,6 @@
 package ui.navigation;
 
+import exceptions.artikel.ArtikelNichtGefunden;
 import logic.Eshop;
 
 import java.util.Scanner;
@@ -205,10 +206,13 @@ public class ShoppingServiceManager {
         }
 
         Kunde kunde = (Kunde) session.getBenutzer();
-
+        Rechnung rechnung = null;
         // Übergeben die ArtikelVerwaltung damit Bestand reduziert werden kann
-        Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorb, eshop.getArtikelVerwaltung());
-
+        try {
+            rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorb, eshop.getArtikelVerwaltung());
+        } catch (ArtikelNichtGefunden e) {
+            System.out.println("Artikel nicht gefunden!");
+        }
         if (rechnung != null) {
             eshop.getBestellVerwaltungV().rechnungAnzeigen(rechnung);
             System.out.println("Bestellung erfolgreich abgeschlossen!");

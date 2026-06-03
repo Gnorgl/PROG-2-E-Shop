@@ -1,6 +1,7 @@
 package logic.verwaltung;
 
 import entities.Benutzer;
+import exceptions.user.BenutzerExistiertNichtException;
 import logic.moduls.IBV;
 
 public class BenutzerVerwaltung implements IBV {
@@ -23,7 +24,7 @@ public class BenutzerVerwaltung implements IBV {
     //Gibt ein Benutzer Objekt zurück oder null wenn nicht gefunden.
 
     @Override
-    public Benutzer benutzerCheck(String email) {
+    public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
         try {
             Benutzer kunde = kundenVerwaltung.getKunde(email);
             if (kunde != null) {
