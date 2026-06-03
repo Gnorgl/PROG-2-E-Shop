@@ -3,6 +3,8 @@ package logic.verwaltung;
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import logic.moduls.IBV;
+import exceptions.user.KundeNichtGefundenException;
+import exceptions.user.MitarbeiterNichtGefundenException;
 
 public class BenutzerVerwaltung implements IBV {
     private final KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
@@ -21,24 +23,18 @@ public class BenutzerVerwaltung implements IBV {
     }
 
     //Methode um zu überprüfen, ob ein Benutzer existiert. Überprüfung anhand der eingegebenen E-Mail.
-    //Gibt ein Benutzer Objekt zurück oder null wenn nicht gefunden.
+    //Gibt ein Benutzer Objekt zurück.
 
     @Override
     public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
         try {
-            Benutzer kunde = kundenVerwaltung.getKunde(email);
-            if (kunde != null) {
-                return kunde;
+            return kundenVerwaltung.getKunde(email);
+        } catch (KundeNichtGefundenException e) {
+            try {
+                return mitarbeiterVerwaltung.getMitarbeiter(email);
+            } catch (MitarbeiterNichtGefundenException ex) {
+                throw new BenutzerExistiertNichtException(email);
             }
-        } catch (Exception e) {
-            // Kunde nicht gefunden, weitersuchen in Mitarbeiter
-        }
-
-        try {
-            return mitarbeiterVerwaltung.getMitarbeiter(email);
-        } catch (Exception e) {
-            // Mitarbeiter auch nicht gefunden
-            return null;
         }
     }
 
@@ -47,8 +43,12 @@ public class BenutzerVerwaltung implements IBV {
 
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
-        if (benutzer == null || password == null) {
-            return false;
+        if (benutzer == null) {
+            throw new IllegalArgumentException("Der Benutzer existiert nicht.");
+        } else if (password == null) {
+            throw new IllegalArgumentException("Das Passwort existiert nicht.");
+        } else if (password.isEmpty()) {
+            throw new IllegalArgumentException("Das Passwort Feld darf nicht leer sein.");
         }
         return benutzer.getPasswort().equals(password);
     }
