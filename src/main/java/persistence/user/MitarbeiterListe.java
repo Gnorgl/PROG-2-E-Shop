@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MitarbeiterListe {
-    private final Map<String, Mitarbeiter> mitarbeiter;
+    private Map<String, Mitarbeiter> mitarbeiter;
 
     public MitarbeiterListe() {
         this.mitarbeiter = new HashMap<>();
@@ -14,6 +14,10 @@ public class MitarbeiterListe {
 
     public Map<String, Mitarbeiter> getMitarbeiter() {
         return mitarbeiter;
+    }
+
+    public void setMitarbeiter(Map<String, Mitarbeiter> mitarbeiter) {
+        this.mitarbeiter = mitarbeiter;
     }
 
 }

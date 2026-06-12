@@ -7,11 +7,11 @@ import java.util.HashMap;
 import logic.verwaltung.ArtikelVerwaltung;
 
 
-
-
 public class WarenkorbListe {
-
+    //Muss als String oder ähnliches gespeichert werden, sonst funktioniert es nicht. Setter Methoden fehlen! Json funktioniert nicht.
     private HashMap<Artikel, Integer> warenkorb = new HashMap<>();
+
+    public WarenkorbListe() {}
 
     //Speichert einen Artikel mit seiner Menge
     public void speichern(Artikel artikel, int menge) {

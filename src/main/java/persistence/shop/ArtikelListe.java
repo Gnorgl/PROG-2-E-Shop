@@ -15,6 +15,9 @@ public class ArtikelListe {
         return artikelImLager;
     }
 
+    public void setArtikelImLager(ArrayList<Artikel> artikelImLager) {
+        this.artikelImLager = artikelImLager;
+    }
 }
 
 //Gesamter Bestand aller existierenden Produkte sind hier aufgelistet

@@ -3,6 +3,10 @@ package entities;
 public class Massengutartikel extends Artikel {
     private int packungsGroesse;
 
+    public Massengutartikel() {
+        super();
+    }
+
     public Massengutartikel(int artikelnummer, String bezeichnung, int bestand, double preis, int packungsGroesse) {
         super(artikelnummer, bezeichnung, bestand, preis);
         this.packungsGroesse = packungsGroesse;

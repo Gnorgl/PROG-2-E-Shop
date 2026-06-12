@@ -1,5 +1,6 @@
 package logic.verwaltung;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Kunde;
 import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.KundeNichtGefundenException;
@@ -7,7 +8,14 @@ import logic.moduls.IKV;
 import logic.moduls.IUC;
 import persistence.user.KundenListe;
 
+import java.io.File;
+import java.io.IOException;
+
 public class KundenVerwaltung implements IKV, IUC {
+
+    private final File datei = new File("kunden.json");
+    private final ObjectMapper mapper = new ObjectMapper();
+
     private final KundenListe kundenListe = new KundenListe();
     //id counter
     private long idCounter = 0;
@@ -52,4 +60,10 @@ public class KundenVerwaltung implements IKV, IUC {
     }
 
     //Kunden ID-Generator andere kennzeichnung als mitarbeiter ID, etwa KD-234324 und Mitarbeiter MB-234324, random generated lange nummer.
+
+    //Persistenz Methoden
+
+
+
+
 }

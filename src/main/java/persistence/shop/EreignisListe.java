@@ -16,4 +16,8 @@ public class EreignisListe {
     public List<Ereignis> getAlleEreignisse() {
         return alleEreignisse;
     }
+
+    public void setAlleEreignisse(List<Ereignis> alleEreignisse) {
+        this.alleEreignisse = alleEreignisse;
+    }
 }

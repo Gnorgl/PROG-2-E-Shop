@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KundenListe {
-    private final Map<String, Kunde> kunden;
+    private Map<String, Kunde> kunden;
 
     public KundenListe() {
         this.kunden = new HashMap<>();
@@ -15,8 +15,9 @@ public class KundenListe {
     public Map<String, Kunde> getKunden() {
         return kunden;
     }
-
-
+    public void setKunden(Map<String, Kunde> kunden) {
+        this.kunden = kunden;
+    }
 }
 
 //Wichtig!!! Getter Methode, damit BenutzerVerwaltung auf die Elemente zugreifen kann für login und

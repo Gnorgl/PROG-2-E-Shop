@@ -26,6 +26,9 @@ public class OrderListe {
     public List<Rechnung> getAlleRechnungen() {
         return alleRechnungen;
     }
+    public void setAlleRechnungen(List<Rechnung> alleRechnungen) {
+        this.alleRechnungen = alleRechnungen;
+    }
 
     /**
      * Sucht eine Rechnung anhand ihrer Rechnungsnummer.

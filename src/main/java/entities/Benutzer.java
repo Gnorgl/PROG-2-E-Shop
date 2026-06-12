@@ -1,5 +1,18 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Kunde.class, name = "kunde"),
+        @JsonSubTypes.Type(value = Mitarbeiter.class, name = "mitarbeiter")
+})
+
 public abstract class Benutzer {
     protected String nummer;
     protected String email;
@@ -7,6 +20,9 @@ public abstract class Benutzer {
     protected String nachname;
     protected String vorname;
     //....
+
+    public Benutzer() {}
+
     protected Benutzer (String nummer, String email, String passwort, String nachname,String vorname){
         this.nummer = nummer;
         this.email = email;
