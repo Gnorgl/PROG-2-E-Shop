@@ -2,13 +2,20 @@ package logic.moduls;
 
 import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
 
 public interface IAV {
 
 
     boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits;
 
-    void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden;
+    void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, MengeUngueltigException;
+
+    void bestandReduzieren(int nr, int anzahl)
+            throws ArtikelNichtGefunden, BestandNichtAusreichendException, MengeUngueltigException;
+
 
     void loeschen(int nr);
+
 }

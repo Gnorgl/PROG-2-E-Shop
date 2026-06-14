@@ -1,7 +1,9 @@
 package exceptions.artikel;
 
-public class ArtikelExistiertBereits extends RuntimeException {
+import exceptions.VerwaltungsException;
+
+public class ArtikelExistiertBereits extends VerwaltungsException {
     public ArtikelExistiertBereits(String artikelBezeichnung) {
-        super("Dieser Artikel: " + artikelBezeichnung + "existiert bereits!");
+        super("Dieser Artikel: " + artikelBezeichnung + " existiert bereits!");
     }
 }

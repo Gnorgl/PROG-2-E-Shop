@@ -35,7 +35,7 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, ArtikelVerwaltung artikelVerwaltung) throws ArtikelNichtGefunden {
+    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, logic.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden {
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
 
         if (warenkorbItems.isEmpty()) {
@@ -55,9 +55,22 @@ public class CheckOutVerwaltung implements ICV {
                 gekaufteArtikel.add(artikel);
             }
 
-            // Artikelbestand im Lager nach dem Kauf reduzieren!!
-            artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
-            ereignisVerwaltung.logEreignis(artikel, menge, kunde, "AUSLAGERUNG_KAUF");
+            // Artikelbestand im Lager nach dem Kauf reduzieren
+            try {
+                artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
+            } catch (ArtikelNichtGefunden e) {
+                // sollte nicht passieren, da Artikel aus Warenkorb stammt
+                throw e;
+            } catch (Exception e) {
+                // andere Validierungsfehler (Bestand, Menge) werden hier als Laufzeitfehler weitergegeben
+                throw new RuntimeException("Fehler beim Reduzieren des Bestands für Artikel " + artikel.getArtikelNummer() + ": " + e.getMessage(), e);
+            }
+
+            try {
+                ereignisVerwaltung.logEreignis(artikel, menge, kunde, "AUSLAGERUNG_KAUF");
+            } catch (exceptions.artikel.ArtikelNullException e) {
+                System.err.println("Fehler beim Loggen des Ereignisses: " + e.getMessage());
+            }
         }
 
         // MwSt und Brutto berechnen

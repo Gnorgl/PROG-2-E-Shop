@@ -5,11 +5,12 @@ import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import persistence.shop.WarenkorbListe;
 import logic.verwaltung.ArtikelVerwaltung;
+import logic.moduls.IAV;
 
 public interface ICV {
 
     // Die aktualisierte checkOut-Methode (mit ArtikelVerwaltung für die Bestandsänderung)
-    Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, ArtikelVerwaltung artikelVerwaltung) throws ArtikelNichtGefunden;
+    Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden;
 
     // Die neue Methode zur Berechnung des Warenkorb-Werts
     double berechneNettoSumme(WarenkorbListe warenkorbListe);

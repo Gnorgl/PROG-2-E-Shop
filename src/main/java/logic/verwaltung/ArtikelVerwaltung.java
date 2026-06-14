@@ -1,7 +1,10 @@
 package logic.verwaltung;
 import entities.*;
+import exceptions.artikel.AnzahlUngueltigException;
 import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.MengeUngueltigException;
+import exceptions.artikel.BestandNichtAusreichendException;
 import logic.moduls.IAV;
 import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.ArtikelListe;
@@ -16,38 +19,47 @@ import java.util.Comparator;
 public class ArtikelVerwaltung implements IAV {
     private ArtikelListe artikelListe = new ArtikelListe();
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
+    private Mitarbeiter currentMitarbeiter;
 
-
-    public ArtikelVerwaltung () {
-    this.artikelListe = new ArtikelListe();
+    public ArtikelVerwaltung() {
+        this.artikelListe = new ArtikelListe();
     }
 
     public void setEreignisVerwaltung(EreignisVerwaltung ereignisVerwaltung) {
         this.ereignisVerwaltung = ereignisVerwaltung;
     }
 
+    public void setCurrentMitarbeiter(Mitarbeiter mitarbeiter) {
+        this.currentMitarbeiter = mitarbeiter;
+    }
+
     @Override
     public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
-        if (findeArtikel(nr) != null) {
+        try {
+            findeArtikel(nr);
             throw new ArtikelExistiertBereits(name);
+        } catch (ArtikelNichtGefunden e) {
+            // Artikel existiert nicht, daher kann er angelegt werden
         }
+
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
-        // Artikel zur Artikelliste hinzufügen
         artikelListe.getArtikelImLager().add(neuerArtikel);
-        // Logge das Ereignis der Einlagerung und übergebe den aktuellen Mitarbeiter
+
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
-        ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
+        try {
+            ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
+        } catch (Exception ex) {
+            // Logging-Fehler sollten nicht den Geschäftsprozess blockieren
+            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
+        }
         return true;
     }
 
-
     @Override
     public void loeschen(int nr) {
-        //durchlaufe die Artikelliste mit einem Iterator, um den Artikel mit der gegebenen Nummer zu finden und zu entfernen
         Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
         while (it.hasNext()) {
             Artikel artikel = it.next();
-            //suchen nach dem Artikel mit der gegebenen Nummer
             if (artikel.getArtikelNummer() == nr) {
                 it.remove();
                 break;
@@ -56,137 +68,105 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     public boolean legeMassengutartikelAn(int nr, String bezeichnung, int bestand, double preis, int packungsGroesse)
-            throws ArtikelExistiertBereits {
-        if (findeArtikel(nr) != null) {
+            throws ArtikelExistiertBereits, MengeUngueltigException {
+        try {
+            findeArtikel(nr);
             throw new ArtikelExistiertBereits(bezeichnung);
+        } catch (ArtikelNichtGefunden e) {
+            // nicht vorhanden
         }
 
+        if (packungsGroesse <= 0) {
+            throw new IllegalArgumentException("Packungsgröße muss > 0 sein");
+        }
         if (bestand % packungsGroesse != 0) {
-            throw new IllegalArgumentException("Bestand muss Vielfaches der Packungsgröße sein!");
+            throw new MengeUngueltigException(String.valueOf(packungsGroesse));
         }
 
         Massengutartikel neuerArtikel = new Massengutartikel(nr, bezeichnung, bestand, preis, packungsGroesse);
         artikelListe.getArtikelImLager().add(neuerArtikel);
-        Benutzer aktuellerBenutzer = getCurrentMitarbeiter();
-        ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerBenutzer, "EINLAGERUNG");
+
+        Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
+        try {
+            ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
+        } catch (Exception ex) {
+            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
+        }
         return true;
     }
 
     @Override
-    public void bestandErhoehen(int nr, int anzahl) {
+    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, MengeUngueltigException {
         Artikel a = findeArtikel(nr);
-        // wenn der Artikel gefunden wird
-        if (a != null) {
-            // Validierung: prüfe Menge über Entity-Methode
-            if (!a.istMengeGueltig(anzahl)) {
-                throw new IllegalArgumentException("Ungültige Menge! " + (a instanceof Massengutartikel ?
-                        "Muss Vielfaches von " + ((Massengutartikel) a).getPackungsGroesse() + " sein" :
-                        "Menge muss > 0 sein"));
-            }
 
-            // alterbestand + anzahl
-            a.setBestand(a.getBestand() + anzahl);
-            Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
+        if (anzahl <= 0) {
+            throw new AnzahlUngueltigException();
+        }
+
+        if (!a.istMengeGueltig(anzahl)) {
+            if (a instanceof Massengutartikel) {
+                throw new MengeUngueltigException(String.valueOf(((Massengutartikel) a).getPackungsGroesse()));
+            } else {
+                throw new AnzahlUngueltigException();
+            }
+        }
+
+        a.setBestand(a.getBestand() + anzahl);
+        Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
+        try {
             ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "EINLAGERUNG_M");
+        } catch (Exception ex) {
+            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
         }
     }
 
-    //Reduziert Bestand extra beim Checkout
-    public void bestandReduzieren(int nr, int anzahl) {
+    // Reduziert Bestand (z. B. beim Checkout)
+    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, BestandNichtAusreichendException, MengeUngueltigException {
         Artikel a = findeArtikel(nr);
-        // Prüfen ob genügend Bestand vorhanden ist
-        if (a != null && a.getBestand() >= anzahl) {
-            // Validierung: prüfe Menge
-            if (!a.istMengeGueltig(anzahl)) {
-                throw new IllegalArgumentException("Ungültige Menge! " + (a instanceof Massengutartikel ?
-                        "Muss Vielfaches von " + ((Massengutartikel) a).getPackungsGroesse() + " sein" :
-                        "Menge muss > 0 sein"));
-            }
 
-            a.setBestand(a.getBestand() - anzahl);
-            Mitarbeiter akutellerMitarbeiter = getCurrentMitarbeiter();
-            ereignisVerwaltung.logEreignis(a, anzahl, akutellerMitarbeiter, "AUSLAGERUNG_M");
+        if (anzahl <= 0) {
+            throw new AnzahlUngueltigException();
         }
-    }
 
-    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) {
-        Artikel artikel = findeArtikel(artikelNr);
-        if (artikel == null) {
-            return new HashMap<>();
+        if (a.getBestand() < anzahl) {
+            throw new BestandNichtAusreichendException(a.getBestand(), anzahl);
         }
-        Map<LocalDate, Integer> historie = new LinkedHashMap<>();
-        int aktuellerBestand = artikel.getBestand();
-        LocalDate heute =  LocalDate.now();
 
-        LocalDateTime vor30Tagen = LocalDateTime.now().minusDays(30);
-        List<Ereignis> relevantEreignisse = ereignisVerwaltung
-                .getEreignisseFuerArtikel(artikelNr)
-                .stream()
-                .filter(e -> e.getZeitstempel().isAfter(vor30Tagen))
-                .sorted(Comparator.comparing(Ereignis::getZeitstempel).reversed())
-                .collect(Collectors.toList());
-
-        int bestandRekonstuiert = aktuellerBestand;
-        for (int tag = 0; tag < 30; tag++) {
-            LocalDate datum = heute.minusDays(tag);
-
-            List<Ereignis> tagesEreignisse = relevantEreignisse
-                    .stream()
-                    .filter(e -> e.getZeitstempel().toLocalDate().equals(datum))
-                    .collect(Collectors.toList());
-
-            historie.put(datum, bestandRekonstuiert);
-
-            for (Ereignis e : tagesEreignisse) {
-                if (e.getTyp().contains("EINLAGERUNG")) {
-                    bestandRekonstuiert -= e.getAnzahl();
-                } else if (e.getTyp().contains("AUSLAGERUNG")) {
-                    bestandRekonstuiert += e.getAnzahl();
-                }
+        if (!a.istMengeGueltig(anzahl)) {
+            if (a instanceof Massengutartikel) {
+                throw new MengeUngueltigException(String.valueOf(((Massengutartikel) a).getPackungsGroesse()));
+            } else {
+                throw new AnzahlUngueltigException();
             }
         }
-        return historie;
-    }
 
-    public void zeigeBestandsHistorie(int artikelNr) {
-        Artikel artikel = findeArtikel(artikelNr);
-        if (artikel == null) {
-            System.out.println("Artikel nicht gefunden");
-            return;
+        a.setBestand(a.getBestand() - anzahl);
+        Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
+        try {
+            ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "AUSLAGERUNG_M");
+        } catch (Exception ex) {
+            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
         }
-        Map<LocalDate, Integer> historie = getBestandsHistorie(artikelNr);
-        System.out.println("\n==================== BESTANDSHISTORIE ====================");
-        System.out.println("Artikel: " + artikel.getBezeichnung() + " (Nr. " + artikel.getArtikelNummer() + ")");
-        System.out.println("========================================================");
-        System.out.println("Datum          | Bestand am Tagesende");
-        System.out.println("--------");
-
-        historie.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEach(entry -> System.out.printf("%s | %d%n", entry.getKey(), entry.getValue()));
-
-        System.out.println("========================================================\n");
     }
 
 
 
-    //Implementierung um den eingeloggten Mitarbeiter zu erhalten
+    // Implementierung um den eingeloggten Mitarbeiter zu erhalten
     private Mitarbeiter getCurrentMitarbeiter() {
-        return null; // TODO: SessionManager/ Eshop-Integration
+        return this.currentMitarbeiter;
     }
 
     public ArtikelListe getArtikelListe() {
         return this.artikelListe;
     }
 
-    public Artikel findeArtikel(int nr) {
+    public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
         for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
                 return a;
             }
         }
-        return null; // Nicht gefunden
+        throw new ArtikelNichtGefunden(String.valueOf(nr));
     }
 }
 

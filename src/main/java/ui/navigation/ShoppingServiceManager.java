@@ -100,7 +100,7 @@ public class ShoppingServiceManager {
             warenkorb.speichern(artikel, aktueleMenge + menge);
             System.out.println( menge + "x " + artikel.getBezeichnung() + " zum Warenkorb hinzugefügt!");
 
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
         }
     }
@@ -161,7 +161,7 @@ public class ShoppingServiceManager {
             warenkorb.speichern(artikel, neueMenge);
             System.out.println(" Menge geändert!");
 
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
         }
     }
@@ -186,7 +186,7 @@ public class ShoppingServiceManager {
             warenkorb.artikelEntfernen(artikel);
             System.out.println( artikel.getBezeichnung() + " entfernt!");
 
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
         }
     }
