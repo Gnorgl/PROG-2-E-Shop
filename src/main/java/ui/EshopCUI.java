@@ -166,7 +166,7 @@ public class EshopCUI {
             System.out.println("Standard-Admin erfolgreich angelegt.");
 
         } catch (EmailBereitsVergebenException e) {
-            // Nicht schlimm: Der Admin existiert offenbar schon im System
+            //Der Admin existiert offenbar schon im System
             System.out.println("Hinweis: " + e.getMessage());
         }
 

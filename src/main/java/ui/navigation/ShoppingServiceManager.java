@@ -76,7 +76,6 @@ public class ShoppingServiceManager {
 
         try {
             int artikelNr = Integer.parseInt(scanner.nextLine().trim());
-            // Nutzt jetzt die Logik-Klasse zum Finden
             Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
 
             if (artikel == null) {
@@ -123,8 +122,7 @@ public class ShoppingServiceManager {
                     menge, artikel.getBezeichnung(), gesamtpreis, artikel.getPreis());
         }
 
-        // Nutzt jetzt die Logik-Klasse für die Mathematik
-        // RICHTIG: Wir fragen die Logik-Klasse (CheckOutVerwaltung) nach der Berechnung
+
         double summeNetto = eshop.getBestellVerwaltungV().berechneNettoSumme(warenkorb);
         double mwst = summeNetto * 0.19;
         double brutto = summeNetto + mwst;
@@ -185,7 +183,6 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            // Nutzt jetzt die saubere Methode zum Löschen
             warenkorb.artikelEntfernen(artikel);
             System.out.println( artikel.getBezeichnung() + " entfernt!");
 

@@ -33,7 +33,7 @@ public class RegistrationManager {
             email = scanner.nextLine().trim().toLowerCase();
 
             if (!email.matches(emailMuster)) {
-                System.out.println("Fehler: Ungueltiges E-Mail-Format! (Erlaubt ist nur: name@domain.com)");
+                System.out.println("Fehler: Ungültiges E-Mail-Format! (Erlaubt ist nur: name@domain.com)");
                 continue;
             }
 
@@ -42,7 +42,7 @@ public class RegistrationManager {
                 eshop.getBenutzerVerwaltung().benutzerCheck(email);
                 System.out.println("Fehler: Benutzer existiert bereits!");
             } catch (BenutzerExistiertNichtException e) {
-                // Das ist genau das, was wir wollen: E-Mail ist noch frei!
+                //E-Mail ist noch frei!
                 emailGueltig = true;
             }
         }
@@ -60,14 +60,13 @@ public class RegistrationManager {
         String adresse = scanner.nextLine().trim();
 
         try {
-            // Methode liefert void. Klappt es nicht, springt Java zum catch.
             eshop.getBenutzerVerwaltung().getKundenVerwaltung().createNewKunden(email, password, nachname, vorname, adresse);
 
             System.out.println("----------------");
             System.out.println("Neues Kundenkonto erfolgreich erstellt!");
             System.out.println("----------------");
 
-            // Da wir wissen, dass der Benutzer existiert, koennen wir die Exception hier ignorieren
+
             Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
             session.login(benutzer);
 
@@ -75,7 +74,7 @@ public class RegistrationManager {
             System.out.println("Fehler bei der Registrierung: " + e.getMessage());
         } catch (BenutzerExistiertNichtException e) {
             // Dieser Fall ist rein theoretisch, da wir den Benutzer gerade erstellt haben
-            System.out.println("Kritischer Systemfehler.");
+            System.out.println("Systemfehler.");
         }
     }
 

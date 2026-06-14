@@ -21,7 +21,7 @@ public class AdminDialogManager {
 
     public void mitarbeiterKontoErstellen() {
         if (session.getBenutzer() == null || !session.istBenutzerEinMitarbeiter()) {
-            System.out.println("Fehler: Zugriff verweigert. Nur Mitarbeiter duerfen Konten erstellen!");
+            System.out.println("Fehler: Zugriff verweigert. Nur Mitarbeiter dürfen Konten erstellen!");
             return;
         }
         System.out.println("----------------");
@@ -37,7 +37,7 @@ public class AdminDialogManager {
             email = scanner.nextLine().trim().toLowerCase();
 
             if (!email.matches(emailMuster)) {
-                System.out.println("Fehler: Ungueltiges E-Mail-Format! (Erlaubt ist nur: name@domain.com)");
+                System.out.println("Fehler: Ungültiges E-Mail-Format! (Erlaubt ist nur: name@domain.com)");
                 continue;
             }
 
@@ -100,14 +100,14 @@ public class AdminDialogManager {
     }
 
     public void produktLoeschen() {
-        System.out.println("------Produkt loeschen------");
+        System.out.println("------Produkt löschen------");
         try {
             System.out.print("Artikel-Nummer: ");
             int nr = Integer.parseInt(scanner.nextLine().trim());
             eshop.getArtikelVerwaltung().loeschen(nr);
-            System.out.println("------Produkt erfolgreich geloescht------");
+            System.out.println("------Produkt erfolgreich gelöscht------");
         } catch (NumberFormatException e) {
-            System.out.println("Fehler: Ungueltige Artikel-Nummer!");
+            System.out.println("Fehler: Ungültige Artikel-Nummer!");
         }
     }
     public void orderVerlauf() {
