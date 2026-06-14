@@ -100,9 +100,6 @@ public class AdminDialogManager {
                 return;
             }
 
-            // Mitarbeiter setzen
-            Mitarbeiter currentMitarbeiter = (Mitarbeiter) session.getBenutzer();
-            eshop.getArtikelVerwaltung().setCurrentMitarbeiter(currentMitarbeiter);
 
             eshop.getArtikelVerwaltung().legeArtikelAn(nr, name, bestand, preis);
             System.out.println("------Produkt erfolgreich erstellt------");
