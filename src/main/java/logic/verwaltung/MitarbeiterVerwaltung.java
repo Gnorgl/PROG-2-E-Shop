@@ -22,6 +22,10 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
     public MitarbeiterVerwaltung() {
         datenLaden();
+        //Admin-Mitarbeiter
+        if (this.mitarbeiterListe.getMitarbeiter().isEmpty()) {
+            initialisiereStandardAdmin();
+        }
     }
 
     //Getter-Methoden
@@ -60,6 +64,16 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     public String generateBenutzerNummer() {
         this.idCounter++;
         return "MI-" + this.idCounter;
+    }
+
+    private void initialisiereStandardAdmin() {
+        String nummer = generateBenutzerNummer(); // Erzeugt "MI-1"
+        Mitarbeiter admin = new Mitarbeiter(nummer, "admin@email.com", "123", "Modus", "Admin");
+
+        this.mitarbeiterListe.getMitarbeiter().put(admin.getEmail(), admin);
+
+        // Sofort speichern, damit die Datei von nun an existiert
+        safe();
     }
 
     //Persistenz Methoden

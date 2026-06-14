@@ -158,18 +158,6 @@ public class EshopCUI {
     public static void main(String[] args) {
         Eshop eshop = new Eshop();
         EshopCUI eShopCUI = new EshopCUI(eshop);
-
-        try {
-            // Erstellung von Admin-Mitarbeiter
-            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung()
-                    .createNewMitarbeiter("admin@email.com", "123", "Modus", "Admin");
-            System.out.println("Standard-Admin erfolgreich angelegt.");
-
-        } catch (EmailBereitsVergebenException e) {
-            //Der Admin existiert offenbar schon im System
-            System.out.println("Hinweis: " + e.getMessage());
-        }
-
         eShopCUI.start();
     }
 }
