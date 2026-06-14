@@ -16,7 +16,7 @@ public class KundenVerwaltung implements IKV, IUC {
     private final File datei = new File("kunden.json");
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final KundenListe kundenListe = new KundenListe();
+    private KundenListe kundenListe = new KundenListe();
     //id counter
     private long idCounter = 0;
 
@@ -62,7 +62,33 @@ public class KundenVerwaltung implements IKV, IUC {
     //Kunden ID-Generator andere kennzeichnung als mitarbeiter ID, etwa KD-234324 und Mitarbeiter MB-234324, random generated lange nummer.
 
     //Persistenz Methoden
+    public void safe() {
+        try {
+            Object[] speicherContainer = new Object[]{ this.kundenListe, this.idCounter };
 
+            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
+        } catch (IOException e) {
+            System.err.println("Fehler beim Speichern der Kunden: " + e.getMessage());
+        }
+    }
+
+    private void datenLaden() {
+        if (!datei.exists()) {
+            return;
+        }
+        try {
+            Object[] speicherContainer = mapper.readValue(datei, Object[].class);
+
+            this.kundenListe = mapper.convertValue(speicherContainer[0], KundenListe.class);
+            this.idCounter = mapper.convertValue(speicherContainer[1], Long.class);
+
+            if (this.kundenListe.getKunden().isEmpty()) {
+                this.idCounter = 0;
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("Fehler beim Laden der Kunden: " + e.getMessage());
+        }
+    }
 
 
 
