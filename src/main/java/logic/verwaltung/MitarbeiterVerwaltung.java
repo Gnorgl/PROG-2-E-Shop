@@ -20,7 +20,9 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
     private long idCounter = 0;
 
-    public MitarbeiterVerwaltung() {}
+    public MitarbeiterVerwaltung() {
+        datenLaden();
+    }
 
     //Getter-Methoden
 
@@ -47,6 +49,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
         } else {
             String nummer = generateBenutzerNummer();
             this.mitarbeiterListe.getMitarbeiter().put(email, new Mitarbeiter(nummer, email, passwort, nachname, vorname));
+            safe();
             return true;
         }
     }
@@ -66,7 +69,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
             mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
         } catch (IOException e) {
-            System.err.println("Fehler beim Speichern der Kunden: " + e.getMessage());
+            System.err.println("Fehler beim Speichern der Mitarbeiter: " + e.getMessage());
         }
     }
 
@@ -84,7 +87,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
                 this.idCounter = 0;
             }
         } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Fehler beim Laden der Kunden: " + e.getMessage());
+            System.err.println("Fehler beim Laden der Mitarbeiter: " + e.getMessage());
         }
     }
 

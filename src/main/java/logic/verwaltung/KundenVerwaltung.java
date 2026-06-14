@@ -15,12 +15,12 @@ public class KundenVerwaltung implements IKV, IUC {
 
     private final File datei = new File("kunden.json");
     private final ObjectMapper mapper = new ObjectMapper();
-
     private KundenListe kundenListe = new KundenListe();
-    //id counter
     private long idCounter = 0;
 
-    public KundenVerwaltung() {}
+    public KundenVerwaltung() {
+        datenLaden();
+    }
 
     //Getter-Methoden
 
@@ -47,6 +47,7 @@ public class KundenVerwaltung implements IKV, IUC {
         } else {
             String nummer = generateBenutzerNummer();
             this.kundenListe.getKunden().put(email, new Kunde(nummer, email, passwort, nachname, vorname, adresse));
+            safe();
             return true;
         }
     }
