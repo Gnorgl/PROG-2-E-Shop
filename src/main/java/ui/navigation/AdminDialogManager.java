@@ -93,7 +93,7 @@ public class AdminDialogManager {
             eshop.getArtikelVerwaltung().legeArtikelAn(nr, name, bestand, preis);
             System.out.println("------Produkt erfolgreich erstellt------");
         } catch (NumberFormatException e) {
-            System.out.println("Fehler: Ungueltige Eingabe!");
+            System.out.println("Fehler: Ungültige Eingabe!");
         } catch (Exception e) {
             System.out.println("Fehler: " + e.getMessage());
         }
