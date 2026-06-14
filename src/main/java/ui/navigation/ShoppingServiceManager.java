@@ -1,30 +1,35 @@
 package ui.navigation;
 
+
 import exceptions.artikel.ArtikelNichtGefunden;
 import logic.Eshop;
 
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import entities.Artikel;
+import entities.Ereignis;
 import entities.Kunde;
 import entities.Rechnung;
-import logic.Eshop;
+import logic.verwaltung.ArtikelVerwaltung;
+import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.WarenkorbListe;
-import logic.verwaltung.CheckOutVerwaltung;
 import java.util.HashMap;
 
 public class ShoppingServiceManager {
     private final Eshop eshop;
+    private final EreignisVerwaltung ereignisVerwaltung;
     private final Scanner scanner;
     private final SessionManager session;
     private final WarenkorbListe warenkorb = new WarenkorbListe();
-
-
-
 
     public ShoppingServiceManager(Eshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
+        this.ereignisVerwaltung = eshop.getEreignisVerwaltung();
     }
 
     public void warenkatalog() {
@@ -218,5 +223,78 @@ public class ShoppingServiceManager {
 
     public void bestellverlauf() {
         System.out.println("------Bestellverlauf------");
+    } // ----- Bestandshistorie -----
+    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
+        // Artikel holen über die vorhandene ArtikelVerwaltung im Eshop
+        Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
+
+        int aktuellerBestand = artikel.getBestand();
+        LocalDate heute = LocalDate.now();
+        LocalDateTime vor30Tagen = LocalDateTime.now().minusDays(30);
+
+        List<Ereignis> relevantEreignisse = ereignisVerwaltung.getEreignisseFuerArtikel(artikelNr)
+                .stream()
+                .filter(e -> e.getZeitstempel().isAfter(vor30Tagen))
+                .sorted(Comparator.comparing(Ereignis::getZeitstempel))
+                .collect(Collectors.toList());
+
+        // 1) Rückwärts rekonstruieren (Startbestand vor ersten relevanten Ereignis)
+        int bestandRekonstruiert = aktuellerBestand;
+        ListIterator<Ereignis> revIt = relevantEreignisse.listIterator(relevantEreignisse.size());
+        while (revIt.hasPrevious()) {
+            Ereignis e = revIt.previous();
+            if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
+                bestandRekonstruiert -= e.getAnzahl();
+            } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
+                bestandRekonstruiert += e.getAnzahl();
+            }
+        }
+
+        // 2) Vorwärts: Tagesweise Bestand anwenden und speichern
+        Map<LocalDate, Integer> historie = new LinkedHashMap<>();
+        LocalDate startDatum = heute.minusDays(29); // 30 Tage inkl. heute
+        for (int i = 0; i < 30; i++) {
+            LocalDate datum = startDatum.plusDays(i);
+
+            List<Ereignis> tagesEreignisse = relevantEreignisse.stream()
+                    .filter(e -> e.getZeitstempel().toLocalDate().equals(datum))
+                    .sorted(Comparator.comparing(Ereignis::getZeitstempel))
+                    .collect(Collectors.toList());
+
+            for (Ereignis e : tagesEreignisse) {
+                if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
+                    bestandRekonstruiert += e.getAnzahl();
+                } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
+                    bestandRekonstruiert -= e.getAnzahl();
+                }
+            }
+
+            historie.put(datum, bestandRekonstruiert);
+        }
+
+        return historie;
     }
+
+    /** Hilfs-Methode: formatiert Ausgabe für CUI, fängt Fehler ab. */
+    public void zeigeBestandsHistorie(int artikelNr) {
+        try {
+            Map<LocalDate, Integer> historie = getBestandsHistorie(artikelNr);
+            Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
+
+            System.out.println("\n==================== BESTANDSHISTORIE ====================");
+            System.out.println("Artikel: " + artikel.getBezeichnung() + " (Nr. " + artikel.getArtikelNummer() + ")");
+            System.out.println("========================================================");
+            System.out.println("Datum          | Bestand am Tagesende");
+            System.out.println("--------");
+
+            historie.entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(entry -> System.out.printf("%s | %d%n", entry.getKey(), entry.getValue()));
+
+            System.out.println("========================================================\n");
+        } catch (ArtikelNichtGefunden e) {
+            System.out.println("Artikel nicht gefunden (Nr: " + artikelNr + ")");
+        }
+    }
+
 }

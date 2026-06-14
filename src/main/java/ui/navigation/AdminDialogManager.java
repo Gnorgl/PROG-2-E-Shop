@@ -87,8 +87,22 @@ public class AdminDialogManager {
             System.out.print("Bestand: ");
             int bestand = Integer.parseInt(scanner.nextLine().trim());
 
+            if (bestand <= 0) {
+                System.out.println("Fehler: Bestand muss größer als 0 sein!");
+                return;
+            }
+
             System.out.print("Preis: ");
-            double preis = Double.parseDouble(scanner.nextLine().trim());
+            double preis = Double.parseDouble(scanner.nextLine().trim().replace(",", "."));
+
+            if (preis < 0) {
+                System.out.println("Fehler: Preis kann nicht negativ sein!");
+                return;
+            }
+
+            // Mitarbeiter setzen
+            Mitarbeiter currentMitarbeiter = (Mitarbeiter) session.getBenutzer();
+            eshop.getArtikelVerwaltung().setCurrentMitarbeiter(currentMitarbeiter);
 
             eshop.getArtikelVerwaltung().legeArtikelAn(nr, name, bestand, preis);
             System.out.println("------Produkt erfolgreich erstellt------");

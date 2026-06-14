@@ -8,6 +8,7 @@ import exceptions.artikel.BestandNichtAusreichendException;
 import logic.moduls.IAV;
 import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.ArtikelListe;
+import ui.navigation.ShoppingServiceManager;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ public class ArtikelVerwaltung implements IAV {
     private ArtikelListe artikelListe = new ArtikelListe();
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
     private Mitarbeiter currentMitarbeiter;
+    private ShoppingServiceManager shoppingServiceManager;
 
     public ArtikelVerwaltung() {
         this.artikelListe = new ArtikelListe();
@@ -31,6 +33,10 @@ public class ArtikelVerwaltung implements IAV {
 
     public void setCurrentMitarbeiter(Mitarbeiter mitarbeiter) {
         this.currentMitarbeiter = mitarbeiter;
+    }
+
+    public void setShoppingServiceManager(ShoppingServiceManager manager) {
+        this.shoppingServiceManager = manager;
     }
 
     @Override
@@ -150,6 +156,11 @@ public class ArtikelVerwaltung implements IAV {
     }
 
 
+    public void zeigeBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
+        if (shoppingServiceManager != null) {
+            shoppingServiceManager.zeigeBestandsHistorie(artikelNr);
+        }
+    }
 
     // Implementierung um den eingeloggten Mitarbeiter zu erhalten
     private Mitarbeiter getCurrentMitarbeiter() {
