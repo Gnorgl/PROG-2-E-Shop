@@ -26,4 +26,9 @@ public class Massengutartikel extends Artikel {
         }
         return menge % packungsGroesse == 0;
     }
+
+    @Override
+    public double berechneGesamtpreis(int menge) {
+        return getPreis() * (menge / packungsGroesse);
+    }
 }

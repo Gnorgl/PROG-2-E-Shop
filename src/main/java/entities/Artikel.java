@@ -59,6 +59,10 @@ public class Artikel {
         return menge > 0;
     }
 
+    public double berechneGesamtpreis(int menge) {
+        return preis * menge;
+    }
+
     @Override
     public String toString() {
     return "Artikelnummer: " + artikelNummer + "Bezeichnung: "

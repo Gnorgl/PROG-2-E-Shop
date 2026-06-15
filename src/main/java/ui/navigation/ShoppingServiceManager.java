@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import entities.Artikel;
 import entities.Ereignis;
 import entities.Kunde;
+import entities.Massengutartikel;
 import entities.Rechnung;
 import logic.verwaltung.ArtikelVerwaltung;
 import logic.verwaltung.EreignisVerwaltung;
@@ -70,8 +71,13 @@ public class ShoppingServiceManager {
         }
 
         for (Artikel a : artikel) {
-            System.out.printf("[%d] %s - Preis: %.2f€ - Bestand: %d%n",
-                    a.getArtikelNummer(), a.getBezeichnung(), a.getPreis(), a.getBestand());
+            if (a instanceof Massengutartikel ma) {
+                System.out.printf("[%d] %s - %.2f€ pro %der-Pack - Bestand: %d Stück%n",
+                        a.getArtikelNummer(), a.getBezeichnung(), a.getPreis(), ma.getPackungsGroesse(), a.getBestand());
+            } else {
+                System.out.printf("[%d] %s - Preis: %.2f€ - Bestand: %d%n",
+                        a.getArtikelNummer(), a.getBezeichnung(), a.getPreis(), a.getBestand());
+            }
         }
     }
 
@@ -88,11 +94,21 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            System.out.print("Menge eingeben: ");
+            if (artikel instanceof Massengutartikel ma) {
+                System.out.printf("Menge eingeben (Vielfaches von %d): ", ma.getPackungsGroesse());
+            } else {
+                System.out.print("Menge eingeben: ");
+            }
             int menge = Integer.parseInt(scanner.nextLine().trim());
 
             if (menge <= 0) {
                 System.out.println("Menge muss größer als 0 sein!");
+                return;
+            }
+
+            if (!artikel.istMengeGueltig(menge)) {
+                int pg = ((Massengutartikel) artikel).getPackungsGroesse();
+                System.out.println("Ungültige Menge! Bei Massengutartikeln nur Vielfache von " + pg + " erlaubt.");
                 return;
             }
 
@@ -122,9 +138,14 @@ public class ShoppingServiceManager {
 
         for (Artikel artikel : items.keySet()) {
             int menge = items.get(artikel);
-            double gesamtpreis = artikel.getPreis() * menge;
-            System.out.printf("%d x %s - %.2f€ (je %.2f€)%n",
-                    menge, artikel.getBezeichnung(), gesamtpreis, artikel.getPreis());
+            double gesamtpreis = artikel.berechneGesamtpreis(menge);
+            if (artikel instanceof Massengutartikel ma) {
+                System.out.printf("%d x %s - %.2f€ (%.2f€ pro %der-Pack)%n",
+                        menge, artikel.getBezeichnung(), gesamtpreis, artikel.getPreis(), ma.getPackungsGroesse());
+            } else {
+                System.out.printf("%d x %s - %.2f€ (je %.2f€)%n",
+                        menge, artikel.getBezeichnung(), gesamtpreis, artikel.getPreis());
+            }
         }
 
 
@@ -155,11 +176,21 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            System.out.print("Neue Menge eingeben: ");
+            if (artikel instanceof Massengutartikel ma) {
+                System.out.printf("Neue Menge eingeben (Vielfaches von %d): ", ma.getPackungsGroesse());
+            } else {
+                System.out.print("Neue Menge eingeben: ");
+            }
             int neueMenge = Integer.parseInt(scanner.nextLine().trim());
 
             if (neueMenge <= 0) {
                 System.out.println("Menge muss größer als 0 sein!");
+                return;
+            }
+
+            if (!artikel.istMengeGueltig(neueMenge)) {
+                int pg = ((Massengutartikel) artikel).getPackungsGroesse();
+                System.out.println("Ungültige Menge! Bei Massengutartikeln nur Vielfache von " + pg + " erlaubt.");
                 return;
             }
 
@@ -220,6 +251,34 @@ public class ShoppingServiceManager {
             System.out.println("Bestellung erfolgreich abgeschlossen!");
         }
     }
+
+    // eventuell raus damit
+    private void rechnungAnzeigen(Rechnung rechnung) {
+        if (rechnung == null) {
+            System.out.println("Keine Rechnung vorhanden!");
+            return;
+        }
+
+        /**
+         * DATUM für die Rechnung mit Stunde und Minute
+         */
+        java.time.LocalDate tag = java.time.LocalDate.now();
+        java.time.LocalTime zeit = java.time.LocalTime.now();
+
+        String tagText = tag.format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String zeitText = zeit.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
+
+        String rechnungsDatum = tagText + " um " + zeitText + " Uhr";
+
+
+        System.out.println("\n========== RECHNUNG ==========");
+        System.out.println("Rechnungsnummer: " + rechnung.getRechnungsNummer());
+        System.out.println("Datum: " + rechnungsDatum);
+        System.out.println("Kunde: " + rechnung.getKunde().getNachname() + ", " + rechnung.getKunde().getVorname());
+        System.out.println("Adresse: " + rechnung.getKunde().getAdresse());
+        System.out.println("\n--- Artikel ---");
+    }
+
 
     public void bestellverlauf() {
         System.out.println("------Bestellverlauf------");

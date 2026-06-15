@@ -29,7 +29,7 @@ public class CheckOutVerwaltung implements ICV {
 
         for (Artikel artikel : warenkorbItems.keySet()) {
             int menge = warenkorbItems.get(artikel);
-            netto += artikel.getPreis() * menge;
+            netto += artikel.berechneGesamtpreis(menge);
         }
         return netto;
     }
@@ -128,11 +128,18 @@ public class CheckOutVerwaltung implements ICV {
 
                 // Collections.frequency zählt, wie oft der Artikel in der Liste vorkommt
                 int menge = Collections.frequency(rechnung.getArtikel(), artikel);
-                double gesamtPreisPosition = artikel.getPreis() * menge;
+                double gesamtPreisPosition = artikel.berechneGesamtpreis(menge);
 
-                System.out.println("- " + menge + "x " + artikel.getBezeichnung() +
-                        " (" + artikel.getArtikelNummer() + "): " +
-                        gesamtPreisPosition + "€ (Einzelpreis: " + artikel.getPreis() + "€)");
+                String preisHinweis;
+                if (artikel instanceof entities.Massengutartikel ma) {
+                    preisHinweis = String.format("%.2f€ pro %der-Pack", artikel.getPreis(), ma.getPackungsGroesse());
+                } else {
+                    preisHinweis = String.format("%.2f€ pro Stück", artikel.getPreis());
+                }
+
+                System.out.printf("- %dx %s (%d): %.2f€ (%s)%n",
+                        menge, artikel.getBezeichnung(), artikel.getArtikelNummer(),
+                        gesamtPreisPosition, preisHinweis);
 
                 schonGedruckt.add(artikel);
             }
