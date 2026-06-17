@@ -1,20 +1,62 @@
 package logic.verwaltung;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import logic.moduls.ICV;
+import persistence.shop.OrderListe;
 import persistence.shop.WarenkorbListe;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class CheckOutVerwaltung implements ICV {
     private int rechnungsNummerZaehler = 1;
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
+    private OrderListe orderListe = new OrderListe();
+
+    private final File datei = new File("checkout.json");
+    private final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule()) // Aktiviert die Unterstützung für LocalDate
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // Speichert das Datum als String (z.B. "2026-06-17")
+
 
     public CheckOutVerwaltung() {
+        datenLaden();
+    }
 
+
+    public void safe() {
+        try {
+            // Speichert den Zähler UND das gesamte OrderListe-Objekt
+            Object[] speicherContainer = new Object[]{ this.rechnungsNummerZaehler, this.orderListe };
+
+            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
+        } catch (IOException e) {
+            System.err.println("Fehler beim Speichern der Rechnungen: " + e.getMessage());
+        }
+    }
+
+    private void datenLaden() {
+        if (!datei.exists()) {
+            return;
+        }
+        try {
+            Object[] speicherContainer = mapper.readValue(datei, Object[].class);
+
+            // Container auslesen und umwandeln
+            this.rechnungsNummerZaehler = mapper.convertValue(speicherContainer[0], Integer.class);
+            this.orderListe = mapper.convertValue(speicherContainer[1], OrderListe.class);
+
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("Fehler beim Laden der Rechnungen: " + e.getMessage());
+        }
     }
 
     public void setEreignisVerwaltung(EreignisVerwaltung ereignisVerwaltung) {
@@ -86,6 +128,9 @@ public class CheckOutVerwaltung implements ICV {
                 mwst,
                 brutto
         );
+
+        this.orderListe.addRechnung(rechnung);
+        safe();
 
         // Warenkorb leeren nach erfolgreichem Checkout
         warenkorbListe.leeren();
