@@ -7,13 +7,11 @@ import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import logic.moduls.ICV;
-import persistence.shop.OrderListe;
 import persistence.shop.WarenkorbListe;
 
 public class CheckOutVerwaltung implements ICV {
     private int rechnungsNummerZaehler = 1;
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
-    private final OrderListe orderListe = new OrderListe();
 
     public CheckOutVerwaltung() {
 
@@ -92,19 +90,7 @@ public class CheckOutVerwaltung implements ICV {
         // Warenkorb leeren nach erfolgreichem Checkout
         warenkorbListe.leeren();
 
-        orderListe.addRechnung(rechnung);
-
         return rechnung;
-    }
-
-    public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
-        List<Rechnung> ergebnis = new ArrayList<>();
-        for (Rechnung r : orderListe.getAlleRechnungen()) {
-            if (r.getKunde().equals(kunde)) {
-                ergebnis.add(r);
-            }
-        }
-        return ergebnis;
     }
 
     @Override
@@ -167,3 +153,4 @@ public class CheckOutVerwaltung implements ICV {
     }
 }
 
+//Funktionen für Warenkauf aus Warenkorb und Bestand aus Lager

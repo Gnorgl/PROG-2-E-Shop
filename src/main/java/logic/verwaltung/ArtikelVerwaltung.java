@@ -1,4 +1,5 @@
 package logic.verwaltung;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.*;
 import exceptions.artikel.AnzahlUngueltigException;
 import exceptions.artikel.ArtikelExistiertBereits;
@@ -10,6 +11,8 @@ import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.ArtikelListe;
 import ui.navigation.ShoppingServiceManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.*;
@@ -23,8 +26,15 @@ public class ArtikelVerwaltung implements IAV {
     private Mitarbeiter currentMitarbeiter;
     private ShoppingServiceManager shoppingServiceManager;
 
+    private final File datei = new File("artikel.json");
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    private long idCounter = 0;
+
+
     public ArtikelVerwaltung() {
         this.artikelListe = new ArtikelListe();
+        datenLaden();
     }
 
     public void setEreignisVerwaltung(EreignisVerwaltung ereignisVerwaltung) {
@@ -39,6 +49,44 @@ public class ArtikelVerwaltung implements IAV {
         this.shoppingServiceManager = manager;
     }
 
+    private void datenLaden() {
+        if (!datei.exists()) {
+            return;
+        }
+        try {
+            // Liest das allgemeine Object-Array ein
+            Object[] speicherContainer = mapper.readValue(datei, Object[].class);
+
+            // Konvertiert die einzelnen Elemente im Array in die korrekten Zielklassen
+            this.artikelListe = mapper.convertValue(speicherContainer[0], ArtikelListe.class);
+            this.idCounter = mapper.convertValue(speicherContainer[1], Long.class);
+
+            // Falls die Liste leer ist, wird der Counter zurückgesetzt
+            // HINWEIS: Falls deine Getter-Methode in ArtikelListe anders heißt (z.B. getArtikelListe()), passe das hier an.
+            if (this.artikelListe.getArtikelImLager().isEmpty()) {
+                this.idCounter = 0;
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("Fehler beim Laden der Artikel: " + e.getMessage());
+        }
+    }
+
+
+
+    public void safe() {
+        try {
+            // Speichert sowohl die Liste als auch den Counter im Container-Array
+            Object[] speicherContainer = new Object[]{ this.artikelListe, this.idCounter };
+
+            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
+        } catch (IOException e) {
+            System.err.println("Fehler beim Speichern der Artikel: " + e.getMessage());
+        }
+    }
+
+
+
+
     @Override
     public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
         try {
@@ -50,6 +98,8 @@ public class ArtikelVerwaltung implements IAV {
 
         Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
         artikelListe.getArtikelImLager().add(neuerArtikel);
+
+        safe();
 
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
         try {
@@ -180,4 +230,6 @@ public class ArtikelVerwaltung implements IAV {
         throw new ArtikelNichtGefunden(String.valueOf(nr));
     }
 }
+
+
 
