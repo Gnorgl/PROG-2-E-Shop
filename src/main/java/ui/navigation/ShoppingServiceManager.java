@@ -325,64 +325,11 @@ public class ShoppingServiceManager {
 
     // ----- Bestandshistorie -----
 
-    // Berechnet den täglichen Bestandsverlauf eines Artikels über die letzten 30 Tage
-    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
-        Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
-
-        int aktuellerBestand = artikel.getBestand();
-        LocalDate heute = LocalDate.now();
-        LocalDateTime vor30Tagen = LocalDateTime.now().minusDays(30);
-
-        // Nur Ereignisse der letzten 30 Tage, chronologisch sortiert
-        List<Ereignis> relevantEreignisse = ereignisVerwaltung.getEreignisseFuerArtikel(artikelNr)
-                .stream()
-                .filter(e -> e.getZeitstempel().isAfter(vor30Tagen))
-                .sorted(Comparator.comparing(Ereignis::getZeitstempel))
-                .collect(Collectors.toList());
-
-        // 1) Rückwärts rekonstruieren: vom heutigen Bestand zurückrechnen um den Startbestand vor 30 Tagen zu ermitteln
-        int bestandRekonstruiert = aktuellerBestand;
-        ListIterator<Ereignis> revIt = relevantEreignisse.listIterator(relevantEreignisse.size());
-        while (revIt.hasPrevious()) {
-            Ereignis e = revIt.previous();
-            if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
-                bestandRekonstruiert -= e.getAnzahl(); // rückgängig machen: Einlagerung zurückdrehen
-            } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
-                bestandRekonstruiert += e.getAnzahl(); // rückgängig machen: Auslagerung zurückdrehen
-            }
-        }
-
-        // 2) Vorwärts: Tag für Tag die Ereignisse anwenden und den Tagesendbestand speichern
-        Map<LocalDate, Integer> historie = new LinkedHashMap<>();
-        LocalDate startDatum = heute.minusDays(29); // 30 Tage inkl. heute
-        for (int i = 0; i < 30; i++) {
-            LocalDate datum = startDatum.plusDays(i);
-
-            // Alle Ereignisse dieses Tages chronologisch anwenden
-            List<Ereignis> tagesEreignisse = relevantEreignisse.stream()
-                    .filter(e -> e.getZeitstempel().toLocalDate().equals(datum))
-                    .sorted(Comparator.comparing(Ereignis::getZeitstempel))
-                    .collect(Collectors.toList());
-
-            for (Ereignis e : tagesEreignisse) {
-                if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
-                    bestandRekonstruiert += e.getAnzahl();
-                } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
-                    bestandRekonstruiert -= e.getAnzahl();
-                }
-            }
-
-            // Tagesendbestand in die Map eintragen
-            historie.put(datum, bestandRekonstruiert);
-        }
-
-        return historie;
-    }
-
     // Gibt die Bestandshistorie formatiert auf der Konsole aus (fängt Fehler ab)
     public void zeigeBestandsHistorie(int artikelNr) {
         try {
-            Map<LocalDate, Integer> historie = getBestandsHistorie(artikelNr);
+            // Berechnung liegt in ArtikelVerwaltung, hier nur noch Ausgabe
+            Map<LocalDate, Integer> historie = eshop.getArtikelVerwaltung().getBestandsHistorie(artikelNr);
             Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
 
             System.out.println("\n==================== BESTANDSHISTORIE ====================");
