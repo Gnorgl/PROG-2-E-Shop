@@ -280,12 +280,15 @@ public class ShoppingServiceManager {
     }
 
 
+    // Zeigt alle vergangenen Bestellungen des eingeloggten Kunden an
     public void bestellverlauf() {
+        // Sicherheitscheck: nur Kunden dürfen diese Funktion nutzen
         if (!(session.getBenutzer() instanceof Kunde kunde)) {
             System.out.println("Fehler: Nur Kunden haben einen Bestellverlauf!");
             return;
         }
 
+        // Alle gespeicherten Rechnungen dieses Kunden aus der CheckOutVerwaltung holen
         List<Rechnung> rechnungen = eshop.getBestellVerwaltungV().getRechnungenFuerKunde(kunde);
 
         if (rechnungen.isEmpty()) {
@@ -297,14 +300,18 @@ public class ShoppingServiceManager {
         System.out.println("Kunde: " + kunde.getNachname() + ", " + kunde.getVorname());
         System.out.println("====================================");
 
+        // Jede Rechnung einzeln ausgeben
         for (Rechnung r : rechnungen) {
             System.out.println("\nRechnung #" + r.getRechnungsNummer() + " vom " + r.getDatum());
             System.out.println("---");
 
+            // Hilfsliste verhindert, dass derselbe Artikel mehrfach gedruckt wird
             List<Artikel> schonGedruckt = new ArrayList<>();
             for (Artikel a : r.getArtikel()) {
                 if (!schonGedruckt.contains(a)) {
+                    // frequency zählt wie oft dieser Artikel in der Rechnungsliste vorkommt = gekaufte Menge
                     int menge = java.util.Collections.frequency(r.getArtikel(), a);
+                    // berechneGesamtpreis berücksichtigt bei Massengutartikeln den Packungspreis
                     System.out.printf("  %dx %s - %.2f€%n", menge, a.getBezeichnung(), a.berechneGesamtpreis(menge));
                     schonGedruckt.add(a);
                 }
@@ -314,39 +321,44 @@ public class ShoppingServiceManager {
         }
 
         System.out.println("====================================\n");
-    } // ----- Bestandshistorie -----
+    }
+
+    // ----- Bestandshistorie -----
+
+    // Berechnet den täglichen Bestandsverlauf eines Artikels über die letzten 30 Tage
     public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
-        // Artikel holen über die vorhandene ArtikelVerwaltung im Eshop
         Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
 
         int aktuellerBestand = artikel.getBestand();
         LocalDate heute = LocalDate.now();
         LocalDateTime vor30Tagen = LocalDateTime.now().minusDays(30);
 
+        // Nur Ereignisse der letzten 30 Tage, chronologisch sortiert
         List<Ereignis> relevantEreignisse = ereignisVerwaltung.getEreignisseFuerArtikel(artikelNr)
                 .stream()
                 .filter(e -> e.getZeitstempel().isAfter(vor30Tagen))
                 .sorted(Comparator.comparing(Ereignis::getZeitstempel))
                 .collect(Collectors.toList());
 
-        // 1) Rückwärts rekonstruieren (Startbestand vor ersten relevanten Ereignis)
+        // 1) Rückwärts rekonstruieren: vom heutigen Bestand zurückrechnen um den Startbestand vor 30 Tagen zu ermitteln
         int bestandRekonstruiert = aktuellerBestand;
         ListIterator<Ereignis> revIt = relevantEreignisse.listIterator(relevantEreignisse.size());
         while (revIt.hasPrevious()) {
             Ereignis e = revIt.previous();
             if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
-                bestandRekonstruiert -= e.getAnzahl();
+                bestandRekonstruiert -= e.getAnzahl(); // rückgängig machen: Einlagerung zurückdrehen
             } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
-                bestandRekonstruiert += e.getAnzahl();
+                bestandRekonstruiert += e.getAnzahl(); // rückgängig machen: Auslagerung zurückdrehen
             }
         }
 
-        // 2) Vorwärts: Tagesweise Bestand anwenden und speichern
+        // 2) Vorwärts: Tag für Tag die Ereignisse anwenden und den Tagesendbestand speichern
         Map<LocalDate, Integer> historie = new LinkedHashMap<>();
         LocalDate startDatum = heute.minusDays(29); // 30 Tage inkl. heute
         for (int i = 0; i < 30; i++) {
             LocalDate datum = startDatum.plusDays(i);
 
+            // Alle Ereignisse dieses Tages chronologisch anwenden
             List<Ereignis> tagesEreignisse = relevantEreignisse.stream()
                     .filter(e -> e.getZeitstempel().toLocalDate().equals(datum))
                     .sorted(Comparator.comparing(Ereignis::getZeitstempel))
@@ -360,13 +372,14 @@ public class ShoppingServiceManager {
                 }
             }
 
+            // Tagesendbestand in die Map eintragen
             historie.put(datum, bestandRekonstruiert);
         }
 
         return historie;
     }
 
-    /** Hilfs-Methode: formatiert Ausgabe für CUI, fängt Fehler ab. */
+    // Gibt die Bestandshistorie formatiert auf der Konsole aus (fängt Fehler ab)
     public void zeigeBestandsHistorie(int artikelNr) {
         try {
             Map<LocalDate, Integer> historie = getBestandsHistorie(artikelNr);
@@ -378,6 +391,7 @@ public class ShoppingServiceManager {
             System.out.println("Datum          | Bestand am Tagesende");
             System.out.println("--------");
 
+            // Einträge nach Datum sortiert ausgeben
             historie.entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(entry -> System.out.printf("%s | %d%n", entry.getKey(), entry.getValue()));
