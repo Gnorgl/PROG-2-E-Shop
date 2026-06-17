@@ -281,7 +281,39 @@ public class ShoppingServiceManager {
 
 
     public void bestellverlauf() {
-        System.out.println("------Bestellverlauf------");
+        if (!(session.getBenutzer() instanceof Kunde kunde)) {
+            System.out.println("Fehler: Nur Kunden haben einen Bestellverlauf!");
+            return;
+        }
+
+        List<Rechnung> rechnungen = eshop.getBestellVerwaltungV().getRechnungenFuerKunde(kunde);
+
+        if (rechnungen.isEmpty()) {
+            System.out.println("\nKeine Bestellungen vorhanden.");
+            return;
+        }
+
+        System.out.println("\n========== BESTELLVERLAUF ==========");
+        System.out.println("Kunde: " + kunde.getNachname() + ", " + kunde.getVorname());
+        System.out.println("====================================");
+
+        for (Rechnung r : rechnungen) {
+            System.out.println("\nRechnung #" + r.getRechnungsNummer() + " vom " + r.getDatum());
+            System.out.println("---");
+
+            List<Artikel> schonGedruckt = new ArrayList<>();
+            for (Artikel a : r.getArtikel()) {
+                if (!schonGedruckt.contains(a)) {
+                    int menge = java.util.Collections.frequency(r.getArtikel(), a);
+                    System.out.printf("  %dx %s - %.2f€%n", menge, a.getBezeichnung(), a.berechneGesamtpreis(menge));
+                    schonGedruckt.add(a);
+                }
+            }
+
+            System.out.printf("  Gesamt (Brutto): %.2f€%n", r.getBruttoSumme());
+        }
+
+        System.out.println("====================================\n");
     } // ----- Bestandshistorie -----
     public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
         // Artikel holen über die vorhandene ArtikelVerwaltung im Eshop
