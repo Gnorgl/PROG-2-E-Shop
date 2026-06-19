@@ -1,0 +1,1 @@
+Wir können die alte CUI Navigation als GUI-Controller benutzen. Also keine scanner mehr für input, aber liest die Felder aus der GUI Szenen aus.
