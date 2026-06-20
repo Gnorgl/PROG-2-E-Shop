@@ -1,8 +1,9 @@
-package ui.navigation;
+package ui.cui.navigation;
 
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import logic.Eshop;
+import logic.SessionManager;
 
 import java.util.Scanner;
 

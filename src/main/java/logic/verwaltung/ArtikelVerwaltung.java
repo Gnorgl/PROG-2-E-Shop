@@ -7,18 +7,12 @@ import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.MengeUngueltigException;
 import exceptions.artikel.BestandNichtAusreichendException;
 import logic.moduls.IAV;
-import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.ArtikelListe;
-import ui.navigation.ShoppingServiceManager;
+import ui.cui.navigation.ShoppingServiceManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Iterator;
-import java.util.*;
-import java.time.LocalDate;
-import java.util.stream.Collectors;
-import java.util.Comparator;
 
 public class ArtikelVerwaltung implements IAV {
     private ArtikelListe artikelListe = new ArtikelListe();
