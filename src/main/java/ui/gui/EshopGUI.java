@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Eshop;
 import logic.SessionManager;
-
+import ui.gui.scenes.LoginScene;
 
 
 public class EshopGUI extends Application {
@@ -27,6 +27,7 @@ public class EshopGUI extends Application {
         this.primaryStage.setTitle("Eshop");
 
         //Hier die erste Szene also vielleicht login mit registrierungsmöglichkeit
+        showLogin();
 
         this.primaryStage.setWidth(800);
         this.primaryStage.setHeight(600);
@@ -43,10 +44,13 @@ public class EshopGUI extends Application {
         }
     }
 
-    //Login Scene hier
-    //Main Menu Scene hier
-    //Quasi Show-Methoden der einzelnen Scenen, die wir erstellen.
+    //Show-Methoden der einzelnen Scenen, die wir erstellen.
+    public void showLogin() {
+        LoginScene loginScene = new LoginScene(eshop, session, this);
+        changeScene(loginScene);
+    }
 
+    public void showMainMenu() {}
 
     public static void main(String[] args) {
         launch(args);
