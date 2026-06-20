@@ -1,4 +1,4 @@
-package ui.navigation;
+package ui.cui.navigation;
 
 
 import exceptions.artikel.ArtikelNichtGefunden;
@@ -14,7 +14,7 @@ import entities.Ereignis;
 import entities.Kunde;
 import entities.Massengutartikel;
 import entities.Rechnung;
-import logic.verwaltung.ArtikelVerwaltung;
+import logic.SessionManager;
 import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.WarenkorbListe;
 import java.util.HashMap;

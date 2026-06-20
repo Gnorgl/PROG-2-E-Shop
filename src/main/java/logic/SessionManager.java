@@ -1,4 +1,4 @@
-package ui.navigation;
+package logic;
 
 import entities.Benutzer;
 import entities.Mitarbeiter;

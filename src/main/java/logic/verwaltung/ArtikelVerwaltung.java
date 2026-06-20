@@ -1,7 +1,6 @@
 package logic.verwaltung;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.*;
-import entities.Ereignis;
 import exceptions.artikel.AnzahlUngueltigException;
 import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
@@ -10,6 +9,7 @@ import exceptions.artikel.BestandNichtAusreichendException;
 import logic.moduls.IAV;
 import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.ArtikelListe;
+import ui.navigation.ShoppingServiceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,7 @@ public class ArtikelVerwaltung implements IAV {
     private ArtikelListe artikelListe = new ArtikelListe();
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
     private Mitarbeiter currentMitarbeiter;
+    private ShoppingServiceManager shoppingServiceManager;
 
     private final File datei = new File("artikel.json");
     private final ObjectMapper mapper = new ObjectMapper();
@@ -42,6 +43,10 @@ public class ArtikelVerwaltung implements IAV {
 
     public void setCurrentMitarbeiter(Mitarbeiter mitarbeiter) {
         this.currentMitarbeiter = mitarbeiter;
+    }
+
+    public void setShoppingServiceManager(ShoppingServiceManager manager) {
+        this.shoppingServiceManager = manager;
     }
 
     private void datenLaden() {
@@ -201,58 +206,10 @@ public class ArtikelVerwaltung implements IAV {
     }
 
 
-    // Berechnet den täglichen Bestandsverlauf eines Artikels über die letzten 30 Tage
-    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
-        Artikel artikel = findeArtikel(artikelNr);
-
-        int aktuellerBestand = artikel.getBestand();
-        LocalDateTime vor30Tagen = LocalDateTime.now().minusDays(30);
-
-        // Nur Ereignisse der letzten 30 Tage, chronologisch sortiert
-        List<Ereignis> relevantEreignisse = ereignisVerwaltung.getEreignisseFuerArtikel(artikelNr)
-                .stream()
-                .filter(e -> e.getZeitstempel().isAfter(vor30Tagen))
-                .sorted(Comparator.comparing(Ereignis::getZeitstempel))
-                .collect(Collectors.toList());
-
-        // 1) Rückwärts rekonstruieren: Wir kennen nur den heutigen Bestand, nicht den von vor 30 Tagen.
-        //    Wir drehen deshalb jedes Ereignis von neu→alt rückgängig (Einlagerung subtrahieren, Auslagerung addieren),
-        //    bis wir beim Zustand vor 30 Tagen ankommen  das ist unser Startpunkt für Schritt 2.
-        int bestandRekonstruiert = aktuellerBestand;
-        ListIterator<Ereignis> revIt = relevantEreignisse.listIterator(relevantEreignisse.size());
-        while (revIt.hasPrevious()) {
-            Ereignis e = revIt.previous();
-            if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
-                bestandRekonstruiert -= e.getAnzahl();
-            } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
-                bestandRekonstruiert += e.getAnzahl();
-            }
+    public void zeigeBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
+        if (shoppingServiceManager != null) {
+            shoppingServiceManager.zeigeBestandsHistorie(artikelNr);
         }
-
-        // 2) Vorwärts: Tag für Tag die Ereignisse anwenden und den Tagesendbestand speichern
-        Map<LocalDate, Integer> historie = new LinkedHashMap<>();
-        LocalDate startDatum = LocalDate.now().minusDays(29);
-        for (int i = 0; i < 30; i++) {
-            LocalDate datum = startDatum.plusDays(i);
-
-            List<Ereignis> tagesEreignisse = relevantEreignisse.stream()
-                    .filter(e -> e.getZeitstempel().toLocalDate().equals(datum))
-                    .sorted(Comparator.comparing(Ereignis::getZeitstempel))
-                    .collect(Collectors.toList());
-
-            for (Ereignis e : tagesEreignisse) {
-                if (e.getTyp() != null && e.getTyp().contains("EINLAGERUNG")) {
-                    bestandRekonstruiert += e.getAnzahl();
-                } else if (e.getTyp() != null && e.getTyp().contains("AUSLAGERUNG")) {
-                    bestandRekonstruiert -= e.getAnzahl();
-                }
-            }
-
-            // Tagesendbestand in die Map eintragen
-            historie.put(datum, bestandRekonstruiert);
-        }
-
-        return historie;
     }
 
     // Implementierung um den eingeloggten Mitarbeiter zu erhalten

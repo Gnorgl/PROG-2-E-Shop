@@ -1,0 +1,68 @@
+/* ==========================================================================
+   1. GLOBALE BASICS (Gilt für die ganze Anwendung)
+   ========================================================================== */
+.root {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.eingabe-feld {
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+.shop-button {
+    -fx-background-color: #2a9d8f;
+    -fx-text-fill: white;
+}
+
+/* ==========================================================================
+   2. STYLES FÜR DIE LOGIN- / REGISTRIERUNGSSCENE
+   ========================================================================== */
+/* Styling für den gesamten Hintergrund (die VBox) */
+.login-container {
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+    -fx-padding: 50px;
+    -fx-background-color: #f4f4f4; /* Hellgrau */
+}
+
+/* Styling für die Überschrift */
+.login-titel {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 0 0 20 0; /* Abstand nach unten */
+}
+
+/* Styling für die Eingabefelder */
+.eingabe-feld {
+    -fx-max-width: 300px;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+/* Styling für den Login-Button */
+.shop-button {
+    -fx-min-width: 150px;
+    -fx-padding: 10px;
+    -fx-background-color: #2a9d8f; /* Schönes Petrol-Grün */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Hover-Effekt für den Button (wenn man mit der Maus drüber fährt) */
+.shop-button:hover {
+    -fx-background-color: #264653; /* Dunkleres Blau/Grün */
+}
+
+/* Styling für Fehlermeldungen */
+.fehler-label {
+    -fx-text-fill: #e76f51; /* Orange-Rot */
+    -fx-font-weight: bold;
+}
+
+/* ==========================================================================
+   3. STYLES FÜR DEN WARENKATALOG
+   ========================================================================== */

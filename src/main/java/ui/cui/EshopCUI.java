@@ -1,8 +1,8 @@
-package ui;
+package ui.cui;
 
 import entities.*;
-import exceptions.user.EmailBereitsVergebenException;
-import ui.navigation.*;
+import logic.SessionManager;
+import ui.cui.navigation.*;
 import logic.Eshop;
 
 
@@ -22,7 +22,6 @@ public class EshopCUI {
     private final LoginLogoutManager loginLogoutManager; //Für den An- und Abmeldeprozess.
     private final ShoppingServiceManager shoppingServiceManager; //Alle shopping Methoden.
     private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
-    private final WindowManager windowManager; //Für die Erstellung und Verwaltung der Anwendungsfenster im GUI.
 
     //Konstruktor
     public EshopCUI(Eshop eshop) {
@@ -33,7 +32,6 @@ public class EshopCUI {
         this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
         this.shoppingServiceManager = new ShoppingServiceManager(eshop, scanner, session);
         this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
-        this.windowManager = new WindowManager(eshop, scanner, session);
     }
 
     public void start() {
