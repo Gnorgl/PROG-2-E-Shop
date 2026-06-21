@@ -67,7 +67,7 @@ public class LoginScene extends VBox{
 
                 System.out.println("Login successful!");
                 //Wichtig:
-                guiController.showMainMenu();
+                guiController.showMainMenuScene();
             } else {
                 infoLabel.setText("Passwort ist falsch!");
             }
