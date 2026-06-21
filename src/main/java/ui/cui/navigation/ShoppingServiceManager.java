@@ -16,6 +16,7 @@ import entities.Massengutartikel;
 import entities.Rechnung;
 import logic.SessionManager;
 import logic.verwaltung.EreignisVerwaltung;
+import logic.verwaltung.ArtikelVerwaltung;
 import persistence.shop.WarenkorbListe;
 import java.util.HashMap;
 
