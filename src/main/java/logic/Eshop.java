@@ -10,7 +10,6 @@ public class Eshop {
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
-    private EreignisListe ereignisListe = new EreignisListe();
 
 
     public Eshop() {}
@@ -28,8 +27,6 @@ public class Eshop {
     }
 
     public EreignisVerwaltung getEreignisVerwaltung() { return ereignisVerwaltung; }
-
-    public EreignisListe getEreignisListe() { return ereignisListe; }
 
 }
 
