@@ -9,7 +9,7 @@ import exceptions.artikel.BestandNichtAusreichendException;
 import logic.moduls.IAV;
 import logic.verwaltung.EreignisVerwaltung;
 import persistence.shop.ArtikelListe;
-import ui.navigation.ShoppingServiceManager;
+import ui.cui.navigation.ShoppingServiceManager;
 
 import java.io.File;
 import java.io.IOException;
