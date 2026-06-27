@@ -32,8 +32,8 @@ public class EshopGUI extends Application {
         //Hier die erste Szene also vielleicht login mit registrierungsmöglichkeit
         showLoginScene();
 
-        this.primaryStage.setWidth(800);
-        this.primaryStage.setHeight(600);
+        this.primaryStage.setWidth(1280);
+        this.primaryStage.setHeight(800);
         this.primaryStage.show();
     }
 
@@ -56,12 +56,6 @@ public class EshopGUI extends Application {
     public void showMainMenuScene() {
         MainMenuScene mainScene = new MainMenuScene(eshop, session, this);
         changeScene(mainScene);
-
-        // Das Fenster vergrößern, wenn wir im Hauptmenü sind
-        primaryStage.setWidth(1024);
-        primaryStage.setHeight(768);
-        // Fenster auf dem Bildschirm zentrieren nach der Größenänderung
-        primaryStage.centerOnScreen();
     }
 
     public void showRegistrationScene() {
