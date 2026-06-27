@@ -62,6 +62,16 @@
     -fx-text-fill: #e76f51; /* Orange-Rot */
     -fx-font-weight: bold;
 }
+/* Für den RegistrierungsScene Button */
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2a9d8f;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+.secondary-button:hover {
+    -fx-text-fill: #264653;
+}
 
 /* ==========================================================================
    3. STYLES FÜR DEN WARENKATALOG

@@ -18,6 +18,7 @@ public class RegistrationScene extends VBox{
 
     private final TextField emailFeld = new TextField();
     private final PasswordField passwortFeld = new PasswordField();
+    private final Button registrationButton = new Button("Registrieren");
     private final Button loginButton = new Button("Anmelden");
     private final Label infoLabel = new Label();
 
