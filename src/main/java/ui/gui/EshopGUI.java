@@ -1,5 +1,6 @@
 package ui.gui;
 
+import com.sun.prism.ReadbackGraphics;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -8,6 +9,7 @@ import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.scenes.LoginScene;
 import ui.gui.scenes.MainMenuScene;
+import ui.gui.scenes.RegistrationScene;
 
 
 public class EshopGUI extends Application {
@@ -60,6 +62,11 @@ public class EshopGUI extends Application {
         primaryStage.setHeight(768);
         // Fenster auf dem Bildschirm zentrieren nach der Größenänderung
         primaryStage.centerOnScreen();
+    }
+
+    public void showRegistrationScene() {
+        ReadbackGraphics registrationScene = new RegistrationScene();
+        changeScene(registrationScene);
     }
 
     public static void main(String[] args) {
