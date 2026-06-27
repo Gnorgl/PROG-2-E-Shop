@@ -65,7 +65,7 @@ public class EshopGUI extends Application {
     }
 
     public void showRegistrationScene() {
-        ReadbackGraphics registrationScene = new RegistrationScene();
+        ReadbackGraphics registrationScene = new RegistrationScene(eshop, session, this);
         changeScene(registrationScene);
     }
 
