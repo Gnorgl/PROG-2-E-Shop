@@ -55,5 +55,15 @@ public class BenutzerVerwaltung implements IBV {
         return benutzer.getPasswort().equals(password);
     }
 
+    @Override
+    public boolean istEmailVergeben(String email) {
+        try {
+            benutzerCheck(email);
+            return true;
+        } catch (BenutzerExistiertNichtException e) {
+            return false;
+        }
+    }
+
 }
 

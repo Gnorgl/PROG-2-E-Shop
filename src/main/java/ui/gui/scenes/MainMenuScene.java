@@ -15,7 +15,7 @@ public class MainMenuScene extends VBox{
     private final SessionManager session;
     private final EshopGUI guiController;
 
-    //Hier die Elemente Objekte erstellen (so wie in LoginScene)
+    //Hier die Elemente Objekte erstellen
 
     public MainMenuScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;

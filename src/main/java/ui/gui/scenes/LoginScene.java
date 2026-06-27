@@ -20,7 +20,7 @@ public class LoginScene extends VBox{
     private final TextField emailFeld = new TextField();
     private final PasswordField passwortFeld = new PasswordField();
     private final Button loginButton = new Button("Anmelden");
-    private final Button registrierenButton = new Button("Noch kein Konto? Registrieren");
+    private final Button zeigeRegistrationSceneButton = new Button("Noch kein Konto? Registrieren");
     private final Label infoLabel = new Label();
 
     public LoginScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
@@ -42,7 +42,7 @@ public class LoginScene extends VBox{
         passwortFeld.getStyleClass().add("eingabe-feld");
         loginButton.getStyleClass().add("shop-button");
         infoLabel.getStyleClass().add("fehler-label");
-        registrierenButton.getStyleClass().add("secondary-button");
+        zeigeRegistrationSceneButton.getStyleClass().add("secondary-button");
         infoLabel.getStyleClass().add("fehler-label");
         //Überschrift
         Label titel = new Label("Willkommen im E-Shop - Login");
@@ -53,11 +53,11 @@ public class LoginScene extends VBox{
         passwortFeld.setPromptText("Passwort");
 
         //Elemente hinzufügen
-        this.getChildren().addAll(titel, emailFeld, passwortFeld, loginButton, registrierenButton, infoLabel);
+        this.getChildren().addAll(titel, emailFeld, passwortFeld, loginButton, zeigeRegistrationSceneButton, infoLabel);
 
         //Event-Handling
         loginButton.setOnAction(event -> login());
-        registrierenButton.setOnAction(event -> guiController.showRegistrationScene());
+        zeigeRegistrationSceneButton.setOnAction(event -> guiController.showRegistrationScene());
     }
 
     private void login() {
