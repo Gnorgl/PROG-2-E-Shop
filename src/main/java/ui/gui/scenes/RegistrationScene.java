@@ -10,6 +10,8 @@ import javafx.scene.layout.VBox;
 import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.components.CustomInputField;
+import ui.gui.components.CustomPasswordField;
 
 public class RegistrationScene extends VBox{
 
@@ -17,11 +19,11 @@ public class RegistrationScene extends VBox{
     private final SessionManager session;
     private final EshopGUI guiController;
 
-    private final TextField emailFeld = new TextField();
-    private final PasswordField passwortFeld = new PasswordField();
-    private final TextField vornameFeld = new TextField();
-    private final TextField nachnameFeld = new TextField();
-    private final TextField adresseFeld = new TextField();
+    private final CustomInputField emailFeld = new CustomInputField("E-Mail-Adresse");
+    private final CustomPasswordField passwortFeld = new CustomPasswordField("Passwort");
+    private final CustomInputField vornameFeld = new CustomInputField("Vorname");
+    private final CustomInputField nachnameFeld = new CustomInputField("Nachname");
+    private final CustomInputField adresseFeld = new CustomInputField("Strasse und Hausnummer");
 
     private final Button registrationButton = new Button("Registrieren");
     private final Button zurueckButton = new Button("Zurück zum Login");
@@ -43,11 +45,6 @@ public class RegistrationScene extends VBox{
         this.getStyleClass().add("login-container");
 
         //Den Elementen IDs oder Klassen zuweisen
-        emailFeld.getStyleClass().add("eingabe-feld");
-        passwortFeld.getStyleClass().add("eingabe-feld");
-        vornameFeld.getStyleClass().add("eingabe-feld");
-        nachnameFeld.getStyleClass().add("eingabe-feld");
-        adresseFeld.getStyleClass().add("eingabe-feld");
         registrationButton.getStyleClass().add("shop-button");
         zurueckButton.getStyleClass().add("secondary-button");
         infoLabel.getStyleClass().add("fehler-label");

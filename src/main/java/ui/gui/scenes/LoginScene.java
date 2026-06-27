@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.components.CustomInputField;
+import ui.gui.components.CustomPasswordField;
 
 
 public class LoginScene extends VBox{
@@ -17,8 +19,9 @@ public class LoginScene extends VBox{
     private final SessionManager session;
     private final EshopGUI guiController;
 
-    private final TextField emailFeld = new TextField();
-    private final PasswordField passwortFeld = new PasswordField();
+    private final CustomInputField emailFeld = new CustomInputField("E-Mail-Adresse");
+    private final CustomPasswordField passwortFeld = new CustomPasswordField("Passwort");
+
     private final Button loginButton = new Button("Anmelden");
     private final Button zeigeRegistrationSceneButton = new Button("Noch kein Konto? Registrieren");
     private final Label infoLabel = new Label();
@@ -37,13 +40,12 @@ public class LoginScene extends VBox{
         }
         //Style-Klasse für VBox
         this.getStyleClass().add("login-container");
+
         //Den Elementen IDs oder Klassen zuweisen
-        emailFeld.getStyleClass().add("eingabe-feld");
-        passwortFeld.getStyleClass().add("eingabe-feld");
         loginButton.getStyleClass().add("shop-button");
-        infoLabel.getStyleClass().add("fehler-label");
         zeigeRegistrationSceneButton.getStyleClass().add("secondary-button");
         infoLabel.getStyleClass().add("fehler-label");
+
         //Überschrift
         Label titel = new Label("Willkommen im E-Shop - Login");
         titel.getStyleClass().add("login-titel");

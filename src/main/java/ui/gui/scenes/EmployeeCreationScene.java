@@ -77,7 +77,41 @@ public class EmployeeCreationScene extends VBox{
     }
 
     private void createEmployee() {
-        //Bei erfolgreicher Erstellung:
-        guiController.showMainMenuScene();
+        String email = emailFeld.getText().trim().toLowerCase();
+        String passwort = passwortFeld.getText().trim();
+        String vorname = vornameFeld.getText().trim();
+        String nachname = nachnameFeld.getText().trim();
+
+        infoLabel.setText("");
+        //Validierung
+        if (email.isEmpty() || passwort.isEmpty() || vorname.isEmpty() || nachname.isEmpty()) {
+            infoLabel.setText("Fehler: Bitte alle Felder ausfüllen!");
+            return;
+        }
+
+        String emailMuster = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$";
+        if (!email.matches(emailMuster)) {
+            infoLabel.setText("Fehler: Ungültiges E-Mail-Format! (nur ...@domain.com)");
+            return;
+        }
+
+        try {
+            // Prüfung E-Mail vergeben?
+            if (eshop.getBenutzerVerwaltung().istEmailVergeben(email)) {
+                infoLabel.setText("Fehler: Diese E-Mail-Adresse wird bereits verwendet!");
+                return;
+            }
+
+            // Mitarbeiter über die Logikklasse anlegen
+            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(email, passwort, nachname, vorname);
+
+            System.out.println("Mitarbeiter erfolgreich angelegt!");
+
+            // Zurück zum Hauptmenü leiten
+            guiController.showMainMenuScene();
+
+        } catch (EmailBereitsVergebenException e) {
+            infoLabel.setText("Fehler: " + e.getMessage());
+        }
     }
 }
