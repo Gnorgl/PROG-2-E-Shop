@@ -20,7 +20,7 @@ public class AdminDialogManager {
         this.session = session;
     }
 
-    public void mitarbeiterKontoErstellen() {
+    /*public void mitarbeiterKontoErstellen() {
         if (session.getBenutzer() == null || !session.istBenutzerEinMitarbeiter()) {
             System.out.println("Fehler: Zugriff verweigert. Nur Mitarbeiter dürfen Konten erstellen!");
             return;
@@ -60,7 +60,7 @@ public class AdminDialogManager {
         String vorname = scanner.nextLine().trim();
 
         try {
-            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(email, password, nachname, vorname);
+            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(password, nachname, vorname);
 
             System.out.println("----------------");
             System.out.println("Neuen Mitarbeiter erfolgreich erstellt!");
@@ -75,7 +75,7 @@ public class AdminDialogManager {
             System.out.println("Systemfehler beim automatischen Login.");
         }
     }
-
+    */
     public void produktErstellen() {
         System.out.println("------Neues Produkt------");
         System.out.println("[1] Einzelartikel");

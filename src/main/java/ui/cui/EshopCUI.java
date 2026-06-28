@@ -119,7 +119,7 @@ public class EshopCUI {
                     case "p" -> adminDialogManager.produktErstellen();
                     case "d" -> adminDialogManager.produktLoeschen();
                     case "i" -> adminDialogManager.orderVerlauf();
-                    case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
+                    //case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
                     case "w" -> shoppingServiceManager.warenkatalog();
                     case "a" -> loginLogoutManager.logout();
                     default -> unbekannterBefehl();

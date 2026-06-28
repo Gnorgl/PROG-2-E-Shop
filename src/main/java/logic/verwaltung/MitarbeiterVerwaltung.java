@@ -2,11 +2,9 @@ package logic.verwaltung;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Mitarbeiter;
-import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.MitarbeiterNichtGefundenException;
 import logic.moduls.IMV;
 import logic.moduls.IUC;
-import persistence.user.KundenListe;
 import persistence.user.MitarbeiterListe;
 
 import java.io.File;
@@ -17,18 +15,14 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     private final ObjectMapper mapper = new ObjectMapper();
 
     private MitarbeiterListe mitarbeiterListe = new MitarbeiterListe();
-
     private long idCounter = 0;
 
     public MitarbeiterVerwaltung() {
         datenLaden();
-        //Admin-Mitarbeiter
         if (this.mitarbeiterListe.getMitarbeiter().isEmpty()) {
             initialisiereStandardAdmin();
         }
     }
-
-    //Getter-Methoden
 
     @Override
     public MitarbeiterListe getMitarbeiterListe() {
@@ -37,6 +31,11 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
     @Override
     public Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException {
+        // ABSICHERUNG: Suche in der Map immer mit Kleinbuchstaben und ohne Leerzeichen
+        if (email != null) {
+            email = email.toLowerCase().trim();
+        }
+
         Mitarbeiter mitarbeiter = this.mitarbeiterListe.getMitarbeiter().get(email);
         if (mitarbeiter == null) {
             throw new MitarbeiterNichtGefundenException(email);
@@ -44,21 +43,19 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
         return mitarbeiter;
     }
 
-    //Methode um einen neuen Mitarbeiter zu erstellen. Gibt einen Boolean Wert wieder.
-
     @Override
-    public boolean createNewMitarbeiter(String email, String passwort, String nachname,String vorname) throws EmailBereitsVergebenException {
-        if (this.mitarbeiterListe.getMitarbeiter().containsKey(email)) {
-            throw new EmailBereitsVergebenException(email);
-        } else {
-            String nummer = generateBenutzerNummer();
-            this.mitarbeiterListe.getMitarbeiter().put(email, new Mitarbeiter(nummer, email, passwort, nachname, vorname));
-            safe();
-            return true;
-        }
-    }
+    public Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname) {
+        String nummer = generateBenutzerNummer();
+        String email = vorname.toLowerCase().trim() + nummer + "@shop.com";
 
-    //Methode um eine Mitarbeiter-ID-Nummer zu generieren. ID wird gezählt.
+        Mitarbeiter neuerMitarbeiter = new Mitarbeiter(nummer, email, passwort, nachname, vorname);
+
+        // Sicherstellen, dass der Key komplett klein ist
+        this.mitarbeiterListe.getMitarbeiter().put(email, neuerMitarbeiter);
+        safe();
+
+        return neuerMitarbeiter;
+    }
 
     @Override
     public String generateBenutzerNummer() {
@@ -67,20 +64,18 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     }
 
     private void initialisiereStandardAdmin() {
-        String nummer = generateBenutzerNummer(); // Erzeugt "MI-1"
-        Mitarbeiter admin = new Mitarbeiter(nummer, "admin@email.com", "123", "Modus", "Admin");
+        String adminNummer = "MI-0";
+        // E-Mail explizit komplett klein schreiben
+        String adminEmail = "admin@shop.com";
+        Mitarbeiter admin = new Mitarbeiter(adminNummer, adminEmail, "123", "Modus", "Admin");
 
-        this.mitarbeiterListe.getMitarbeiter().put(admin.getEmail(), admin);
-
-        // Sofort speichern, damit die Datei von nun an existiert
+        this.mitarbeiterListe.getMitarbeiter().put(adminEmail, admin);
         safe();
     }
 
-    //Persistenz Methoden
     public void safe() {
         try {
             Object[] speicherContainer = new Object[]{ this.mitarbeiterListe, this.idCounter };
-
             mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
         } catch (IOException e) {
             System.err.println("Fehler beim Speichern der Mitarbeiter: " + e.getMessage());
@@ -104,5 +99,4 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
             System.err.println("Fehler beim Laden der Mitarbeiter: " + e.getMessage());
         }
     }
-
 }

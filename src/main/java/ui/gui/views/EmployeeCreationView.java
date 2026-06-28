@@ -1,5 +1,6 @@
 package ui.gui.views;
 
+import entities.Mitarbeiter;
 import exceptions.user.EmailBereitsVergebenException;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox; // Geändert von BorderPane zu VBox
@@ -15,7 +16,6 @@ public class EmployeeCreationView extends VBox {
     private final Eshop eshop;
     private final EshopGUI guiController;
 
-    private final CustomInputField emailFeld = new CustomInputField("E-Mail-Adresse");
     private final CustomPasswordField passwortFeld = new CustomPasswordField("Passwort");
     private final CustomInputField vornameFeld = new CustomInputField("Vorname");
     private final CustomInputField nachnameFeld = new CustomInputField("Nachname");
@@ -28,6 +28,7 @@ public class EmployeeCreationView extends VBox {
         this.guiController = guiController;
 
         this.getStyleClass().add("dashboard-container");
+        this.setAlignment(javafx.geometry.Pos.CENTER);
         infoLabel.getStyleClass().add("fehler-label");
 
         Label titel = new Label("Erstellung eines Mitarbeiters!");
@@ -35,7 +36,6 @@ public class EmployeeCreationView extends VBox {
 
         this.getChildren().addAll(
                 titel,
-                emailFeld,
                 passwortFeld,
                 vornameFeld,
                 nachnameFeld,
@@ -48,44 +48,33 @@ public class EmployeeCreationView extends VBox {
     }
 
     private void createEmployee() {
-        String email = emailFeld.getText().trim().toLowerCase();
         String passwort = passwortFeld.getText().trim();
         String vorname = vornameFeld.getText().trim();
         String nachname = nachnameFeld.getText().trim();
 
         infoLabel.setText("");
 
-        if (email.isEmpty() || passwort.isEmpty() || vorname.isEmpty() || nachname.isEmpty()) {
+        if (passwort.isEmpty() || vorname.isEmpty() || nachname.isEmpty()) {
             infoLabel.setText("Bitte alle Felder ausfüllen!");
             return;
         }
 
-        String emailMuster = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$";
-        if (!email.matches(emailMuster)) {
-            infoLabel.setText("Ungültiges E-Mail-Format! (nur ...@domain.com)");
-            return;
-        }
-
         try {
-            if (eshop.getBenutzerVerwaltung().istEmailVergeben(email)) {
-                infoLabel.setText("Diese E-Mail-Adresse wird bereits verwendet!");
-                return;
-            }
-
-            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(email, passwort, nachname, vorname);
+            // Aufruf der neuen Methode ohne das E-Mail-Argument
+            Mitarbeiter m = eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(passwort, nachname, vorname);
 
             infoLabel.setStyle("-fx-text-fill: #2a9d8f;");
-            infoLabel.setText("Mitarbeiter erfolgreich angelegt!");
+            // Hier nutzen wir das zurückgegebene Objekt für das Feedback:
+            infoLabel.setText("Mitarbeiter erfolgreich angelegt!\nE-Mail: " + m.getEmail());
 
-            // Felder leeren für den nächsten Eintrag
-            emailFeld.clear();
+            // Felder leeren
             passwortFeld.clear();
             vornameFeld.clear();
             nachnameFeld.clear();
 
-        } catch (EmailBereitsVergebenException e) {
+        } catch (Exception e) {
             infoLabel.setStyle("-fx-text-fill: #e76f51;");
-            infoLabel.setText("Fehler: " + e.getMessage());
+            infoLabel.setText("Fehler beim Speichern: " + e.getMessage());
         }
     }
 }

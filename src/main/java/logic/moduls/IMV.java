@@ -11,6 +11,6 @@ public interface IMV {
 
     Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException;
 
-    boolean createNewMitarbeiter(String email, String passwort, String nachname,String vorname) throws EmailBereitsVergebenException;
+    public Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname);
 
 }
