@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. GLOBALE BASICS (Gilt für die ganze Anwendung)
+   GLOBALE BASICS (Gilt für die ganze Anwendung)
    ========================================================================== */
 .root {
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
@@ -14,7 +14,102 @@
 }
 
 /* ==========================================================================
-   2. STYLES FÜR DIE LOGIN- / REGISTRIERUNGSSCENE
+   STYLES FÜR DIE NAVIGATION-SIDEBAR
+   ========================================================================== */
+.sidebar {
+    -fx-spacing: 15px;
+    -fx-padding: 20px;
+    -fx-pref-width: 250px;
+    -fx-background-color: #2c3e50; /* Ein schönes, dunkles Admin-Blau */
+}
+
+.sidebar-user-info {
+    -fx-spacing: 5px;
+    -fx-alignment: center-left;
+    -fx-border-color: #34495e;
+    -fx-border-width: 0 0 2px 0; /* Ersetzt die hässlichen Bindestriche durch eine echte Trennlinie */
+    -fx-padding: 0 0 15px 0;
+}
+
+.sidebar-username {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #ffffff;
+}
+
+.sidebar-userrole {
+    -fx-font-size: 12px;
+    -fx-text-fill: #bdc3c7;
+}
+
+.sidebar-button {
+    -fx-max-width: infinity; /* Macht alle Knöpfe gleich breit */
+    -fx-alignment: center-left;
+    -fx-padding: 10px 15px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #ecf0f1;
+    -fx-cursor: hand;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #34495e;
+    -fx-background-radius: 4px;
+}
+
+.sidebar-logout-box {
+    -fx-padding: 50px 0 0 0;
+}
+
+.logout-button {
+    -fx-max-width: infinity;
+    -fx-padding: 10px;
+    -fx-background-color: #e74c3c; /* Dezentes Rot für den Logout */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.logout-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* ==========================================================================
+   MAIN MENU-SCENE
+   ========================================================================== */
+
+.dashboard-container {
+    -fx-alignment: top-left;
+    -fx-spacing: 25px;
+    -fx-padding: 40px;
+}
+
+.dashboard-willkommen {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.dashboard-infotext {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Die Infobox für den Mitarbeiter */
+.mitarbeiter-infobox {
+    -fx-spacing: 10px;
+    -fx-background-color: #ecf0f1;
+    -fx-padding: 15px;
+    -fx-background-radius: 5px;
+}
+
+.mitarbeiter-infobox-titel {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2980b9;
+}
+
+/* ==========================================================================
+   STYLES FÜR DIE LOGIN- / REGISTRIERUNGSSCENE
    ========================================================================== */
 /* Styling für den gesamten Hintergrund (die VBox) */
 .login-container {
@@ -43,9 +138,10 @@
 
 /* Styling für den Login-Button */
 .shop-button {
-    -fx-min-width: 150px;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
     -fx-padding: 10px;
-    -fx-background-color: #2a9d8f; /* Schönes Petrol-Grün */
+    -fx-background-color: #2a9d8f;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5px;
@@ -64,6 +160,8 @@
 }
 /* Für den RegistrierungsScene Button */
 .secondary-button {
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
     -fx-background-color: transparent;
     -fx-text-fill: #2a9d8f;
     -fx-underline: true;
@@ -74,5 +172,5 @@
 }
 
 /* ==========================================================================
-   3. STYLES FÜR DEN WARENKATALOG
+   STYLES FÜR DEN WARENKATALOG
    ========================================================================== */

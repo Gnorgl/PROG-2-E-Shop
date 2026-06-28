@@ -1,15 +1,14 @@
 package ui.gui;
 
-import com.sun.prism.ReadbackGraphics;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Eshop;
 import logic.SessionManager;
-import ui.gui.scenes.EmployeeCreationScene;
+import ui.gui.views.EmployeeCreationView;
 import ui.gui.scenes.LoginScene;
-import ui.gui.scenes.MainMenuScene;
+import ui.gui.scenes.MainLayoutScene;
 import ui.gui.scenes.RegistrationScene;
 
 
@@ -54,8 +53,8 @@ public class EshopGUI extends Application {
         changeScene(loginScene);
     }
 
-    public void showMainMenuScene() {
-        MainMenuScene mainScene = new MainMenuScene(eshop, session, this);
+    public void showMainLayoutScene() {
+        MainLayoutScene mainScene = new MainLayoutScene(eshop, session, this);
         changeScene(mainScene);
     }
 
@@ -65,7 +64,7 @@ public class EshopGUI extends Application {
     }
 
     public void showEmployeeCreationScene() {
-        EmployeeCreationScene employeeScene = new EmployeeCreationScene(eshop, session, this);
+        EmployeeCreationView employeeScene = new EmployeeCreationView(eshop, session, this);
         changeScene(employeeScene);
     }
 
