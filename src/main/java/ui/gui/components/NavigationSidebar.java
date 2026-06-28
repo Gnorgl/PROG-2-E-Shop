@@ -8,6 +8,7 @@ import logic.SessionManager;
 import ui.gui.EshopGUI;
 import ui.gui.scenes.MainLayoutScene;
 import ui.gui.views.EmployeeCreationView;
+import ui.gui.views.KatalogView;
 
 public class NavigationSidebar extends VBox {
 
@@ -60,6 +61,8 @@ public class NavigationSidebar extends VBox {
             Button historieBtn = new Button("Meine Bestellungen");
 
             addSidebarButtons(shopBtn, warenkorbBtn, historieBtn);
+            shopBtn.setOnAction(e -> mainLayout.setCenterView(new KatalogView(eshop, session, guiController)));
+            warenkorbBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.WarenkorbView(eshop, session, guiController, mainLayout)));
         }
 
         // --- Logout-Bereich ---

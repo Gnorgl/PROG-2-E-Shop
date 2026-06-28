@@ -1,7 +1,5 @@
-package ui.gui.scenes;
+package ui.gui.views;
 
-import entities.Artikel;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -9,7 +7,7 @@ import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
 
-public class ArtikelVerwaltungScene extends VBox {
+public class ArtikelVerwaltungView extends VBox {
     private final Eshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
@@ -22,12 +20,12 @@ public class ArtikelVerwaltungScene extends VBox {
     private Button anlegenBtn;
     private Button einlagernBtn;
 
-    public ArtikelVerwaltungScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public ArtikelVerwaltungView(Eshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
 
-        // CSS laden (Pfad anpassen, falls nötig)
+        // CSS laden
         try {
             String cssPath = getClass().getResource("/ui/gui/css/style.css").toExternalForm();
             this.getStylesheets().add(cssPath);

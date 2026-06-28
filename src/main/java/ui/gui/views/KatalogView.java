@@ -1,4 +1,4 @@
-package ui.gui.scenes;
+package ui.gui.views;
 
 import entities.Artikel;
 import javafx.collections.ObservableList;
@@ -9,7 +9,7 @@ import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
 
-public class ArtikelListeScene extends VBox {
+public class KatalogView extends VBox {
     private final Eshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
@@ -18,12 +18,12 @@ public class ArtikelListeScene extends VBox {
     private ComboBox<String> sortBox;
     private ObservableList<Artikel> artikelListe;
 
-    public ArtikelListeScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public KatalogView(Eshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
 
-        // CSS laden (Pfad anpassen, falls nötig)
+        // CSS laden
         try {
             String cssPath = getClass().getResource("/ui/gui/css/style.css").toExternalForm();
             this.getStylesheets().add(cssPath);
