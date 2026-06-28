@@ -19,19 +19,23 @@ import logic.verwaltung.EreignisVerwaltung;
 import logic.verwaltung.ArtikelVerwaltung;
 import persistence.shop.WarenkorbListe;
 import java.util.HashMap;
+import logic.verwaltung.WarenkorbVerwaltung;
 
 public class ShoppingServiceManager {
     private final Eshop eshop;
     private final EreignisVerwaltung ereignisVerwaltung;
     private final Scanner scanner;
     private final SessionManager session;
-    private final WarenkorbListe warenkorb = new WarenkorbListe();
+    private final WarenkorbVerwaltung warenkorbVerwaltung;
+    private final WarenkorbListe warenkorb;
 
     public ShoppingServiceManager(Eshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
         this.ereignisVerwaltung = eshop.getEreignisVerwaltung();
+        this.warenkorbVerwaltung = new WarenkorbVerwaltung(eshop.getArtikelVerwaltung());
+        this.warenkorb = warenkorbVerwaltung.getWarenkorbListe();
     }
 
     public void warenkatalog() {
@@ -119,7 +123,7 @@ public class ShoppingServiceManager {
             }
 
             int aktueleMenge = warenkorb.getMenge(artikel);
-            warenkorb.speichern(artikel, aktueleMenge + menge);
+            warenkorbVerwaltung.artikelHinzufuegen(artikel, aktueleMenge + menge);
             System.out.println( menge + "x " + artikel.getBezeichnung() + " zum Warenkorb hinzugefügt!");
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
@@ -195,7 +199,7 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            warenkorb.speichern(artikel, neueMenge);
+            warenkorbVerwaltung.artikelHinzufuegen(artikel, neueMenge);
             System.out.println(" Menge geändert!");
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
@@ -220,7 +224,7 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            warenkorb.artikelEntfernen(artikel);
+            warenkorbVerwaltung.artikelEntfernen(artikel);
             System.out.println( artikel.getBezeichnung() + " entfernt!");
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
@@ -249,6 +253,7 @@ public class ShoppingServiceManager {
         }
         if (rechnung != null) {
             eshop.getBestellVerwaltungV().rechnungAnzeigen(rechnung);
+            warenkorbVerwaltung.safe();
             System.out.println("Bestellung erfolgreich abgeschlossen!");
         }
     }
