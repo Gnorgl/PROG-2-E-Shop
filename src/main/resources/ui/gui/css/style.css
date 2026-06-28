@@ -8,10 +8,6 @@
     -fx-padding: 8px;
     -fx-background-radius: 5px;
 }
-.shop-button {
-    -fx-background-color: #2a9d8f;
-    -fx-text-fill: white;
-}
 
 /* ==========================================================================
    STYLES FÜR DIE NAVIGATION-SIDEBAR

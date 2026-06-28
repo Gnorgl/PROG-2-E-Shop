@@ -37,10 +37,10 @@ public class LoginScene extends VBox {
             System.err.println("CSS Datei nicht gefunden!");
         }
 
-        this.getStyleClass().add("login-container");
+        this.getStyleClass().add("login-container"); //An sich sollte es keine getStyleClass() in den views oder scenen geben, alles als component
         infoLabel.getStyleClass().add("fehler-label");
 
-        Label titel = new Label("Willkommen im E-Shop - Login");
+        Label titel = new Label("Willkommen im E-Shop - Login"); //Das auch als Component darstellen
         titel.getStyleClass().add("login-titel");
 
         // Keine manuellen Button-Styles oder Field-Prompts
