@@ -27,7 +27,7 @@ public class MainLayoutScene extends BorderPane {
 
         this.setLeft(new NavigationSidebar(eshop, session, guiController, this)); // this wird an sidebar übergeben
 
-        // 2. Als Standard-Inhalt beim Starten die Home-Page (Dashboard) laden
+        // dashboard ist quasi der home-screen
         showDashboard();
     }
 

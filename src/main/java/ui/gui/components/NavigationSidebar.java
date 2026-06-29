@@ -3,7 +3,7 @@ package ui.gui.components;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import logic.Eshop; // Import hinzugefügt
+import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
 import ui.gui.scenes.MainLayoutScene;
@@ -54,7 +54,7 @@ public class NavigationSidebar extends VBox {
             addSidebarButtons(infoBtn, mitarbeiterAnlegenBtn, logBtn);
 
             mitarbeiterAnlegenBtn.setOnAction(e -> mainLayout.setCenterView(new EmployeeCreationView(eshop, session, guiController)));
-            //Hier noch die event listener wenn die anderen views erstellt wurden.
+            //Hier noch die event listener, wenn die anderen views erstellt wurden.
         } else {
             Button shopBtn = new Button("Zum Marktplatz");
             Button warenkorbBtn = new Button("Warenkorb");

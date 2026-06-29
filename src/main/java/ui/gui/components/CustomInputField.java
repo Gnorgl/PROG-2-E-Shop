@@ -7,6 +7,6 @@ public class CustomInputField extends TextField {
     public CustomInputField(String promptText) {
         super();
         this.setPromptText(promptText);
-        this.getStyleClass().add("eingabe-feld"); // CSS-Klasse global vergeben
+        this.getStyleClass().add("eingabe-feld");
     }
 }

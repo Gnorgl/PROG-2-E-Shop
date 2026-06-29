@@ -31,7 +31,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
     @Override
     public Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException {
-        // ABSICHERUNG: Suche in der Map immer mit Kleinbuchstaben und ohne Leerzeichen
+        // immer kleinbuchstabe
         if (email != null) {
             email = email.toLowerCase().trim();
         }
@@ -50,7 +50,6 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
         Mitarbeiter neuerMitarbeiter = new Mitarbeiter(nummer, email, passwort, nachname, vorname);
 
-        // Sicherstellen, dass der Key komplett klein ist
         this.mitarbeiterListe.getMitarbeiter().put(email, neuerMitarbeiter);
         safe();
 
