@@ -57,7 +57,7 @@ public class KundenVerwaltung implements IKV, IUC {
     @Override
     public String generateBenutzerNummer() {
         this.idCounter++;
-        return "KI-" + this.idCounter;
+        return "-ki-" + this.idCounter;
     }
 
     //Kunden ID-Generator andere kennzeichnung als mitarbeiter ID, etwa KD-234324 und Mitarbeiter MB-234324, random generated lange nummer.

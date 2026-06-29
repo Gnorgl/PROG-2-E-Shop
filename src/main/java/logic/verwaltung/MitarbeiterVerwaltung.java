@@ -46,7 +46,8 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     @Override
     public Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname) {
         String nummer = generateBenutzerNummer();
-        String email = vorname.toLowerCase().trim() + nummer + "@shop.com";
+
+        String email = (vorname.trim() + nummer + "@shop.com").toLowerCase();
 
         Mitarbeiter neuerMitarbeiter = new Mitarbeiter(nummer, email, passwort, nachname, vorname);
 
@@ -59,11 +60,11 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
     @Override
     public String generateBenutzerNummer() {
         this.idCounter++;
-        return "MI-" + this.idCounter;
+        return "-mi-" + this.idCounter;
     }
 
     private void initialisiereStandardAdmin() {
-        String adminNummer = "MI-0";
+        String adminNummer = "-mi-0";
         // E-Mail explizit komplett klein schreiben
         String adminEmail = "admin@shop.com";
         Mitarbeiter admin = new Mitarbeiter(adminNummer, adminEmail, "123", "Modus", "Admin");
