@@ -76,7 +76,7 @@ public class RegistrationScene extends VBox {
             return;
         }
 
-        String emailMuster = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$";
+        String emailMuster = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.(de|com|net|org)$";
         if (!email.matches(emailMuster)) {
             infoLabel.setText("Ungültige E-Mail! (nur ...@domain.com)");
             return;
