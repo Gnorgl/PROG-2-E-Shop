@@ -57,7 +57,6 @@ public class ArtikelVerwaltung implements IAV {
             this.idCounter = mapper.convertValue(speicherContainer[1], Long.class);
 
             // Falls die Liste leer ist, wird der Counter zurückgesetzt
-            // HINWEIS: Falls deine Getter-Methode in ArtikelListe anders heißt (z.B. getArtikelListe()), passe das hier an.
             if (this.artikelListe.getArtikelImLager().isEmpty()) {
                 this.idCounter = 0;
             }
@@ -83,16 +82,19 @@ public class ArtikelVerwaltung implements IAV {
 
 
     @Override
-    public boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits {
-        try {
-            findeArtikel(nr);
-            throw new ArtikelExistiertBereits(name);
-        } catch (ArtikelNichtGefunden e) {
-            // Artikel existiert nicht, daher kann er angelegt werden
+    public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits {
+
+        int neueNr = (int) ++idCounter;
+
+        for (Artikel a : artikelListe.getArtikelImLager()) {
+            if (a.getBezeichnung().equalsIgnoreCase(name)) {
+                throw new ArtikelExistiertBereits(name);
+            }
         }
 
-        Artikel neuerArtikel = new Artikel(nr, name, bestand, preis);
+        Artikel neuerArtikel = new Artikel(neueNr, name, bestand, preis);
         artikelListe.getArtikelImLager().add(neuerArtikel);
+
 
         safe();
 
@@ -100,7 +102,6 @@ public class ArtikelVerwaltung implements IAV {
         try {
             ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
         } catch (Exception ex) {
-            // Logging-Fehler sollten nicht den Geschäftsprozess blockieren
             System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
         }
         return true;

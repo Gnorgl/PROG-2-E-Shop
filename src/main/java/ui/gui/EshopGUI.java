@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Eshop;
 import logic.SessionManager;
+import ui.gui.views.ArtikelVerwaltungView;
 import ui.gui.views.EmployeeCreationView;
 import ui.gui.scenes.LoginScene;
 import ui.gui.scenes.MainLayoutScene;
@@ -66,6 +67,11 @@ public class EshopGUI extends Application {
     public void showEmployeeCreationScene() {
         EmployeeCreationView employeeScene = new EmployeeCreationView(eshop, session, this);
         changeScene(employeeScene);
+    }
+
+    public void showArtikelVerwaltungView() {
+        ArtikelVerwaltungView artikelVerwaltungView = new ArtikelVerwaltungView(eshop, session, this);
+        changeScene(artikelVerwaltungView);
     }
 
     public static void main(String[] args) {

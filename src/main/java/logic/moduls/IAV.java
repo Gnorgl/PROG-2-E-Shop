@@ -8,7 +8,7 @@ import exceptions.artikel.MengeUngueltigException;
 public interface IAV {
 
 
-    boolean legeArtikelAn(int nr, String name, int bestand, double preis) throws ArtikelExistiertBereits;
+    boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits;
 
     void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, MengeUngueltigException;
 

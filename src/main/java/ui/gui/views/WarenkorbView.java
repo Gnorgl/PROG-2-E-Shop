@@ -40,7 +40,7 @@ public class WarenkorbView extends VBox {
         }
 
         this.setSpacing(15);
-        this.setPadding(new Insets(20)); // Ersetzt die vorherigen Insets(30)
+        this.setPadding(new Insets(20));
     }
 
     private void initUI() {

@@ -51,6 +51,7 @@ public class NavigationSidebar extends VBox {
             Button mitarbeiterAnlegenBtn = new Button("Mitarbeiter anlegen");
             Button logBtn = new Button("Historie / Protokoll");
 
+            infoBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.ArtikelVerwaltungView(eshop, session, guiController)));
             addSidebarButtons(infoBtn, mitarbeiterAnlegenBtn, logBtn);
 
             mitarbeiterAnlegenBtn.setOnAction(e -> mainLayout.setCenterView(new EmployeeCreationView(eshop, session, guiController)));

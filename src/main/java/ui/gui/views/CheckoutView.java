@@ -35,7 +35,7 @@ public class CheckoutView extends VBox {
         }
 
         this.setSpacing(15);
-        this.setPadding(new Insets(20)); // Ersetzt die vorherigen Insets(30)
+        this.setPadding(new Insets(20));
     }
 
     private void initUI() {
@@ -44,7 +44,7 @@ public class CheckoutView extends VBox {
         // Links Eingabefelder
         VBox linksBox = new VBox(25);
 
-        // Titel (Die alte headerBox wird nicht mehr gebraucht, wir fügen das Label direkt hinzu)
+        // Titel
         Label titleLabel = new Label("Kasse");
         titleLabel.getStyleClass().add("checkout-title");
 
