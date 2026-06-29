@@ -127,7 +127,7 @@ public class AdminDialogManager {
                 eshop.getArtikelVerwaltung().legeMassengutartikelAn(nr, name, bestand, preis, packungsGroesse);
                 System.out.println("------Massengutartikel erfolgreich erstellt (Packungsgröße: " + packungsGroesse + ")------");
             } else {
-                eshop.getArtikelVerwaltung().legeArtikelAn(nr, name, bestand, preis);
+                eshop.getArtikelVerwaltung().legeArtikelAn(name, bestand, preis);
                 System.out.println("------Einzelartikel erfolgreich erstellt------");
             }
         } catch (NumberFormatException e) {
