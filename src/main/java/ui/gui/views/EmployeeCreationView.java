@@ -60,11 +60,10 @@ public class EmployeeCreationView extends VBox {
         }
 
         try {
-            // Aufruf der neuen Methode ohne das E-Mail-Argument
+            // Aufruf ohne das E-Mail-Argument anders als bei Kunden
             Mitarbeiter m = eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(passwort, nachname, vorname);
 
             infoLabel.setStyle("-fx-text-fill: #2a9d8f;");
-            // Hier nutzen wir das zurückgegebene Objekt für das Feedback:
             infoLabel.setText("Mitarbeiter erfolgreich angelegt!\nE-Mail: " + m.getEmail());
 
             // Felder leeren
