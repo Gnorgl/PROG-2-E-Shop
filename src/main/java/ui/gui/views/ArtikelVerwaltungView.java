@@ -33,6 +33,8 @@ public class ArtikelVerwaltungView extends VBox {
     private ObservableList<Artikel> artikelListe;
 
     // Artikel anlegen
+    private CheckBox massengutCheckBox;
+    private CustomInputField neuPackungField;
     private CustomInputField neuBezeichnungField;
     private CustomInputField neuBestandField;
     private CustomInputField neuPreisField;
@@ -119,13 +121,24 @@ public class ArtikelVerwaltungView extends VBox {
         colBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
         colBez.setPrefWidth(200);
 
+        TableColumn<Artikel, String> colArt = new TableColumn<>("Typ / Packung");
+        colArt.setCellValueFactory(cellData -> {
+            Artikel a = cellData.getValue();
+            if (a instanceof entities.Massengutartikel) {
+                return new javafx.beans.property.ReadOnlyStringWrapper(((entities.Massengutartikel) a).getPackungsGroesse() + "er Pack");
+            } else {
+                return new javafx.beans.property.ReadOnlyStringWrapper("Einzelartikel");
+            }
+        });
+        colArt.setPrefWidth(100);
+
         TableColumn<Artikel, Integer> colBestand = new TableColumn<>("Bestand");
         colBestand.setCellValueFactory(new PropertyValueFactory<>("bestand"));
 
         TableColumn<Artikel, Double> colPreis = new TableColumn<>("Preis (€)");
         colPreis.setCellValueFactory(new PropertyValueFactory<>("preis"));
 
-        artikelTable.getColumns().addAll(colNr, colBez, colBestand, colPreis);
+        artikelTable.getColumns().addAll(colNr, colBez, colArt, colBestand, colPreis);
 
         box.getChildren().addAll(header, artikelTable);
         return box;
@@ -151,11 +164,23 @@ public class ArtikelVerwaltungView extends VBox {
         neuBestandField = new CustomInputField("z.B. 100");
         neuPreisField = new CustomInputField("z.B. 49.99");
 
+        massengutCheckBox = new CheckBox("Ist Massengutartikel?");
+        neuPackungField = new CustomInputField("z.B. 6");
+        neuPackungField.setDisable(true); // Standardmäßig deaktiviert
+
+        // Toggle-Logik für das Textfeld
+        massengutCheckBox.setOnAction(e -> {
+            neuPackungField.setDisable(!massengutCheckBox.isSelected());
+            if(!massengutCheckBox.isSelected()) neuPackungField.clear();
+        });
+
         VBox formLayout = new VBox(10);
         formLayout.getChildren().addAll(
                 new FormRow("Bezeichnung:", neuBezeichnungField),
                 new FormRow("Startbestand:", neuBestandField),
-                new FormRow("Preis (€):", neuPreisField)
+                new FormRow("Preis (€):", neuPreisField),
+                massengutCheckBox,
+                new FormRow("Packungsgröße:", neuPackungField)
         );
 
         anlegenBtn = new CustomButton("Artikel erstellen", CustomButton.ButtonType.PRIMARY);
@@ -219,12 +244,21 @@ public class ArtikelVerwaltungView extends VBox {
                 return;
             }
 
-            eshop.getArtikelVerwaltung().legeArtikelAn(bezeichnung, bestand, preis);
+            if (massengutCheckBox.isSelected()) {
+                int packung = Integer.parseInt(neuPackungField.getText().trim());
+                eshop.getArtikelVerwaltung().legeMassengutartikelAn(bezeichnung, bestand, preis, packung);
+            } else {
+                eshop.getArtikelVerwaltung().legeArtikelAn(bezeichnung, bestand, preis);
+            }
+
             showAlert(Alert.AlertType.INFORMATION, "Erfolg", "Artikel '" + bezeichnung + "' wurde erfolgreich angelegt.");
 
             neuBezeichnungField.clear();
             neuBestandField.clear();
             neuPreisField.clear();
+            neuPackungField.clear();
+            massengutCheckBox.setSelected(false);
+            neuPackungField.setDisable(true);
 
             datenLaden();
 

@@ -74,13 +74,23 @@ public class KatalogView extends VBox {
         TableColumn<Artikel, String> colBez = new TableColumn<>("Bezeichnung");
         colBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
 
+        TableColumn<Artikel, String> colArt = new TableColumn<>("Verpackung");
+        colArt.setCellValueFactory(cellData -> {
+            Artikel a = cellData.getValue();
+            if (a instanceof entities.Massengutartikel) {
+                return new javafx.beans.property.ReadOnlyStringWrapper(((entities.Massengutartikel) a).getPackungsGroesse() + "er Pack");
+            } else {
+                return new javafx.beans.property.ReadOnlyStringWrapper("Einzelstück");
+            }
+        });
+
         TableColumn<Artikel, Double> colPreis = new TableColumn<>("Preis (€)");
         colPreis.setCellValueFactory(new PropertyValueFactory<>("preis"));
 
         TableColumn<Artikel, Integer> colBestand = new TableColumn<>("Bestand");
         colBestand.setCellValueFactory(new PropertyValueFactory<>("bestand"));
 
-        table.getColumns().addAll(colNr, colBez, colPreis, colBestand);
+        table.getColumns().addAll(colNr, colBez, colArt, colPreis, colBestand);
         VBox.setVgrow(table, Priority.ALWAYS); // Tabelle nimmt restlichen Platz ein
 
         // In Warenkorb legen
@@ -129,14 +139,21 @@ public class KatalogView extends VBox {
         }
 
         try {
-            int menge = Integer.parseInt(mengeField.getText().trim());
-            if (menge <= 0) throw new NumberFormatException();
+            int eingabeMenge = Integer.parseInt(mengeField.getText().trim());
+            if (eingabeMenge <= 0) throw new NumberFormatException();
 
-            eshop.getWarenkorbVerwaltung().artikelHinzufuegen(ausgewaehlterArtikel, menge);
+            // NEU: Bei Massengut die Eingabe (Packungen) in Stückzahlen umrechnen
+            int finaleMenge = eingabeMenge;
+            if (ausgewaehlterArtikel instanceof entities.Massengutartikel) {
+                int packGroesse = ((entities.Massengutartikel) ausgewaehlterArtikel).getPackungsGroesse();
+                finaleMenge = eingabeMenge * packGroesse;
+            }
 
-            System.out.println(menge + "x " + ausgewaehlterArtikel.getBezeichnung() + " in den Warenkorb gelegt.");
+            eshop.getWarenkorbVerwaltung().artikelHinzufuegen(ausgewaehlterArtikel, finaleMenge);
 
-            showAlert(Alert.AlertType.INFORMATION, "Erfolg", menge + "x " + ausgewaehlterArtikel.getBezeichnung() + " wurde zum Warenkorb hinzugefügt.");
+            // Für die Erfolgsmeldung zeigen wir weiterhin die Packungsanzahl an
+            System.out.println(eingabeMenge + "x " + ausgewaehlterArtikel.getBezeichnung() + " in den Warenkorb gelegt.");
+            showAlert(Alert.AlertType.INFORMATION, "Erfolg", eingabeMenge + "x " + ausgewaehlterArtikel.getBezeichnung() + " wurde zum Warenkorb hinzugefügt.");
 
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige positive Zahl als Menge eingeben.");

@@ -120,13 +120,15 @@ public class ArtikelVerwaltung implements IAV {
         safe();
     }
 
-    public boolean legeMassengutartikelAn(int nr, String bezeichnung, int bestand, double preis, int packungsGroesse)
+    public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse)
             throws ArtikelExistiertBereits, MengeUngueltigException {
-        try {
-            findeArtikel(nr);
-            throw new ArtikelExistiertBereits(bezeichnung);
-        } catch (ArtikelNichtGefunden e) {
-            // nicht vorhanden
+
+        int neueNr = (int) ++idCounter;
+
+        for (Artikel a : artikelListe.getArtikelImLager()) {
+            if (a.getBezeichnung().equalsIgnoreCase(bezeichnung)) {
+                throw new ArtikelExistiertBereits(bezeichnung);
+            }
         }
 
         if (packungsGroesse <= 0) {
@@ -136,8 +138,10 @@ public class ArtikelVerwaltung implements IAV {
             throw new MengeUngueltigException(String.valueOf(packungsGroesse));
         }
 
-        Massengutartikel neuerArtikel = new Massengutartikel(nr, bezeichnung, bestand, preis, packungsGroesse);
+        Massengutartikel neuerArtikel = new Massengutartikel(neueNr, bezeichnung, bestand, preis, packungsGroesse);
         artikelListe.getArtikelImLager().add(neuerArtikel);
+
+        safe();
 
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
         try {

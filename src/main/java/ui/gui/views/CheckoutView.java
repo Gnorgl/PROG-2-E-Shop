@@ -59,11 +59,21 @@ public class CheckoutView extends VBox {
         HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getAlleArtikel();
 
         for (Artikel a : warenkorbMap.keySet()) {
-            int menge = warenkorbMap.get(a);
-            double positionsPreis = a.getPreis() * menge;
+            int mengeStueck = warenkorbMap.get(a);
+            double positionsPreis = a.berechneGesamtpreis(mengeStueck);
+
+            String anzeigeName = a.getBezeichnung();
+            int anzeigeMenge = mengeStueck;
+
+            // Umrechnen für die Kassen-Anzeige
+            if (a instanceof entities.Massengutartikel) {
+                int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
+                anzeigeMenge = mengeStueck / packGroesse;
+                anzeigeName += " (" + packGroesse + "er Pack)";
+            }
 
             HBox itemRow = new HBox();
-            Label lblItemName = new Label(menge + "x " + a.getBezeichnung());
+            Label lblItemName = new Label(anzeigeMenge + "x " + anzeigeName);
             Label lblItemPreis = new Label(String.format("€%.2f", positionsPreis));
 
             Region spacer = new Region();
@@ -146,7 +156,7 @@ public class CheckoutView extends VBox {
 
     private VBox createSummaryBox() {
         VBox box = new VBox(15);
-        // Breite und Padding werden jetzt über .summary-box im CSS gesteuert
+        // Breite und Padding
         box.getStyleClass().add("summary-box");
 
         Label lblTitel = new Label("Bestellung abschließen");

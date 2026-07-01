@@ -124,7 +124,7 @@ public class AdminDialogManager {
             }
 
             if (istMassengut) {
-                eshop.getArtikelVerwaltung().legeMassengutartikelAn(nr, name, bestand, preis, packungsGroesse);
+                eshop.getArtikelVerwaltung().legeMassengutartikelAn(name, bestand, preis, packungsGroesse);
                 System.out.println("------Massengutartikel erfolgreich erstellt (Packungsgröße: " + packungsGroesse + ")------");
             } else {
                 eshop.getArtikelVerwaltung().legeArtikelAn(name, bestand, preis);

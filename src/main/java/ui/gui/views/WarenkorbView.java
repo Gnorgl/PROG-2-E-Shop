@@ -60,13 +60,26 @@ public class WarenkorbView extends VBox {
         // 1. Spalte: Menge
         TableColumn<Artikel, Integer> colMenge = new TableColumn<>("Menge");
         colMenge.setCellValueFactory(cellData -> {
-            int menge = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getMenge(cellData.getValue());
-            return new ReadOnlyObjectWrapper<>(menge);
+            Artikel a = cellData.getValue();
+            int mengeStueck = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getMenge(a);
+
+            if (a instanceof entities.Massengutartikel) {
+                int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
+                return new ReadOnlyObjectWrapper<>(mengeStueck / packGroesse);
+            }
+            return new ReadOnlyObjectWrapper<>(mengeStueck);
         });
 
-        // 2. Spalte: Bezeichnung
+        // 2. Spalte: Bezeichnung (Packungsgröße anhängen)
         TableColumn<Artikel, String> colBez = new TableColumn<>("Artikel");
-        colBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
+        colBez.setCellValueFactory(cellData -> {
+            Artikel a = cellData.getValue();
+            if (a instanceof entities.Massengutartikel) {
+                int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
+                return new javafx.beans.property.ReadOnlyStringWrapper(a.getBezeichnung() + " (" + packGroesse + "er Pack)");
+            }
+            return new javafx.beans.property.ReadOnlyStringWrapper(a.getBezeichnung());
+        });
         colBez.setPrefWidth(200);
 
         // 3. Spalte: Einzelpreis
@@ -165,13 +178,21 @@ public class WarenkorbView extends VBox {
         summaryArtikelBox.getChildren().clear();
 
         for (Artikel a : warenkorbMap.keySet()) {
-            int menge = warenkorbMap.get(a);
+            int mengeStueck = warenkorbMap.get(a);
+            double positionsPreis = a.berechneGesamtpreis(mengeStueck);
 
+            String anzeigeName = a.getBezeichnung();
+            int anzeigeMenge = mengeStueck;
 
-            double positionsPreis = a.berechneGesamtpreis(menge);
+            // NEU: AnzeigeMenge berechnen
+            if (a instanceof entities.Massengutartikel) {
+                int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
+                anzeigeMenge = mengeStueck / packGroesse;
+                anzeigeName += " (" + packGroesse + "er Pack)";
+            }
 
             HBox itemRow = new HBox();
-            Label lblItemName = new Label(menge + "x " + a.getBezeichnung());
+            Label lblItemName = new Label(anzeigeMenge + "x " + anzeigeName);
             Label lblItemPreis = new Label(String.format("€%.2f", positionsPreis));
 
             Region spacer = new Region();
@@ -180,7 +201,6 @@ public class WarenkorbView extends VBox {
             itemRow.getChildren().addAll(lblItemName, spacer, lblItemPreis);
             summaryArtikelBox.getChildren().add(itemRow);
         }
-
 
         double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getWarenkorbListe());
 

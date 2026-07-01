@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entities.Artikel;
 import entities.Kunde;
+import entities.Massengutartikel; // <-- NEU: Import hinzugefügt
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import logic.moduls.ICV;
@@ -66,12 +67,12 @@ public class CheckOutVerwaltung implements ICV {
     @Override
     public double berechneNettoSumme(WarenkorbListe warenkorbListe) {
         double netto = 0;
-        //durchlaufe alle Artikel im Warenkorb und berechne die Summe (Preis * Menge)
+        //durchlaufe alle Artikel im Warenkorb und berechne die Summe
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
 
         for (Artikel artikel : warenkorbItems.keySet()) {
             int menge = warenkorbItems.get(artikel);
-            netto += artikel.berechneGesamtpreis(menge);
+            netto += artikel.berechneGesamtpreis(menge); // Polymorphie greift hier perfekt!
         }
         return netto;
     }
@@ -93,7 +94,6 @@ public class CheckOutVerwaltung implements ICV {
 
         List<Artikel> gekaufteArtikel = new ArrayList<>();
 
-        // HIER WIRD ANGEPASST: Artikel entsprechend ihrer Menge oft in die Liste legen
         for (Artikel artikel : warenkorbItems.keySet()) {
             int menge = warenkorbItems.get(artikel);
 
@@ -105,10 +105,8 @@ public class CheckOutVerwaltung implements ICV {
             try {
                 artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
             } catch (ArtikelNichtGefunden e) {
-                // sollte nicht passieren, da Artikel aus Warenkorb stammt
                 throw e;
             } catch (Exception e) {
-                // andere Validierungsfehler (Bestand, Menge) werden hier als Laufzeitfehler weitergegeben
                 throw new RuntimeException("Fehler beim Reduzieren des Bestands für Artikel " + artikel.getArtikelNummer() + ": " + e.getMessage(), e);
             }
 
@@ -159,7 +157,15 @@ public class CheckOutVerwaltung implements ICV {
             if (!schonGedruckt.contains(artikel)) {
                 int menge = Collections.frequency(rechnung.getArtikel(), artikel);
                 double gesamt = artikel.berechneGesamtpreis(menge);
-                beleg.append(String.format("%dx %-25s %10.2f €\n", menge, artikel.getBezeichnung(), gesamt));
+
+                // Hier passen wir den Namen für den Bon an
+                String anzeigeName = artikel.getBezeichnung();
+                if (artikel instanceof Massengutartikel) {
+                    anzeigeName += " (" + ((Massengutartikel) artikel).getPackungsGroesse() + "er Pack)";
+                }
+
+
+                beleg.append(String.format("%dx %-25s %10.2f €\n", menge, anzeigeName, gesamt));
                 schonGedruckt.add(artikel);
             }
         }
@@ -198,22 +204,19 @@ public class CheckOutVerwaltung implements ICV {
         System.out.println("Rechnungsnummer: " + rechnung.getRechnungsNummer());
         System.out.println("Datum: " + rechnungsDatum);
         System.out.println("Kunde: " + rechnung.getKunde().getNachname() + ", " + rechnung.getKunde().getVorname());
-        System.out.println("Adresse: " + rechnung.getKunde().getAdresse()); //
+        System.out.println("Adresse: " + rechnung.getKunde().getAdresse());
         System.out.println("\n--- Artikel ---");
 
-        // Hilfsliste um doppelte Konsolenausgaben zu vermeiden
         List<Artikel> schonGedruckt = new ArrayList<>();
 
-        // Stückzahl und Gesamtpreis aus der Liste berechnen
         for (Artikel artikel : rechnung.getArtikel()) {
             if (!schonGedruckt.contains(artikel)) {
 
-                // Collections.frequency zählt, wie oft der Artikel in der Liste vorkommt
                 int menge = Collections.frequency(rechnung.getArtikel(), artikel);
                 double gesamtPreisPosition = artikel.berechneGesamtpreis(menge);
 
                 String preisHinweis;
-                if (artikel instanceof entities.Massengutartikel ma) {
+                if (artikel instanceof Massengutartikel ma) {
                     preisHinweis = String.format("%.2f€ pro %der-Pack", artikel.getPreis(), ma.getPackungsGroesse());
                 } else {
                     preisHinweis = String.format("%.2f€ pro Stück", artikel.getPreis());
