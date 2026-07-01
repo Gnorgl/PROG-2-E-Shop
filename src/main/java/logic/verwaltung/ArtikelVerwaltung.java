@@ -117,6 +117,7 @@ public class ArtikelVerwaltung implements IAV {
                 break;
             }
         }
+        safe();
     }
 
     public boolean legeMassengutartikelAn(int nr, String bezeichnung, int bestand, double preis, int packungsGroesse)
@@ -164,6 +165,9 @@ public class ArtikelVerwaltung implements IAV {
         }
 
         a.setBestand(a.getBestand() + anzahl);
+
+        safe();
+
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
         try {
             ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "EINLAGERUNG_M");
@@ -193,6 +197,9 @@ public class ArtikelVerwaltung implements IAV {
         }
 
         a.setBestand(a.getBestand() - anzahl);
+
+        safe();
+
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
         try {
             ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "AUSLAGERUNG_M");

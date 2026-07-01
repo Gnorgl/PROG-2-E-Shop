@@ -1,27 +1,36 @@
 package ui.gui.views;
 
+import entities.Artikel;
 import exceptions.artikel.AnzahlUngueltigException;
 import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.BestandNichtAusreichendException;
 import exceptions.artikel.MengeUngueltigException;
-import javafx.geometry.Insets;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
 
-
 import ui.gui.components.CustomButton;
 import ui.gui.components.CustomInputField;
 import ui.gui.components.FormRow;
+
+import java.util.List;
 
 public class ArtikelVerwaltungView extends VBox {
     private final Eshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
+
+    // Tabelle für die Übersicht
+    private TableView<Artikel> artikelTable;
+    private ObservableList<Artikel> artikelListe;
 
     // Artikel anlegen
     private CustomInputField neuBezeichnungField;
@@ -52,34 +61,91 @@ public class ArtikelVerwaltungView extends VBox {
             System.err.println("CSS Datei nicht gefunden!");
         }
 
-        this.setSpacing(30);
-        this.setPadding(new Insets(25));
+        // Haupt-Layout CSS-Klasse zuweisen
+        this.getStyleClass().add("artikel-verwaltung-view");
 
         initUI();
+        datenLaden();
     }
 
     private void initUI() {
         Label titelLabel = new Label("Warenbestand verwalten");
-        titelLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        titelLabel.getStyleClass().add("view-title");
 
+        // UI-Bereiche generieren
+        VBox tabelleBox = createTabelleBereich();
         VBox anlegenBox = createAnlegenBereich();
         VBox bestandBox = createBestandBereich();
         VBox loeschBox = createLoeschenBereich();
 
+        // Ein Layout für die Formulare nebeneinander
+        HBox formulareBox = new HBox(30);
+
+        // Linke Seite: Anlegen & Löschen
+        VBox linksBox = new VBox(20);
+        linksBox.getChildren().addAll(anlegenBox, new Separator(), loeschBox);
+        HBox.setHgrow(linksBox, Priority.ALWAYS);
+
+        // Rechte Seite: Bestand ändern
+        VBox rechtsBox = new VBox(20);
+        rechtsBox.getChildren().addAll(bestandBox);
+        HBox.setHgrow(rechtsBox, Priority.ALWAYS);
+
+        formulareBox.getChildren().addAll(linksBox, new Separator(), rechtsBox);
+
         this.getChildren().addAll(
                 titelLabel,
-                anlegenBox,
+                tabelleBox, // Die Tabelle oben
                 new Separator(),
-                bestandBox,
-                new Separator(),
-                loeschBox
+                formulareBox
         );
+    }
+
+    // Tabellen-Bereich
+    private VBox createTabelleBereich() {
+        VBox box = new VBox(10);
+        Label header = new Label("Aktueller Inventarbestand");
+        header.getStyleClass().add("section-header");
+
+        artikelTable = new TableView<>();
+        artikelTable.setPrefHeight(200); // Feste Höhe, damit genug Platz für die Formulare bleibt
+
+        // ("artikelNummer" ruft getArtikelNummer() auf)
+        TableColumn<Artikel, Integer> colNr = new TableColumn<>("Nr.");
+        colNr.setCellValueFactory(new PropertyValueFactory<>("artikelNummer"));
+        colNr.setPrefWidth(50);
+
+        TableColumn<Artikel, String> colBez = new TableColumn<>("Bezeichnung");
+        colBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
+        colBez.setPrefWidth(200);
+
+        TableColumn<Artikel, Integer> colBestand = new TableColumn<>("Bestand");
+        colBestand.setCellValueFactory(new PropertyValueFactory<>("bestand"));
+
+        TableColumn<Artikel, Double> colPreis = new TableColumn<>("Preis (€)");
+        colPreis.setCellValueFactory(new PropertyValueFactory<>("preis"));
+
+        artikelTable.getColumns().addAll(colNr, colBez, colBestand, colPreis);
+
+        box.getChildren().addAll(header, artikelTable);
+        return box;
+    }
+
+
+    private void datenLaden() {
+        List<Artikel> alleArtikel = eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
+
+        // Baut eine Liste aus dem aktuellen Lagerbestand
+        artikelListe = FXCollections.observableArrayList(alleArtikel);
+
+        artikelTable.setItems(artikelListe);
+        artikelTable.refresh();
     }
 
     private VBox createAnlegenBereich() {
         VBox box = new VBox(15);
-        Label header = new Label("Neuen Artikel anlegen (ID wird automatisch vergeben)");
-        header.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label header = new Label("Neuen Artikel anlegen");
+        header.getStyleClass().add("section-header");
 
         neuBezeichnungField = new CustomInputField("z.B. Gaming Maus");
         neuBestandField = new CustomInputField("z.B. 100");
@@ -102,7 +168,7 @@ public class ArtikelVerwaltungView extends VBox {
     private VBox createBestandBereich() {
         VBox box = new VBox(15);
         Label header = new Label("Bestand ändern");
-        header.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        header.getStyleClass().add("section-header");
 
         bestandNrField = new CustomInputField("Artikelnummer");
         bestandAnzahlField = new CustomInputField("Menge");
@@ -117,10 +183,10 @@ public class ArtikelVerwaltungView extends VBox {
         einlagernBtn = new CustomButton("Einlagern (+)", CustomButton.ButtonType.PRIMARY);
         einlagernBtn.setOnAction(e -> BestandErhoehen());
 
-        reduzierenBtn = new CustomButton("Reduzieren (-)", CustomButton.ButtonType.SECONDARY);
+        reduzierenBtn = new CustomButton("Reduzieren (-)", CustomButton.ButtonType.PRIMARY);
         reduzierenBtn.setOnAction(e -> BestandReduzieren());
 
-        btnBox.getChildren().addAll(einlagernBtn, reduzierenBtn); // Hier war der Tippfehler behoben
+        btnBox.getChildren().addAll(einlagernBtn, reduzierenBtn);
 
         box.getChildren().addAll(header, formLayout, btnBox);
         return box;
@@ -129,13 +195,13 @@ public class ArtikelVerwaltungView extends VBox {
     private VBox createLoeschenBereich() {
         VBox box = new VBox(15);
         Label header = new Label("Artikel unwiderruflich löschen");
-        header.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        header.getStyleClass().add("section-header");
 
         loeschNrField = new CustomInputField("Artikelnummer");
         FormRow loeschRow = new FormRow("Artikelnummer:", loeschNrField);
 
         loeschenBtn = new CustomButton("Löschen", CustomButton.ButtonType.PRIMARY);
-        loeschenBtn.setStyle("-fx-background-color: #d9534f; -fx-text-fill: white;");
+        loeschenBtn.getStyleClass().add("delete-btn");
         loeschenBtn.setOnAction(e -> ArtikelLoeschen());
 
         box.getChildren().addAll(header, loeschRow, loeschenBtn);
@@ -160,6 +226,8 @@ public class ArtikelVerwaltungView extends VBox {
             neuBestandField.clear();
             neuPreisField.clear();
 
+            datenLaden();
+
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte gültige Zahlenformate nutzen.");
         } catch (ArtikelExistiertBereits ex) {
@@ -179,6 +247,8 @@ public class ArtikelVerwaltungView extends VBox {
 
             bestandNrField.clear();
             bestandAnzahlField.clear();
+
+            datenLaden();
 
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte gültige Ganzzahlen eingeben.");
@@ -202,6 +272,8 @@ public class ArtikelVerwaltungView extends VBox {
             bestandNrField.clear();
             bestandAnzahlField.clear();
 
+            datenLaden();
+
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte gültige Ganzzahlen eingeben.");
         } catch (ArtikelNichtGefunden ex) {
@@ -217,7 +289,6 @@ public class ArtikelVerwaltungView extends VBox {
         try {
             int nr = Integer.parseInt(loeschNrField.getText().trim());
 
-
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Möchten Sie den Artikel mit der Nummer " + nr + " wirklich löschen?", javafx.scene.control.ButtonType.YES, javafx.scene.control.ButtonType.NO);
             confirm.setHeaderText(null);
             confirm.showAndWait();
@@ -226,6 +297,8 @@ public class ArtikelVerwaltungView extends VBox {
                 eshop.getArtikelVerwaltung().loeschen(nr);
                 showAlert(Alert.AlertType.INFORMATION, "Erfolg", "Artikel wurde aus dem System entfernt.");
                 loeschNrField.clear();
+
+                datenLaden();
             }
 
         } catch (NumberFormatException ex) {
@@ -235,8 +308,7 @@ public class ArtikelVerwaltungView extends VBox {
         }
     }
 
-
-    //Pop up zur visuellen Rückmeldung
+    // Pop-up zur visuellen Rückmeldung
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

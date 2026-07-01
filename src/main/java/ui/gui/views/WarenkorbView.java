@@ -1,8 +1,8 @@
 package ui.gui.views;
 
 import entities.Artikel;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
@@ -12,6 +12,8 @@ import ui.gui.EshopGUI;
 import ui.gui.scenes.MainLayoutScene;
 import ui.gui.components.CustomButton;
 
+import java.util.HashMap;
+
 public class WarenkorbView extends VBox {
     private final Eshop eshop;
     private final SessionManager session;
@@ -20,6 +22,9 @@ public class WarenkorbView extends VBox {
 
     private TableView<Artikel> warenkorbTable;
     private ObservableList<Artikel> warenkorbListe;
+    private Label lblZwischensumme;
+    private Label lblGesamtPreis;
+    private VBox summaryArtikelBox;
 
     public WarenkorbView(Eshop eshop, SessionManager session, EshopGUI guiController, MainLayoutScene mainLayout) {
         this.eshop = eshop;
@@ -27,10 +32,8 @@ public class WarenkorbView extends VBox {
         this.guiController = guiController;
         this.mainLayout = mainLayout;
 
-        this.getStyleClass().add("article-container");
-
-        initUI();
-
+        // CSS-Klasse für das gesamte Layout setzen
+        this.getStyleClass().add("warenkorb-view");
 
         try {
             String cssPath = getClass().getResource("/ui/gui/css/style.css").toExternalForm();
@@ -39,8 +42,8 @@ public class WarenkorbView extends VBox {
             System.err.println("CSS Datei nicht gefunden!");
         }
 
-        this.setSpacing(15);
-        this.setPadding(new Insets(20));
+        initUI();
+        datenLaden();
     }
 
     private void initUI() {
@@ -53,14 +56,52 @@ public class WarenkorbView extends VBox {
         titleLabel.getStyleClass().add("checkout-title");
 
         warenkorbTable = new TableView<>();
+
+        // 1. Spalte: Menge
+        TableColumn<Artikel, Integer> colMenge = new TableColumn<>("Menge");
+        colMenge.setCellValueFactory(cellData -> {
+            int menge = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getMenge(cellData.getValue());
+            return new ReadOnlyObjectWrapper<>(menge);
+        });
+
+        // 2. Spalte: Bezeichnung
         TableColumn<Artikel, String> colBez = new TableColumn<>("Artikel");
         colBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
-        colBez.setPrefWidth(250);
+        colBez.setPrefWidth(200);
 
-        TableColumn<Artikel, Double> colPreis = new TableColumn<>("Preis");
+        // 3. Spalte: Einzelpreis
+        TableColumn<Artikel, Double> colPreis = new TableColumn<>("Einzelpreis (€)");
         colPreis.setCellValueFactory(new PropertyValueFactory<>("preis"));
 
-        warenkorbTable.getColumns().addAll(colBez, colPreis);
+        // 4. Spalte: Entfernen-Button
+        TableColumn<Artikel, Void> colAction = new TableColumn<>("Aktion");
+        colAction.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("X");
+
+            {
+
+                btn.getStyleClass().add("delete-table-btn");
+                btn.setOnAction(event -> {
+                    Artikel artikel = getTableView().getItems().get(getIndex());
+                    // Artikel aus der Logik entfernen
+                    eshop.getWarenkorbVerwaltung().artikelEntfernen(artikel);
+                    // View sofort neu laden, damit die Summen und die Tabelle aktualisiert werden
+                    datenLaden();
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn); // Zeigt den Button in der Zelle an
+                }
+            }
+        });
+
+        warenkorbTable.getColumns().addAll(colMenge, colBez, colPreis, colAction);
         VBox.setVgrow(warenkorbTable, Priority.ALWAYS);
 
         linksBox.getChildren().addAll(titleLabel, warenkorbTable);
@@ -75,22 +116,24 @@ public class WarenkorbView extends VBox {
 
     private VBox createSummaryBox() {
         VBox box = new VBox(15);
-        box.setPadding(new Insets(20));
+
         box.getStyleClass().add("summary-box");
-        box.setPrefWidth(300);
 
         Label lblTitel = new Label("Bestellübersicht");
         lblTitel.getStyleClass().add("summary-title");
 
+        summaryArtikelBox = new VBox(8);
+
         HBox rowZwischen = new HBox();
-        rowZwischen.getChildren().addAll(new Label("Zwischensumme"), new Region(), new Label("€0,00"));
+        lblZwischensumme = new Label("€0,00");
+        rowZwischen.getChildren().addAll(new Label("Zwischensumme"), new Region(), lblZwischensumme);
         HBox.setHgrow(rowZwischen.getChildren().get(1), Priority.ALWAYS);
 
         HBox rowGesamt = new HBox();
         Label lblGesamt = new Label("Gesamt");
         lblGesamt.getStyleClass().add("summary-text-bold");
 
-        Label lblGesamtPreis = new Label("€0,00");
+        lblGesamtPreis = new Label("€0,00");
         lblGesamtPreis.getStyleClass().add("summary-price");
 
         rowGesamt.getChildren().addAll(lblGesamt, new Region(), lblGesamtPreis);
@@ -98,12 +141,51 @@ public class WarenkorbView extends VBox {
 
         CustomButton btnZurKasse = new CustomButton("Zur Kasse ➔", CustomButton.ButtonType.PRIMARY);
         btnZurKasse.setMaxWidth(Double.MAX_VALUE);
-
         btnZurKasse.setOnAction(e -> {
-            mainLayout.setCenterView(new CheckoutView(eshop, session, guiController, mainLayout));
+            // Verhindert das Navigieren zur Kasse, wenn der Korb leer ist
+            if (eshop.getWarenkorbVerwaltung().getWarenkorbListe().istLeer()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Dein Warenkorb ist leer!");
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            } else {
+                mainLayout.setCenterView(new CheckoutView(eshop, session, guiController, mainLayout));
+            }
         });
 
-        box.getChildren().addAll(lblTitel, new Separator(), rowZwischen, new Separator(), rowGesamt, btnZurKasse);
+        box.getChildren().addAll(lblTitel, new Separator(), summaryArtikelBox, new Separator(), rowZwischen, new Separator(), rowGesamt, btnZurKasse);
         return box;
+    }
+
+    private void datenLaden() {
+        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getAlleArtikel();
+
+        warenkorbListe = javafx.collections.FXCollections.observableArrayList(warenkorbMap.keySet());
+        warenkorbTable.setItems(warenkorbListe);
+
+        summaryArtikelBox.getChildren().clear();
+
+        for (Artikel a : warenkorbMap.keySet()) {
+            int menge = warenkorbMap.get(a);
+
+
+            double positionsPreis = a.berechneGesamtpreis(menge);
+
+            HBox itemRow = new HBox();
+            Label lblItemName = new Label(menge + "x " + a.getBezeichnung());
+            Label lblItemPreis = new Label(String.format("€%.2f", positionsPreis));
+
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            itemRow.getChildren().addAll(lblItemName, spacer, lblItemPreis);
+            summaryArtikelBox.getChildren().add(itemRow);
+        }
+
+
+        double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getWarenkorbListe());
+
+        String preisString = String.format("€%.2f", gesamt);
+        lblZwischensumme.setText(preisString);
+        lblGesamtPreis.setText(preisString);
     }
 }

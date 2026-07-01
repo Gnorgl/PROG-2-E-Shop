@@ -1,13 +1,22 @@
 package ui.gui.views;
 
 import entities.Artikel;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import logic.Eshop;
 import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.components.CustomButton;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class KatalogView extends VBox {
     private final Eshop eshop;
@@ -17,11 +26,16 @@ public class KatalogView extends VBox {
     private TableView<Artikel> table;
     private ComboBox<String> sortBox;
     private ObservableList<Artikel> artikelListe;
+    private SortedList<Artikel> sortedListe;
+    private TextField mengeField;
 
     public KatalogView(Eshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
+
+        // CSS-Klasse für das gesamte Layout setzen
+        this.getStyleClass().add("katalog-view");
 
         // CSS laden
         try {
@@ -31,8 +45,111 @@ public class KatalogView extends VBox {
             System.err.println("CSS Datei nicht gefunden!");
         }
 
-        this.setSpacing(15);
-        this.setPadding(new Insets(20));
+        initUI();
+        datenLaden();
+    }
 
+    private void initUI() {
+        Label titelLabel = new Label("Artikelkatalog");
+        titelLabel.getStyleClass().add("katalog-title"); // CSS statt setStyle
+
+        // Sortierung Top Bar
+        HBox topBar = new HBox();
+        topBar.getStyleClass().add("katalog-bar"); // Steuert Spacing über CSS
+
+        Label sortLabel = new Label("Sortieren nach:");
+        sortBox = new ComboBox<>();
+        sortBox.getItems().addAll("Artikelnummer", "Bezeichnung");
+        sortBox.setValue("Artikelnummer"); // Standardwert
+        sortBox.setOnAction(e -> sortiereTabelle());
+
+        topBar.getChildren().addAll(sortLabel, sortBox);
+
+        // Tabelle zum Artikel Anzeigen
+        table = new TableView<>();
+
+        TableColumn<Artikel, Integer> colNr = new TableColumn<>("Nr.");
+        colNr.setCellValueFactory(new PropertyValueFactory<>("artikelNummer"));
+
+        TableColumn<Artikel, String> colBez = new TableColumn<>("Bezeichnung");
+        colBez.setCellValueFactory(new PropertyValueFactory<>("bezeichnung"));
+
+        TableColumn<Artikel, Double> colPreis = new TableColumn<>("Preis (€)");
+        colPreis.setCellValueFactory(new PropertyValueFactory<>("preis"));
+
+        TableColumn<Artikel, Integer> colBestand = new TableColumn<>("Bestand");
+        colBestand.setCellValueFactory(new PropertyValueFactory<>("bestand"));
+
+        table.getColumns().addAll(colNr, colBez, colPreis, colBestand);
+        VBox.setVgrow(table, Priority.ALWAYS); // Tabelle nimmt restlichen Platz ein
+
+        // In Warenkorb legen
+        HBox bottomBar = new HBox();
+        bottomBar.getStyleClass().add("katalog-bar"); // Steuert Spacing über CSS
+
+        Label mengeLabel = new Label("Menge:");
+        mengeField = new TextField("1");
+        mengeField.getStyleClass().add("menge-input"); // Breite über CSS gesteuert
+
+        CustomButton btnWarenkorb = new CustomButton("In den Warenkorb", CustomButton.ButtonType.PRIMARY);
+        btnWarenkorb.setOnAction(e -> artikelInWarenkorbLegen());
+
+        bottomBar.getChildren().addAll(mengeLabel, mengeField, btnWarenkorb);
+
+        this.getChildren().addAll(titelLabel, topBar, table, bottomBar);
+    }
+
+    private void datenLaden() {
+        List<Artikel> alleArtikel = eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
+        artikelListe = FXCollections.observableArrayList(alleArtikel);
+
+        // Wir verpacken die Liste in eine SortedList
+        sortedListe = new SortedList<>(artikelListe);
+        table.setItems(sortedListe);
+
+        sortiereTabelle();
+    }
+
+    private void sortiereTabelle() {
+        String kriterium = sortBox.getValue();
+
+        if (kriterium.equals("Artikelnummer")) {
+            sortedListe.setComparator(Comparator.comparingInt(Artikel::getArtikelNummer));
+        } else if (kriterium.equals("Bezeichnung")) {
+            sortedListe.setComparator(Comparator.comparing(Artikel::getBezeichnung, String.CASE_INSENSITIVE_ORDER));
+        }
+    }
+
+    private void artikelInWarenkorbLegen() {
+        Artikel ausgewaehlterArtikel = table.getSelectionModel().getSelectedItem();
+
+        if (ausgewaehlterArtikel == null) {
+            showAlert(Alert.AlertType.WARNING, "Kein Artikel ausgewählt", "Bitte wähle zuerst einen Artikel aus der Tabelle aus.");
+            return;
+        }
+
+        try {
+            int menge = Integer.parseInt(mengeField.getText().trim());
+            if (menge <= 0) throw new NumberFormatException();
+
+            eshop.getWarenkorbVerwaltung().artikelHinzufuegen(ausgewaehlterArtikel, menge);
+
+            System.out.println(menge + "x " + ausgewaehlterArtikel.getBezeichnung() + " in den Warenkorb gelegt.");
+
+            showAlert(Alert.AlertType.INFORMATION, "Erfolg", menge + "x " + ausgewaehlterArtikel.getBezeichnung() + " wurde zum Warenkorb hinzugefügt.");
+
+        } catch (NumberFormatException ex) {
+            showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige positive Zahl als Menge eingeben.");
+        } catch (Exception ex) {
+            showAlert(Alert.AlertType.ERROR, "Fehler", ex.getMessage());
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

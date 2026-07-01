@@ -31,8 +31,18 @@ public class WarenkorbVerwaltung {
     }
 
     public void artikelHinzufuegen(Artikel artikel, int menge) {
-        warenkorbListe.speichern(artikel, menge);
-        safe(); // Speichert automatisch nach jeder Änderung
+        if (menge > 0) {
+            // 1. Logik: Bisherige Menge aus der Datenhaltung abfragen
+            int alteMenge = warenkorbListe.getMenge(artikel);
+
+            // 2. Logik: Die neue Endmenge berechnen
+            int neueMenge = alteMenge + menge;
+
+            // 3. Persistenz: Nur noch den fertigen Endwert zum Speichern übergeben
+            warenkorbListe.speichern(artikel, neueMenge);
+
+            safe(); // Speichert in die JSON
+        }
     }
 
     public void artikelEntfernen(Artikel artikel) {

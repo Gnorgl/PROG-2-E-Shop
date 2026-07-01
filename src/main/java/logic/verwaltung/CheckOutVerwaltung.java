@@ -76,6 +76,10 @@ public class CheckOutVerwaltung implements ICV {
         return netto;
     }
 
+    public double berechneBruttoSumme(WarenkorbListe warenkorbListe) {
+        return berechneNettoSumme(warenkorbListe) * 1.19;
+    }
+
     @Override
     public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, logic.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden {
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
@@ -137,6 +141,39 @@ public class CheckOutVerwaltung implements ICV {
 
         return rechnung;
     }
+
+
+    public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
+        StringBuilder beleg = new StringBuilder();
+        beleg.append("==================================================\n");
+        beleg.append("                    RECHNUNG                      \n");
+        beleg.append("==================================================\n");
+        beleg.append("Rechnungsnummer: ").append(rechnung.getRechnungsNummer()).append("\n");
+        beleg.append("Datum: ").append(java.time.LocalDate.now()).append("\n\n");
+        beleg.append("Lieferadresse:\n");
+        beleg.append(lieferadresse).append("\n");
+        beleg.append("--------------------------------------------------\n");
+
+        List<Artikel> schonGedruckt = new ArrayList<>();
+        for (Artikel artikel : rechnung.getArtikel()) {
+            if (!schonGedruckt.contains(artikel)) {
+                int menge = Collections.frequency(rechnung.getArtikel(), artikel);
+                double gesamt = artikel.berechneGesamtpreis(menge);
+                beleg.append(String.format("%dx %-25s %10.2f €\n", menge, artikel.getBezeichnung(), gesamt));
+                schonGedruckt.add(artikel);
+            }
+        }
+
+        beleg.append("--------------------------------------------------\n");
+        beleg.append(String.format("%-30s %10.2f €\n", "Netto:", rechnung.getNettosumme()));
+        beleg.append(String.format("%-30s %10.2f €\n", "MwSt (19%):", rechnung.getMwstBetrag()));
+        beleg.append(String.format("%-30s %10.2f €\n", "BRUTTO GESAMT:", rechnung.getBruttoSumme()));
+        beleg.append("==================================================");
+
+        return beleg.toString();
+    }
+
+
 
     @Override
     public void rechnungAnzeigen(Rechnung rechnung) {
