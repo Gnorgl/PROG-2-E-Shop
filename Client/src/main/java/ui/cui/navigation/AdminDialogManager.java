@@ -2,8 +2,6 @@ package ui.cui.navigation;
 
 import entities.Benutzer;
 import exceptions.artikel.MengeUngueltigException;
-import exceptions.user.BenutzerExistiertNichtException;
-import exceptions.user.EmailBereitsVergebenException;
 import logic.Eshop;
 import logic.SessionManager;
 

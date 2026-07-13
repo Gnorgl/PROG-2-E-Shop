@@ -1,8 +1,6 @@
 package logic;
 import logic.verwaltung.EreignisVerwaltung;
-import persistence.shop.EreignisListe;
 import logic.verwaltung.*;
-import persistence.shop.EreignisListe;
 
 
 public class Eshop {

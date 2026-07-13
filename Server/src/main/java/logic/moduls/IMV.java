@@ -1,7 +1,6 @@
 package logic.moduls;
 
 import entities.Mitarbeiter;
-import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.MitarbeiterNichtGefundenException;
 import persistence.user.MitarbeiterListe;
 

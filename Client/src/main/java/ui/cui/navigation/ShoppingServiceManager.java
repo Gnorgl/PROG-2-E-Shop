@@ -5,9 +5,7 @@ import exceptions.artikel.ArtikelNichtGefunden;
 import logic.Eshop;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import entities.Artikel;
 import entities.Ereignis;
@@ -16,7 +14,6 @@ import entities.Massengutartikel;
 import entities.Rechnung;
 import logic.SessionManager;
 import logic.verwaltung.EreignisVerwaltung;
-import logic.verwaltung.ArtikelVerwaltung;
 import persistence.shop.WarenkorbListe;
 import java.util.HashMap;
 import logic.verwaltung.WarenkorbVerwaltung;

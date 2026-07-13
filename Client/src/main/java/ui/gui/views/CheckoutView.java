@@ -3,7 +3,6 @@ package ui.gui.views;
 import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import logic.Eshop;

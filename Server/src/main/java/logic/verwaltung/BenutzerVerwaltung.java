@@ -1,7 +1,5 @@
 package logic.verwaltung;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import logic.moduls.IBV;

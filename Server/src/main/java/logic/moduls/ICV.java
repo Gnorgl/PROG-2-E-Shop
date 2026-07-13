@@ -4,8 +4,6 @@ import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import persistence.shop.WarenkorbListe;
-import logic.verwaltung.ArtikelVerwaltung;
-import logic.moduls.IAV;
 
 public interface ICV {
 

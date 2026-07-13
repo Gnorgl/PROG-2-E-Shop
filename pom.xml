@@ -7,6 +7,12 @@
     <groupId>org.example</groupId>
     <artifactId>E-Shop</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>Common</module>
+        <module>Client</module>
+        <module>Server</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -49,7 +55,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>ui.gui.EshopGUI</mainClass>
+                    <mainClass>gui.ui.EshopGUI</mainClass>
                 </configuration>
             </plugin>
         </plugins>

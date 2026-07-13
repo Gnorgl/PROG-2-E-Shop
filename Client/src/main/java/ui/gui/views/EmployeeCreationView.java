@@ -1,7 +1,6 @@
 package ui.gui.views;
 
 import entities.Mitarbeiter;
-import exceptions.user.EmailBereitsVergebenException;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox; // Geändert von BorderPane zu VBox
 import logic.Eshop;

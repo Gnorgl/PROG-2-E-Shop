@@ -1,10 +1,8 @@
 package persistence.shop;
 
 import entities.Artikel;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.HashMap;
-import logic.verwaltung.ArtikelVerwaltung;
 
 
 public class WarenkorbListe {
