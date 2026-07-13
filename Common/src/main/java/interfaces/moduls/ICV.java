@@ -1,11 +1,11 @@
-package logic.moduls;
+package interfaces.moduls;
 
 import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import persistence.shop.WarenkorbListe;
 
-public interface ICV {
+public interface ICV { //Interface CheckOutVerwaltung
 
     // Die aktualisierte checkOut-Methode (mit ArtikelVerwaltung für die Bestandsänderung)
     Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden;

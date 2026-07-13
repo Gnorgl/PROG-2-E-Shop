@@ -12,7 +12,8 @@ import entities.Kunde;
 import entities.Massengutartikel; // <-- NEU: Import hinzugefügt
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
-import logic.moduls.ICV;
+import interfaces.moduls.IAV;
+import interfaces.moduls.ICV;
 import persistence.shop.OrderListe;
 import persistence.shop.WarenkorbListe;
 
@@ -82,7 +83,7 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, logic.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden {
+    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden {
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
 
         if (warenkorbItems.isEmpty()) {

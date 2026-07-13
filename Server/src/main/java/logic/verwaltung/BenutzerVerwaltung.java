@@ -2,7 +2,7 @@ package logic.verwaltung;
 
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
-import logic.moduls.IBV;
+import interfaces.moduls.IBV;
 import exceptions.user.KundeNichtGefundenException;
 import exceptions.user.MitarbeiterNichtGefundenException;
 

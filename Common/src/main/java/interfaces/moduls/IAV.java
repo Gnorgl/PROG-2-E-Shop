@@ -1,11 +1,11 @@
-package logic.moduls;
+package interfaces.moduls;
 
 import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.BestandNichtAusreichendException;
 import exceptions.artikel.MengeUngueltigException;
 
-public interface IAV {
+public interface IAV { //Interface ArtikelVerwaltung
 
 
     boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits;

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Kunde;
 import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.KundeNichtGefundenException;
-import logic.moduls.IKV;
-import logic.moduls.IUC;
+import interfaces.moduls.IKV;
+import interfaces.moduls.IUC;
 import persistence.user.KundenListe;
 
 import java.io.File;

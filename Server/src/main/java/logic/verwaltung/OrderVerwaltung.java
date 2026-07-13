@@ -1,6 +1,6 @@
 package logic.verwaltung;
 
-import logic.moduls.IOV;
+import interfaces.moduls.IOV;
 
 public class OrderVerwaltung implements IOV {
 }

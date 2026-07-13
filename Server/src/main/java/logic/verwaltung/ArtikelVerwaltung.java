@@ -6,7 +6,7 @@ import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.MengeUngueltigException;
 import exceptions.artikel.BestandNichtAusreichendException;
-import logic.moduls.IAV;
+import interfaces.moduls.IAV;
 import persistence.shop.ArtikelListe;
 import entities.Ereignis;
 import java.io.File;

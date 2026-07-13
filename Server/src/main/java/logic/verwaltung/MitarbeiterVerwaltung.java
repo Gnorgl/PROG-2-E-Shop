@@ -3,8 +3,8 @@ package logic.verwaltung;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Mitarbeiter;
 import exceptions.user.MitarbeiterNichtGefundenException;
-import logic.moduls.IMV;
-import logic.moduls.IUC;
+import interfaces.moduls.IMV;
+import interfaces.moduls.IUC;
 import persistence.user.MitarbeiterListe;
 
 import java.io.File;

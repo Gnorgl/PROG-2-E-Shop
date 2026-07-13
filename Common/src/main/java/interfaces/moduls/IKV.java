@@ -1,11 +1,11 @@
-package logic.moduls;
+package interfaces.moduls;
 
 import entities.Kunde;
 import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.KundeNichtGefundenException;
 import persistence.user.KundenListe;
 
-public interface IKV {
+public interface IKV { //Interface KundenVerwaltung
 
     KundenListe getKundenListe();
 

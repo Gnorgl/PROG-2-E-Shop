@@ -1,10 +1,10 @@
-package logic.moduls;
+package interfaces.moduls;
 
 import entities.Mitarbeiter;
 import exceptions.user.MitarbeiterNichtGefundenException;
 import persistence.user.MitarbeiterListe;
 
-public interface IMV {
+public interface IMV { //Interface MitarbeiterVerwaltung
 
     MitarbeiterListe getMitarbeiterListe();
 
