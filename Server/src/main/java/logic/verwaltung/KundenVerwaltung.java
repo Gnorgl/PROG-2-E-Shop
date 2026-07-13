@@ -24,7 +24,6 @@ public class KundenVerwaltung implements IKV, IUC {
 
     //Getter-Methoden
 
-    @Override
     public KundenListe getKundenListe() {
         return kundenListe;
     }

@@ -24,7 +24,6 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
         }
     }
 
-    @Override
     public MitarbeiterListe getMitarbeiterListe() {
         return mitarbeiterListe;
     }
