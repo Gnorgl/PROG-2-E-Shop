@@ -1,3 +1,0 @@
-Hier kommen die ganzen einzelnen Szenen hin. Also Login, Hauptmenü usw.
-Jede Scene (oder jedes Panel) sollte eine eigene Klasse sein (z. B. erbend von BorderPane, VBox oder GridPane).
-Dadurch bleibt jede Klasse auf genau ein Fenster fokussiert.

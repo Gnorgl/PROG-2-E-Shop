@@ -2,9 +2,10 @@ package logic;
 
 import entities.Benutzer;
 import entities.Mitarbeiter;
+import interfaces.moduls.ISM;
 
 //Speichert ab, wer aktuell angemeldet ist.
-public class SessionManager {
+public class SessionManager extends ISM {
     private Benutzer angemeldeterBenutzer = null;
 
     public SessionManager() {}

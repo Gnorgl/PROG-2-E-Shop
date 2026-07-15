@@ -1,2 +1,0 @@
-Hier kommen die ganzen Komponenten hin, die wir immer wieder verwenden, also zum beispiel einen zurück knopf oder
-ein Menü Button um immer ins Menü zu kommen. Oder ein Profilbutton auf den man klicken kann. Irgendwie sowas.

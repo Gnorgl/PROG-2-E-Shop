@@ -1,9 +1,10 @@
 package logic;
+import interfaces.InterfaceEshop;
 import logic.verwaltung.EreignisVerwaltung;
 import logic.verwaltung.*;
 
 
-public class Eshop {
+public class Eshop extends InterfaceEshop {
     private ArtikelVerwaltung  artikelVerwaltung = new ArtikelVerwaltung();
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
