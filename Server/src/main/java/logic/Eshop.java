@@ -4,7 +4,7 @@ import logic.verwaltung.EreignisVerwaltung;
 import logic.verwaltung.*;
 
 
-public class Eshop extends InterfaceEshop {
+public class Eshop implements InterfaceEshop {
     private ArtikelVerwaltung  artikelVerwaltung = new ArtikelVerwaltung();
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
     private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
