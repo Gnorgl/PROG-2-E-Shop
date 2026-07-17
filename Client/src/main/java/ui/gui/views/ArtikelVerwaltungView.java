@@ -6,6 +6,7 @@ import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.BestandNichtAusreichendException;
 import exceptions.artikel.MengeUngueltigException;
+import interfaces.InterfaceEshop;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -13,10 +14,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
 
+import ui.gui.SessionManager;
 import ui.gui.components.CustomButton;
 import ui.gui.components.CustomInputField;
 import ui.gui.components.FormRow;
@@ -24,7 +24,7 @@ import ui.gui.components.FormRow;
 import java.util.List;
 
 public class ArtikelVerwaltungView extends VBox {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
 
@@ -55,7 +55,7 @@ public class ArtikelVerwaltungView extends VBox {
     private CustomInputField loeschNrField;
     private CustomButton loeschenBtn;
 
-    public ArtikelVerwaltungView(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public ArtikelVerwaltungView(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
@@ -153,8 +153,9 @@ public class ArtikelVerwaltungView extends VBox {
 
 
     private void datenLaden() {
-        List<Artikel> alleArtikel = eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
-
+        List<Artikel> alleArtikel = eshop.getAlleArtikel();
+        //eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
+        //Hier war vorher getArtikelImLager() das Gleiche wie getAlleArtikel() ?
         // Baut eine Liste aus dem aktuellen Lagerbestand
         artikelListe = FXCollections.observableArrayList(alleArtikel);
 
@@ -260,7 +261,7 @@ public class ArtikelVerwaltungView extends VBox {
     private void HistorieAnzeigen() {
         try {
             int nr = Integer.parseInt(historieNrField.getText().trim());
-            historieChart.zeichne(eshop.getArtikelVerwaltung(), nr);
+            historieChart.zeichne(eshop.getArtikelVerwaltung(), nr); //Illegal
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige Artikelnummer eingeben.");
         } catch (ArtikelNichtGefunden ex) {
@@ -281,9 +282,9 @@ public class ArtikelVerwaltungView extends VBox {
 
             if (massengutCheckBox.isSelected()) {
                 int packung = Integer.parseInt(neuPackungField.getText().trim());
-                eshop.getArtikelVerwaltung().legeMassengutartikelAn(bezeichnung, bestand, preis, packung);
+                eshop.legeMassengutartikelAn(bezeichnung, bestand, preis, packung);
             } else {
-                eshop.getArtikelVerwaltung().legeArtikelAn(bezeichnung, bestand, preis);
+                eshop.legeArtikelAn(bezeichnung, bestand, preis);
             }
 
             showAlert(Alert.AlertType.INFORMATION, "Erfolg", "Artikel '" + bezeichnung + "' wurde erfolgreich angelegt.");
@@ -311,7 +312,7 @@ public class ArtikelVerwaltungView extends VBox {
             int nr = Integer.parseInt(bestandNrField.getText().trim());
             int anzahl = Integer.parseInt(bestandAnzahlField.getText().trim());
 
-            eshop.getArtikelVerwaltung().bestandErhoehen(nr, anzahl);
+            eshop.bestandErhoehen(nr, anzahl);
             showAlert(Alert.AlertType.INFORMATION, "Erfolg", "Bestand erfolgreich erhöht.");
 
             bestandNrField.clear();
@@ -335,7 +336,7 @@ public class ArtikelVerwaltungView extends VBox {
             int nr = Integer.parseInt(bestandNrField.getText().trim());
             int anzahl = Integer.parseInt(bestandAnzahlField.getText().trim());
 
-            eshop.getArtikelVerwaltung().bestandReduzieren(nr, anzahl);
+            eshop.bestandReduzieren(nr, anzahl);
             showAlert(Alert.AlertType.INFORMATION, "Erfolg", "Bestand erfolgreich reduziert.");
 
             bestandNrField.clear();
@@ -363,7 +364,7 @@ public class ArtikelVerwaltungView extends VBox {
             confirm.showAndWait();
 
             if (confirm.getResult() == javafx.scene.control.ButtonType.YES) {
-                eshop.getArtikelVerwaltung().loeschen(nr);
+                eshop.loeschen(nr);
                 showAlert(Alert.AlertType.INFORMATION, "Erfolg", "Artikel wurde aus dem System entfernt.");
                 loeschNrField.clear();
 

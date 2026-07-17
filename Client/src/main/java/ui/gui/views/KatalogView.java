@@ -1,6 +1,7 @@
 package ui.gui.views;
 
 import entities.Artikel;
+import interfaces.InterfaceEshop;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -9,16 +10,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.components.CustomButton;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class KatalogView extends VBox {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
 
@@ -28,7 +28,7 @@ public class KatalogView extends VBox {
     private SortedList<Artikel> sortedListe;
     private TextField mengeField;
 
-    public KatalogView(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public KatalogView(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
@@ -109,7 +109,7 @@ public class KatalogView extends VBox {
     }
 
     private void datenLaden() {
-        List<Artikel> alleArtikel = eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
+        List<Artikel> alleArtikel = eshop.getAlleArtikel();
         artikelListe = FXCollections.observableArrayList(alleArtikel);
 
         // Wir verpacken die Liste in eine SortedList
@@ -148,7 +148,7 @@ public class KatalogView extends VBox {
                 finaleMenge = eingabeMenge * packGroesse;
             }
 
-            eshop.getWarenkorbVerwaltung().artikelHinzufuegen(ausgewaehlterArtikel, finaleMenge);
+            eshop.getWarenkorbVerwaltung().artikelHinzufuegen(ausgewaehlterArtikel, finaleMenge); //Illegal
 
             // Für die Erfolgsmeldung zeigen wir weiterhin die Packungsanzahl an
             System.out.println(eingabeMenge + "x " + ausgewaehlterArtikel.getBezeichnung() + " in den Warenkorb gelegt.");

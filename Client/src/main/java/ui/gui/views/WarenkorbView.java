@@ -1,21 +1,21 @@
 package ui.gui.views;
 
 import entities.Artikel;
+import interfaces.InterfaceEshop;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.scenes.MainLayoutScene;
 import ui.gui.components.CustomButton;
 
 import java.util.HashMap;
 
 public class WarenkorbView extends VBox {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
     private final MainLayoutScene mainLayout;
@@ -26,7 +26,7 @@ public class WarenkorbView extends VBox {
     private Label lblGesamtPreis;
     private VBox summaryArtikelBox;
 
-    public WarenkorbView(Eshop eshop, SessionManager session, EshopGUI guiController, MainLayoutScene mainLayout) {
+    public WarenkorbView(InterfaceEshop eshop, SessionManager session, EshopGUI guiController, MainLayoutScene mainLayout) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
@@ -61,7 +61,7 @@ public class WarenkorbView extends VBox {
         TableColumn<Artikel, Integer> colMenge = new TableColumn<>("Menge");
         colMenge.setCellValueFactory(cellData -> {
             Artikel a = cellData.getValue();
-            int mengeStueck = eshop.getWarenkorbVerwaltung().getMenge(a);
+            int mengeStueck = eshop.getWarenkorbVerwaltung().getMenge(a); //Illegal
 
             if (a instanceof entities.Massengutartikel) {
                 int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
@@ -97,7 +97,7 @@ public class WarenkorbView extends VBox {
                 btn.setOnAction(event -> {
                     Artikel artikel = getTableView().getItems().get(getIndex());
                     // Artikel aus der Logik entfernen
-                    eshop.getWarenkorbVerwaltung().artikelEntfernen(artikel);
+                    eshop.getWarenkorbVerwaltung().artikelEntfernen(artikel); //Illegal
                     // View sofort neu laden, damit die Summen und die Tabelle aktualisiert werden
                     datenLaden();
                 });
@@ -156,7 +156,7 @@ public class WarenkorbView extends VBox {
         btnZurKasse.setMaxWidth(Double.MAX_VALUE);
         btnZurKasse.setOnAction(e -> {
             // Verhindert das Navigieren zur Kasse, wenn der Korb leer ist
-            if (eshop.getWarenkorbVerwaltung().istLeer()) {
+            if (eshop.getWarenkorbVerwaltung().istLeer()) { //Illegal
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Dein Warenkorb ist leer!");
                 alert.setHeaderText(null);
                 alert.showAndWait();
@@ -170,7 +170,7 @@ public class WarenkorbView extends VBox {
     }
 
     private void datenLaden() {
-        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getAlleArtikel();
+        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getAlleArtikel(); //Illegal
 
         warenkorbListe = javafx.collections.FXCollections.observableArrayList(warenkorbMap.keySet());
         warenkorbTable.setItems(warenkorbListe);
@@ -202,7 +202,7 @@ public class WarenkorbView extends VBox {
             summaryArtikelBox.getChildren().add(itemRow);
         }
 
-        double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getAlleArtikel());
+        double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getAlleArtikel()); //Illegal und Methoden in Interface fehlen
 
         String preisString = String.format("€%.2f", gesamt);
         lblZwischensumme.setText(preisString);

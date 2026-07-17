@@ -2,7 +2,7 @@ package ui.gui.views; // Neues Package für die "Inhalte" in der Mitte
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 
 public class DashboardView extends VBox {
 

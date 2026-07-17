@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import logic.verwaltung.ArtikelVerwaltung;
+import logic.verwaltung.ArtikelVerwaltung; //Auch hier gleiches Problem
 
 import java.util.List;
 

@@ -1,16 +1,16 @@
 package ui.gui.scenes;
 
 import entities.Artikel;
+import interfaces.InterfaceEshop;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 
 public class CheckoutScene extends VBox {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
 
@@ -20,7 +20,7 @@ public class CheckoutScene extends VBox {
     private Label gesamtPreisLabel;
     private Button kaufenBtn;
 
-    public CheckoutScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public CheckoutScene(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;

@@ -1,11 +1,10 @@
 package ui.gui;
 
+import interfaces.InterfaceEshop;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.views.ArtikelVerwaltungView;
 import ui.gui.views.EmployeeCreationView;
 import ui.gui.scenes.LoginScene;
@@ -15,13 +14,16 @@ import ui.gui.scenes.RegistrationScene;
 
 public class EshopGUI extends Application {
 
-    private Eshop eshop;
+    private InterfaceEshop eshop;
     private SessionManager session;
     private Stage primaryStage;
 
+    public static void setEshop(InterfaceEshop eshop) {
+        eshop = eshop;
+    }
     @Override
     public void init() throws Exception {
-        this.eshop = new Eshop();
+         //funktioniert nicht und woher kommt der InterfaceEshop eshop parameter?
         this.session = new SessionManager();
     }
 

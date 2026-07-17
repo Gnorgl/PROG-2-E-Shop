@@ -2,18 +2,18 @@ package ui.gui.scenes;
 
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
+import interfaces.InterfaceEshop;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.components.CustomButton;
 import ui.gui.components.CustomInputField;
 import ui.gui.components.CustomPasswordField;
 
 public class LoginScene extends VBox {
 
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
 
@@ -25,7 +25,7 @@ public class LoginScene extends VBox {
     private final CustomButton zeigeRegistrationSceneButton = new CustomButton("Noch kein Konto? Registrieren", CustomButton.ButtonType.SECONDARY);
     private final Label infoLabel = new Label();
 
-    public LoginScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public LoginScene(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
@@ -57,9 +57,9 @@ public class LoginScene extends VBox {
         infoLabel.setText("");
 
         try {
-            Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+            Benutzer benutzer = eshop.benutzerCheck(email);
 
-            if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
+            if (eshop.passwordCheck(benutzer, passwort)) {
                 session.login(benutzer);
                 System.out.println("Login successful!");
                 guiController.showMainLayoutScene();

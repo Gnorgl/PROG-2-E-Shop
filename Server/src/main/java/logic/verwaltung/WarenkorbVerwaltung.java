@@ -6,13 +6,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entities.Artikel;
 import exceptions.artikel.ArtikelNichtGefunden;
+import interfaces.moduls.IWV;
 import persistence.shop.WarenkorbListe;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class WarenkorbVerwaltung {
+public class WarenkorbVerwaltung implements IWV {
     private final WarenkorbListe warenkorbListe = new WarenkorbListe();
     private final File datei = new File("warenkorb.json");
     private final ObjectMapper mapper = new ObjectMapper()
@@ -38,7 +39,8 @@ public class WarenkorbVerwaltung {
         return warenkorbListe.getMenge(artikel);
     }
 
-    public HashMap<Artikel, Integer> getAlleArtikel() {
+    @Override
+    public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
         return warenkorbListe.getAlleArtikel();
     }
 

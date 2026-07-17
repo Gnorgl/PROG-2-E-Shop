@@ -1,18 +1,18 @@
 package ui.gui.views;
 
 import entities.Mitarbeiter;
+import interfaces.InterfaceEshop;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox; // Geändert von BorderPane zu VBox
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.components.CustomButton;
 import ui.gui.components.CustomInputField;
 import ui.gui.components.CustomPasswordField;
 
 public class EmployeeCreationView extends VBox {
 
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final EshopGUI guiController;
 
     private final CustomPasswordField passwortFeld = new CustomPasswordField("Passwort");
@@ -22,7 +22,7 @@ public class EmployeeCreationView extends VBox {
     private final CustomButton registrationButton = new CustomButton("Mitarbeiter anlegen", CustomButton.ButtonType.PRIMARY);
     private final Label infoLabel = new Label();
 
-    public EmployeeCreationView(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public EmployeeCreationView(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.guiController = guiController;
 
@@ -60,7 +60,7 @@ public class EmployeeCreationView extends VBox {
 
         try {
             // Aufruf ohne das E-Mail-Argument anders als bei Kunden
-            Mitarbeiter m = eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(passwort, nachname, vorname);
+            Mitarbeiter m = eshop.createNewMitarbeiter(passwort, nachname, vorname);
 
             infoLabel.setStyle("-fx-text-fill: #2a9d8f;");
             infoLabel.setText("Mitarbeiter erfolgreich angelegt!\nE-Mail: " + m.getEmail());

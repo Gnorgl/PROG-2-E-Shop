@@ -19,6 +19,7 @@ import logic.verwaltung.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,13 +103,24 @@ public class Eshop implements InterfaceEshop {
         this.checkOutVerwaltung.rechnungAnzeigen(rechnung);
     }
 
+
+    // ==========================================
+    // WARENKORB
+    // ==========================================
+
+    @Override
+    public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
+        return warenkorbVerwaltung.getAlleWarenkorbArtikel();
+    }
+
+
     // ==========================================
     // BENUTZER-CHECKS
     // ==========================================
 
     @Override
-    public void benutzerCheck(String email) throws BenutzerExistiertNichtException {
-        this.benutzerVerwaltung.benutzerCheck(email);
+    public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
+        return this.benutzerVerwaltung.benutzerCheck(email);
     }
 
     @Override

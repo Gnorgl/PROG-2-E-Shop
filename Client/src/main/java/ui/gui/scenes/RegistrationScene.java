@@ -3,18 +3,18 @@ package ui.gui.scenes;
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import exceptions.user.EmailBereitsVergebenException;
+import interfaces.InterfaceEshop;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.components.CustomButton;
 import ui.gui.components.CustomInputField;
 import ui.gui.components.CustomPasswordField;
 
 public class RegistrationScene extends VBox {
 
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final SessionManager session;
     private final EshopGUI guiController;
 
@@ -28,7 +28,7 @@ public class RegistrationScene extends VBox {
     private final CustomButton zurueckButton = new CustomButton("Zurück zum Login", CustomButton.ButtonType.SECONDARY);
     private final Label infoLabel = new Label();
 
-    public RegistrationScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public RegistrationScene(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.eshop = eshop;
         this.session = session;
         this.guiController = guiController;
@@ -83,14 +83,14 @@ public class RegistrationScene extends VBox {
         }
 
         try {
-            if (eshop.getBenutzerVerwaltung().istEmailVergeben(email)) {
+            if (eshop.istEmailVergeben(email)) {
                 infoLabel.setText("Diese E-Mail-Adresse wird bereits verwendet!");
                 return;
             }
 
-            eshop.getBenutzerVerwaltung().getKundenVerwaltung().createNewKunden(email, passwort, nachname, vorname, adresse);
+            eshop.createNewKunden(email, passwort, nachname, vorname, adresse);
 
-            Benutzer neuerBenutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+            Benutzer neuerBenutzer = eshop.benutzerCheck(email);
             session.login(neuerBenutzer);
 
             System.out.println("Registrierung und Login erfolgreich!");

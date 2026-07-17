@@ -1,11 +1,11 @@
 package ui.gui.components;
 
+import interfaces.InterfaceEshop;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.scenes.MainLayoutScene;
 import ui.gui.views.EmployeeCreationView;
 import ui.gui.views.KatalogView;
@@ -13,9 +13,9 @@ import ui.gui.views.KatalogView;
 public class NavigationSidebar extends VBox {
 
     private final MainLayoutScene mainLayout;
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
 
-    public NavigationSidebar(Eshop eshop, SessionManager session, EshopGUI guiController, MainLayoutScene mainLayout) {
+    public NavigationSidebar(InterfaceEshop eshop, SessionManager session, EshopGUI guiController, MainLayoutScene mainLayout) {
         this.eshop = eshop;
         this.mainLayout = mainLayout;
 

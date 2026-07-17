@@ -1,10 +1,10 @@
 package ui.gui.scenes;
 
+import interfaces.InterfaceEshop;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import logic.Eshop;
-import logic.SessionManager;
 import ui.gui.EshopGUI;
+import ui.gui.SessionManager;
 import ui.gui.components.NavigationSidebar;
 import ui.gui.views.DashboardView; // Die neue Home-Page
 
@@ -13,7 +13,7 @@ public class MainLayoutScene extends BorderPane {
     private final SessionManager session;
     private final EshopGUI guiController;
 
-    public MainLayoutScene(Eshop eshop, SessionManager session, EshopGUI guiController) {
+    public MainLayoutScene(InterfaceEshop eshop, SessionManager session, EshopGUI guiController) {
         this.session = session;
         this.guiController = guiController;
 
