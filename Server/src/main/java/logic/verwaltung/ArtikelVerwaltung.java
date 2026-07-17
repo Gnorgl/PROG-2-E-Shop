@@ -63,7 +63,7 @@ public class ArtikelVerwaltung implements IAV {
 
 
 
-    public void safe() throws IOException {
+    private void safe() throws IOException {
         // Speichert sowohl die Liste als auch den Counter im Container-Array
         Object[] speicherContainer = new Object[]{ this.artikelListe, this.idCounter };
 

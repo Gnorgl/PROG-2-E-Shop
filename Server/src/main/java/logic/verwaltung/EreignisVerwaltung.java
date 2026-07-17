@@ -26,7 +26,7 @@ public class EreignisVerwaltung {
         datenLaden();
     }
 
-    public void safe() throws IOException {
+    private void safe() throws IOException {
         mapper.writerWithDefaultPrettyPrinter().writeValue(datei, this.ereignisListe);
     }
 

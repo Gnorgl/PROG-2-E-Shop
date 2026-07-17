@@ -5,13 +5,14 @@ import entities.Kunde;
 import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.KundeNichtGefundenException;
 import interfaces.moduls.IKV;
-import interfaces.moduls.IUC;
 import persistence.user.KundenListe;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class KundenVerwaltung implements IKV, IUC {
+public class KundenVerwaltung implements IKV {
 
     private final File datei = new File("kunden.json");
     private final ObjectMapper mapper = new ObjectMapper();
@@ -26,6 +27,11 @@ public class KundenVerwaltung implements IKV, IUC {
 
     public KundenListe getKundenListe() {
         return kundenListe;
+    }
+
+    @Override
+    public List<Kunde> getAlleKunden() {
+        return new ArrayList<>(this.kundenListe.getKunden().values());
     }
 
     @Override
@@ -52,9 +58,7 @@ public class KundenVerwaltung implements IKV, IUC {
     }
 
     //Methode um eine Kunden-ID-Nummer zu generieren. ID wird gezählt.
-
-    @Override
-    public String generateBenutzerNummer() {
+    private String generateBenutzerNummer() {
         this.idCounter++;
         return "-ki-" + this.idCounter;
     }
@@ -62,7 +66,7 @@ public class KundenVerwaltung implements IKV, IUC {
     //Kunden ID-Generator andere kennzeichnung als mitarbeiter ID, etwa KD-234324 und Mitarbeiter MB-234324, random generated lange nummer.
 
     //Persistenz Methoden
-    public void safe() {
+    private void safe() {
         try {
             Object[] speicherContainer = new Object[]{ this.kundenListe, this.idCounter };
 

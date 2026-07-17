@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Mitarbeiter;
 import exceptions.user.MitarbeiterNichtGefundenException;
 import interfaces.moduls.IMV;
-import interfaces.moduls.IUC;
 import persistence.user.MitarbeiterListe;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MitarbeiterVerwaltung implements IMV, IUC {
+public class MitarbeiterVerwaltung implements IMV {
     private final File datei = new File("mitarbeiter.json");
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -26,6 +27,11 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
 
     public MitarbeiterListe getMitarbeiterListe() {
         return mitarbeiterListe;
+    }
+
+    @Override
+    public List<Mitarbeiter> getAlleMitarbeiter() {
+        return new ArrayList<>(this.mitarbeiterListe.getMitarbeiter().values());
     }
 
     @Override
@@ -56,8 +62,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
         return neuerMitarbeiter;
     }
 
-    @Override
-    public String generateBenutzerNummer() {
+    private String generateBenutzerNummer() {
         this.idCounter++;
         return "-mi-" + this.idCounter;
     }
@@ -72,7 +77,7 @@ public class MitarbeiterVerwaltung implements IMV, IUC {
         safe();
     }
 
-    public void safe() {
+    private void safe() {
         try {
             Object[] speicherContainer = new Object[]{ this.mitarbeiterListe, this.idCounter };
             mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);

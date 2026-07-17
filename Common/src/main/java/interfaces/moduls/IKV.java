@@ -4,7 +4,11 @@ import entities.Kunde;
 import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.KundeNichtGefundenException;
 
+import java.util.List;
+
 public interface IKV { //Interface KundenVerwaltung
+
+    List<Kunde> getAlleKunden();
 
     Kunde getKunde(String email) throws KundeNichtGefundenException;
 

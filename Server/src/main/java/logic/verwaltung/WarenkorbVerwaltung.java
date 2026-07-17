@@ -67,7 +67,7 @@ public class WarenkorbVerwaltung {
         safe();
     }
 
-    public void safe() throws IOException {
+    private void safe() throws IOException {
         // ID-basiertes Speichern: Wir mappen ArtikelNummer -> Menge
         HashMap<Integer, Integer> speicherMap = new HashMap<>();
         for (Artikel a : warenkorbListe.getAlleArtikel().keySet()) {

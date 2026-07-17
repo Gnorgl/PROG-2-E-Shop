@@ -3,10 +3,14 @@ package interfaces.moduls;
 import entities.Mitarbeiter;
 import exceptions.user.MitarbeiterNichtGefundenException;
 
+import java.util.List;
+
 public interface IMV { //Interface MitarbeiterVerwaltung
+
+    List<Mitarbeiter> getAlleMitarbeiter();
 
     Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException;
 
-    public Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname);
+    Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname);
 
 }

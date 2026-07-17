@@ -31,7 +31,7 @@ public class CheckOutVerwaltung implements ICV {
         datenLaden();
     }
 
-    public void safe() throws IOException {
+    private void safe() throws IOException {
         Object[] speicherContainer = new Object[]{ this.rechnungsNummerZaehler, this.orderListe };
         mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
     }

@@ -7,10 +7,14 @@ import exceptions.user.KundeNichtGefundenException;
 import exceptions.user.MitarbeiterNichtGefundenException;
 
 public class BenutzerVerwaltung implements IBV {
-    private final KundenVerwaltung kundenVerwaltung = new KundenVerwaltung();
-    private final MitarbeiterVerwaltung mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
+    private final KundenVerwaltung kundenVerwaltung;
+    private final MitarbeiterVerwaltung mitarbeiterVerwaltung;
 
-    public BenutzerVerwaltung() {}
+    // Konstruktor verlangt die fertigen Verwaltungen
+    public BenutzerVerwaltung(KundenVerwaltung kv, MitarbeiterVerwaltung mv) {
+        this.kundenVerwaltung = kv;
+        this.mitarbeiterVerwaltung = mv;
+    }
 
     //Getter-Methoden
 
