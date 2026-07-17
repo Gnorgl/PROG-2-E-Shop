@@ -67,6 +67,11 @@ public class Eshop implements InterfaceEshop { //Es fehlen noch ein paar Interfa
         return this.mitarbeiterVerwaltung.getAlleMitarbeiter();
     }
 
+
+    // ==========================================
+    // GETTER & SETTER
+    // ==========================================
+
     public ArtikelVerwaltung getArtikelVerwaltung() {
         return artikelVerwaltung;
     }
