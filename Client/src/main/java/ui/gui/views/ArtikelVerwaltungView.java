@@ -46,6 +46,11 @@ public class ArtikelVerwaltungView extends VBox {
     private CustomButton einlagernBtn;
     private CustomButton reduzierenBtn;
 
+    // Bestandshistorie anzeigen
+    private CustomInputField historieNrField;
+    private CustomButton historieAnzeigenBtn;
+    private BestandsHistorieView historieChart;
+
     // Artikel löschen
     private CustomInputField loeschNrField;
     private CustomButton loeschenBtn;
@@ -79,6 +84,7 @@ public class ArtikelVerwaltungView extends VBox {
         VBox anlegenBox = createAnlegenBereich();
         VBox bestandBox = createBestandBereich();
         VBox loeschBox = createLoeschenBereich();
+        VBox historieBox = createHistorieBereich();
 
         // Ein Layout für die Formulare nebeneinander
         HBox formulareBox = new HBox(30);
@@ -91,6 +97,7 @@ public class ArtikelVerwaltungView extends VBox {
         // Rechte Seite: Bestand ändern
         VBox rechtsBox = new VBox(20);
         rechtsBox.getChildren().addAll(bestandBox);
+        rechtsBox.getChildren().add(historieBox);
         HBox.setHgrow(rechtsBox, Priority.ALWAYS);
 
         formulareBox.getChildren().addAll(linksBox, new Separator(), rechtsBox);
@@ -231,6 +238,34 @@ public class ArtikelVerwaltungView extends VBox {
 
         box.getChildren().addAll(header, loeschRow, loeschenBtn);
         return box;
+    }
+
+    private VBox createHistorieBereich() {
+        VBox box = new VBox(15);
+        Label header = new Label("Bestandshistorie anzeigen");
+        header.getStyleClass().add("section-header");
+
+        historieNrField = new CustomInputField("Artikelnummer");
+        FormRow historieRow = new FormRow("Artikelnummer:", historieNrField);
+
+        historieAnzeigenBtn = new CustomButton("Historie anzeigen", CustomButton.ButtonType.PRIMARY);
+        historieAnzeigenBtn.setOnAction(e -> HistorieAnzeigen());
+
+        historieChart = new BestandsHistorieView(400, 250);
+
+        box.getChildren().addAll(header, historieRow, historieAnzeigenBtn, historieChart);
+        return box;
+    }
+
+    private void HistorieAnzeigen() {
+        try {
+            int nr = Integer.parseInt(historieNrField.getText().trim());
+            historieChart.zeichne(eshop.getArtikelVerwaltung(), nr);
+        } catch (NumberFormatException ex) {
+            showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige Artikelnummer eingeben.");
+        } catch (ArtikelNichtGefunden ex) {
+            showAlert(Alert.AlertType.WARNING, "Nicht gefunden", "Artikel-ID existiert nicht.");
+        }
     }
 
     private void ArtikelAnlegen() {
