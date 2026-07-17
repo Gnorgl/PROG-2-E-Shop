@@ -1,6 +1,15 @@
 package logic;
+import entities.Artikel;
+import entities.Benutzer;
 import entities.Kunde;
 import entities.Mitarbeiter;
+import entities.Rechnung;
+import exceptions.artikel.ArtikelExistiertBereits;
+import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
+import exceptions.user.BenutzerExistiertNichtException;
 import exceptions.user.EmailBereitsVergebenException;
 import exceptions.user.KundeNichtGefundenException;
 import exceptions.user.MitarbeiterNichtGefundenException;
@@ -9,14 +18,16 @@ import logic.verwaltung.EreignisVerwaltung;
 import logic.verwaltung.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
-public class Eshop implements InterfaceEshop { //Es fehlen noch ein paar Interface - Methoden
-    private ArtikelVerwaltung  artikelVerwaltung = new ArtikelVerwaltung(); //fehlt
-    private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung(); //fehlt
-    private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung(); //fehlt
-    private WarenkorbVerwaltung warenkorbVerwaltung = new WarenkorbVerwaltung(artikelVerwaltung); //fehlt
+public class Eshop implements InterfaceEshop {
+    private ArtikelVerwaltung  artikelVerwaltung = new ArtikelVerwaltung();
+    private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();
+    private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
+    private WarenkorbVerwaltung warenkorbVerwaltung = new WarenkorbVerwaltung(artikelVerwaltung);
 
     private final BenutzerVerwaltung benutzerVerwaltung;
     private final KundenVerwaltung kundenVerwaltung;
@@ -26,6 +37,88 @@ public class Eshop implements InterfaceEshop { //Es fehlen noch ein paar Interfa
         this.kundenVerwaltung = new KundenVerwaltung();
         this.mitarbeiterVerwaltung = new MitarbeiterVerwaltung();
         this.benutzerVerwaltung = new BenutzerVerwaltung(this.kundenVerwaltung, this.mitarbeiterVerwaltung);
+    }
+
+    // ==========================================
+    // ARTIKEL
+    // ==========================================
+
+    @Override
+    public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
+        return this.artikelVerwaltung.legeArtikelAn(name, bestand, preis);
+    }
+
+    @Override
+    public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse) throws ArtikelExistiertBereits, MengeUngueltigException, ArtikelNullException, IOException {
+        return this.artikelVerwaltung.legeMassengutartikelAn(bezeichnung, bestand, preis, packungsGroesse);
+    }
+
+    @Override
+    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, MengeUngueltigException, ArtikelNullException, IOException {
+        this.artikelVerwaltung.bestandErhoehen(nr, anzahl);
+    }
+
+    @Override
+    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
+        this.artikelVerwaltung.bestandReduzieren(nr, anzahl);
+    }
+
+    @Override
+    public void loeschen(int nr) throws IOException {
+        this.artikelVerwaltung.loeschen(nr);
+    }
+
+    @Override
+    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
+        return this.artikelVerwaltung.getBestandsHistorie(artikelNr);
+    }
+
+    @Override
+    public List<Artikel> getAlleArtikel() {
+        return this.artikelVerwaltung.getAlleArtikel();
+    }
+
+    @Override
+    public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
+        return this.artikelVerwaltung.findeArtikel(nr);
+    }
+
+    // ==========================================
+    // CHECKOUT
+    // ==========================================
+
+    @Override
+    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, interfaces.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
+        return this.checkOutVerwaltung.checkOut(kunde, warenkorbInhalt, artikelVerwaltung);
+    }
+
+    @Override
+    public double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt) {
+        return this.checkOutVerwaltung.berechneNettoSumme(warenkorbInhalt);
+    }
+
+    @Override
+    public void rechnungAnzeigen(Rechnung rechnung) {
+        this.checkOutVerwaltung.rechnungAnzeigen(rechnung);
+    }
+
+    // ==========================================
+    // BENUTZER-CHECKS
+    // ==========================================
+
+    @Override
+    public void benutzerCheck(String email) throws BenutzerExistiertNichtException {
+        this.benutzerVerwaltung.benutzerCheck(email);
+    }
+
+    @Override
+    public boolean passwordCheck(Benutzer benutzer, String password) {
+        return this.benutzerVerwaltung.passwordCheck(benutzer, password);
+    }
+
+    @Override
+    public boolean istEmailVergeben(String email) {
+        return this.benutzerVerwaltung.istEmailVergeben(email);
     }
 
     // ==========================================
