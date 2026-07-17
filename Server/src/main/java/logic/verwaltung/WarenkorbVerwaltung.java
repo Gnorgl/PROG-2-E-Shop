@@ -30,6 +30,18 @@ public class WarenkorbVerwaltung {
         return warenkorbListe;
     }
 
+    public boolean istLeer() {
+        return warenkorbListe.istLeer();
+    }
+
+    public int getMenge(Artikel artikel) {
+        return warenkorbListe.getMenge(artikel);
+    }
+
+    public HashMap<Artikel, Integer> getAlleArtikel() {
+        return warenkorbListe.getAlleArtikel();
+    }
+
     public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
         if (menge > 0) {
             // 1. Logik: Bisherige Menge aus der Datenhaltung abfragen

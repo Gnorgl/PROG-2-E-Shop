@@ -61,7 +61,7 @@ public class WarenkorbView extends VBox {
         TableColumn<Artikel, Integer> colMenge = new TableColumn<>("Menge");
         colMenge.setCellValueFactory(cellData -> {
             Artikel a = cellData.getValue();
-            int mengeStueck = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getMenge(a);
+            int mengeStueck = eshop.getWarenkorbVerwaltung().getMenge(a);
 
             if (a instanceof entities.Massengutartikel) {
                 int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
@@ -156,7 +156,7 @@ public class WarenkorbView extends VBox {
         btnZurKasse.setMaxWidth(Double.MAX_VALUE);
         btnZurKasse.setOnAction(e -> {
             // Verhindert das Navigieren zur Kasse, wenn der Korb leer ist
-            if (eshop.getWarenkorbVerwaltung().getWarenkorbListe().istLeer()) {
+            if (eshop.getWarenkorbVerwaltung().istLeer()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Dein Warenkorb ist leer!");
                 alert.setHeaderText(null);
                 alert.showAndWait();
@@ -170,7 +170,7 @@ public class WarenkorbView extends VBox {
     }
 
     private void datenLaden() {
-        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getAlleArtikel();
+        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getAlleArtikel();
 
         warenkorbListe = javafx.collections.FXCollections.observableArrayList(warenkorbMap.keySet());
         warenkorbTable.setItems(warenkorbListe);
@@ -202,7 +202,7 @@ public class WarenkorbView extends VBox {
             summaryArtikelBox.getChildren().add(itemRow);
         }
 
-        double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getWarenkorbListe());
+        double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getAlleArtikel());
 
         String preisString = String.format("€%.2f", gesamt);
         lblZwischensumme.setText(preisString);

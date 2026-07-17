@@ -16,7 +16,6 @@ import exceptions.artikel.ArtikelNullException;
 import interfaces.moduls.IAV;
 import interfaces.moduls.ICV;
 import persistence.shop.OrderListe;
-import persistence.shop.WarenkorbListe;
 
 public class CheckOutVerwaltung implements ICV {
     private int rechnungsNummerZaehler = 1;
@@ -59,37 +58,33 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public double berechneNettoSumme(WarenkorbListe warenkorbListe) {
+    public double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt) {
         double netto = 0;
         //durchlaufe alle Artikel im Warenkorb und berechne die Summe
-        HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
-
-        for (Artikel artikel : warenkorbItems.keySet()) {
-            int menge = warenkorbItems.get(artikel);
+        for (Artikel artikel : warenkorbInhalt.keySet()) {
+            int menge = warenkorbInhalt.get(artikel);
             netto += artikel.berechneGesamtpreis(menge); // Polymorphie greift hier perfekt!
         }
         return netto;
     }
 
-    public double berechneBruttoSumme(WarenkorbListe warenkorbListe) {
-        return berechneNettoSumme(warenkorbListe) * 1.19;
+    public double berechneBruttoSumme(Map<Artikel, Integer> warenkorbInhalt) {
+        return berechneNettoSumme(warenkorbInhalt) * 1.19;
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
-        HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
-
-        if (warenkorbItems.isEmpty()) {
+    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
+        if (warenkorbInhalt.isEmpty()) {
             return null;
         }
 
         // Netto-Summe berechnen lassen
-        double netto = berechneNettoSumme(warenkorbListe);
+        double netto = berechneNettoSumme(warenkorbInhalt);
 
         List<Artikel> gekaufteArtikel = new ArrayList<>();
 
-        for (Artikel artikel : warenkorbItems.keySet()) {
-            int menge = warenkorbItems.get(artikel);
+        for (Artikel artikel : warenkorbInhalt.keySet()) {
+            int menge = warenkorbInhalt.get(artikel);
 
             for (int i = 0; i < menge; i++) {
                 gekaufteArtikel.add(artikel);
@@ -123,9 +118,6 @@ public class CheckOutVerwaltung implements ICV {
 
         orderListe.addRechnung(rechnung);
         safe();
-
-        // Warenkorb leeren nach erfolgreichem Checkout
-        warenkorbListe.leeren();
 
         return rechnung;
     }

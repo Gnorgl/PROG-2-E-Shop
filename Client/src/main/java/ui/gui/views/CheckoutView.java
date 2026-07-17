@@ -51,11 +51,11 @@ public class CheckoutView extends VBox {
     }
 
     private void datenLaden() {
-        double netto = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getWarenkorbListe());
-        double brutto = eshop.getBestellVerwaltungV().berechneBruttoSumme(eshop.getWarenkorbVerwaltung().getWarenkorbListe());
+        double netto = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getAlleArtikel());
+        double brutto = eshop.getBestellVerwaltungV().berechneBruttoSumme(eshop.getWarenkorbVerwaltung().getAlleArtikel());
 
         summaryArtikelBox.getChildren().clear();
-        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getWarenkorbListe().getAlleArtikel();
+        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getAlleArtikel();
 
         for (Artikel a : warenkorbMap.keySet()) {
             int mengeStueck = warenkorbMap.get(a);
@@ -206,7 +206,7 @@ public class CheckoutView extends VBox {
 
             Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(
                     kunde,
-                    eshop.getWarenkorbVerwaltung().getWarenkorbListe(),
+                    eshop.getWarenkorbVerwaltung().getAlleArtikel(),
                     eshop.getArtikelVerwaltung()
             );
 
@@ -215,7 +215,7 @@ public class CheckoutView extends VBox {
                 return;
             }
 
-            eshop.getWarenkorbVerwaltung().safe();
+            eshop.getWarenkorbVerwaltung().leeren();
 
             // Adresse aus den Feldern für die Rechnung zusammenbauen
             String lieferadresse = vornameField.getText() + " " + nachnameField.getText() + "\n" +

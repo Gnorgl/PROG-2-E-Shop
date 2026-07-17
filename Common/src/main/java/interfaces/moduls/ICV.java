@@ -1,20 +1,21 @@
 package interfaces.moduls;
 
+import entities.Artikel;
 import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
-import persistence.shop.WarenkorbListe;
 
 import java.io.IOException;
+import java.util.Map;
 
 public interface ICV { //Interface CheckOutVerwaltung
 
     // Die aktualisierte checkOut-Methode (mit ArtikelVerwaltung für die Bestandsänderung)
-    Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException;
+    Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException;
 
     // Die neue Methode zur Berechnung des Warenkorb-Werts
-    double berechneNettoSumme(WarenkorbListe warenkorbListe);
+    double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt);
 
     // Die Methode zum Anzeigen der Rechnung
     void rechnungAnzeigen(Rechnung rechnung);
