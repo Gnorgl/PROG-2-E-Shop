@@ -8,7 +8,7 @@ import java.net.Socket;
 
 // Nimmt Verbindungswünsche von Clients entgegen und startet pro Client
 // einen eigenen ClientRequestProcessor in einem eigenen Thread.
-public class XYServer {
+public class EShopServer {
 
     public static final int DEFAULT_PORT = 6789;
 
@@ -16,11 +16,11 @@ public class XYServer {
     private final Eshop eshop;
     private ServerSocket serverSocket;
 
-    public XYServer(Eshop eshop) {
+    public EShopServer(Eshop eshop) {
         this(eshop, DEFAULT_PORT);
     }
 
-    public XYServer(Eshop eshop, int port) {
+    public EShopServer(Eshop eshop, int port) {
         this.eshop = eshop;
         this.port = port;
     }
@@ -41,7 +41,7 @@ public class XYServer {
 
     public static void main(String[] args) throws IOException {
         Eshop eshop = new Eshop();
-        XYServer server = new XYServer(eshop);
+        EShopServer server = new EShopServer(eshop);
         server.starten();
     }
 }
