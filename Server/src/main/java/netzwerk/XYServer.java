@@ -1,0 +1,47 @@
+package netzwerk;
+
+import logic.Eshop;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+// Nimmt Verbindungswünsche von Clients entgegen und startet pro Client
+// einen eigenen ClientRequestProcessor in einem eigenen Thread.
+public class XYServer {
+
+    public static final int DEFAULT_PORT = 6789;
+
+    private final int port;
+    private final Eshop eshop;
+    private ServerSocket serverSocket;
+
+    public XYServer(Eshop eshop) {
+        this(eshop, DEFAULT_PORT);
+    }
+
+    public XYServer(Eshop eshop, int port) {
+        this.eshop = eshop;
+        this.port = port;
+    }
+
+    public void starten() throws IOException {
+        serverSocket = new ServerSocket(port);
+        System.out.println("XYServer bereit auf Port " + port + " ...");
+
+        while (true) {
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Client verbunden: " + clientSocket.getInetAddress());
+
+            ClientRequestProcessor processor = new ClientRequestProcessor(clientSocket, eshop);
+            Thread thread = new Thread(processor);
+            thread.start();
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        Eshop eshop = new Eshop();
+        XYServer server = new XYServer(eshop);
+        server.starten();
+    }
+}
