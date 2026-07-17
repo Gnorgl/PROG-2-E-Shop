@@ -26,12 +26,12 @@ public class BenutzerVerwaltung implements IBV {
     //Gibt ein Benutzer Objekt zurück.
 
     @Override
-    public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
+    public void benutzerCheck(String email) throws BenutzerExistiertNichtException {
         try {
-            return kundenVerwaltung.getKunde(email);
+            kundenVerwaltung.getKunde(email);
         } catch (KundeNichtGefundenException e) {
             try {
-                return mitarbeiterVerwaltung.getMitarbeiter(email);
+                mitarbeiterVerwaltung.getMitarbeiter(email);
             } catch (MitarbeiterNichtGefundenException ex) {
                 throw new BenutzerExistiertNichtException(email);
             }

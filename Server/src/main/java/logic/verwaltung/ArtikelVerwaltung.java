@@ -31,7 +31,6 @@ public class ArtikelVerwaltung implements IAV {
 
 
     public ArtikelVerwaltung() throws IOException {
-        this.artikelListe = new ArtikelListe();
         datenLaden();
     }
 
@@ -109,6 +108,7 @@ public class ArtikelVerwaltung implements IAV {
         safe();
     }
 
+    @Override
     public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse)
             throws ArtikelExistiertBereits, MengeUngueltigException, ArtikelNullException, IOException {
 
@@ -163,6 +163,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     // Reduziert Bestand (z. B. beim Checkout)
+    @Override
     public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
         Artikel a = findeArtikel(nr);
 
@@ -191,6 +192,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     // Berechnet den täglichen Bestandsverlauf eines Artikels über die letzten 30 Tage
+    @Override
     public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
         Artikel artikel = findeArtikel(artikelNr);
 
@@ -250,10 +252,16 @@ public class ArtikelVerwaltung implements IAV {
         return this.currentMitarbeiter;
     }
 
+    @Override
+    public List<Artikel> getAlleArtikel() {
+        return this.artikelListe.getArtikelImLager();
+    }
+
     public ArtikelListe getArtikelListe() {
         return this.artikelListe;
     }
 
+    @Override
     public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
         for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
