@@ -27,7 +27,7 @@ public class EShopServer {
 
     public void starten() throws IOException {
         serverSocket = new ServerSocket(port);
-        System.out.println("XYServer bereit auf Port " + port + " ...");
+        System.out.println("EShopServer bereit auf Port " + port + " ...");
 
         while (true) {
             Socket clientSocket = serverSocket.accept();

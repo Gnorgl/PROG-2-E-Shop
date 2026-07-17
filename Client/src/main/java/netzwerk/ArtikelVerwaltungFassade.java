@@ -1,0 +1,142 @@
+package netzwerk;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import entities.Artikel;
+import exceptions.artikel.ArtikelExistiertBereits;
+import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
+import interfaces.moduls.IAV;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+// Sieht für die GUI genauso aus wie die echte ArtikelVerwaltung (implementiert
+// dasselbe Interface IAV), leitet die Aufrufe aber über die ServerVerbindung
+// an den Server weiter, statt sie lokal auszuführen.
+public class ArtikelVerwaltungFassade implements IAV {
+
+    private final ServerVerbindung verbindung;
+
+    public ArtikelVerwaltungFassade(ServerVerbindung verbindung) {
+        this.verbindung = verbindung;
+    }
+
+    @Override
+    public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
+        try {
+            verbindung.sendeKommando("ARTIKEL_ANLEGEN", name, String.valueOf(bestand), String.valueOf(preis));
+            return true;
+        } catch (ServerFehlerException e) {
+            switch (e.getExceptionName()) {
+                case "ArtikelExistiertBereits" -> throw new ArtikelExistiertBereits(e.getNachricht());
+                case "ArtikelNullException" -> throw new ArtikelNullException();
+                default -> throw new IOException("Serverfehler: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse) throws ArtikelExistiertBereits, MengeUngueltigException, ArtikelNullException, IOException {
+        try {
+            verbindung.sendeKommando("MASSENGUT_ANLEGEN", bezeichnung, String.valueOf(bestand), String.valueOf(preis), String.valueOf(packungsGroesse));
+            return true;
+        } catch (ServerFehlerException e) {
+            switch (e.getExceptionName()) {
+                case "ArtikelExistiertBereits" -> throw new ArtikelExistiertBereits(e.getNachricht());
+                case "MengeUngueltigException" -> throw new MengeUngueltigException(e.getNachricht());
+                case "ArtikelNullException" -> throw new ArtikelNullException();
+                default -> throw new IOException("Serverfehler: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, MengeUngueltigException, ArtikelNullException, IOException {
+        try {
+            verbindung.sendeKommando("BESTAND_ERHOEHEN", String.valueOf(nr), String.valueOf(anzahl));
+        } catch (ServerFehlerException e) {
+            switch (e.getExceptionName()) {
+                case "ArtikelNichtGefunden" -> throw new ArtikelNichtGefunden(e.getNachricht());
+                case "MengeUngueltigException" -> throw new MengeUngueltigException(e.getNachricht());
+                case "ArtikelNullException" -> throw new ArtikelNullException();
+                default -> throw new IOException("Serverfehler: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
+        try {
+            verbindung.sendeKommando("BESTAND_REDUZIEREN", String.valueOf(nr), String.valueOf(anzahl));
+        } catch (ServerFehlerException e) {
+            switch (e.getExceptionName()) {
+                case "ArtikelNichtGefunden" -> throw new ArtikelNichtGefunden(e.getNachricht());
+                case "BestandNichtAusreichendException" -> throw new BestandNichtAusreichendException(0, 0);
+                case "MengeUngueltigException" -> throw new MengeUngueltigException(e.getNachricht());
+                case "ArtikelNullException" -> throw new ArtikelNullException();
+                default -> throw new IOException("Serverfehler: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void loeschen(int nr) throws IOException {
+        try {
+            verbindung.sendeKommando("ARTIKEL_LOESCHEN", String.valueOf(nr));
+        } catch (ServerFehlerException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
+        try {
+            String json = verbindung.sendeKommandoMitAntwort("BESTANDSHISTORIE", String.valueOf(artikelNr));
+            return verbindung.mapper.readValue(json, new TypeReference<Map<LocalDate, Integer>>() {
+            });
+        } catch (ServerFehlerException e) {
+            werfeArtikelFehlerOhneIO(e);
+            return null; // unerreichbar
+        } catch (IOException e) {
+            throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Artikel> getAlleArtikel() {
+        try {
+            String json = verbindung.sendeKommandoMitAntwort("ALLE_ARTIKEL");
+            return verbindung.mapper.readValue(json, new TypeReference<List<Artikel>>() {
+            });
+        } catch (IOException | ServerFehlerException e) {
+            throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
+        try {
+            String json = verbindung.sendeKommandoMitAntwort("ARTIKEL_FINDEN", String.valueOf(nr));
+            return verbindung.mapper.readValue(json, Artikel.class);
+        } catch (ServerFehlerException e) {
+            werfeArtikelFehlerOhneIO(e);
+            return null; // unerreichbar
+        } catch (IOException e) {
+            throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
+        }
+    }
+
+    // Wandelt eine ServerFehlerException in ArtikelNichtGefunden um (für
+    // getBestandsHistorie/findeArtikel, die laut IAV nur diese eine Checked-
+    // Exception deklarieren dürfen).
+    private void werfeArtikelFehlerOhneIO(ServerFehlerException e) throws ArtikelNichtGefunden {
+        if ("ArtikelNichtGefunden".equals(e.getExceptionName())) {
+            throw new ArtikelNichtGefunden(e.getNachricht());
+        }
+        throw new RuntimeException("Serverfehler: " + e.getMessage());
+    }
+}
