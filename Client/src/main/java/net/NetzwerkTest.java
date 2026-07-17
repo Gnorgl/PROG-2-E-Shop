@@ -1,4 +1,4 @@
-package netzwerk;
+package net;
 
 // Kleine Test-Klasse zum manuellen Ausprobieren, unabhängig von der echten GUI.
 // Vorher XYServer.main() in einem separaten Programmlauf starten!

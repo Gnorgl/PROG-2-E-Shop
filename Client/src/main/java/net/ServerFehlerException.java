@@ -1,4 +1,4 @@
-package netzwerk;
+package net;
 
 // Transportiert eine Fehlermeldung vom Server (Format "ExceptionName: Nachricht")
 // zur aufrufenden Fassade-Methode, die daraus die passende, im Common-Modul

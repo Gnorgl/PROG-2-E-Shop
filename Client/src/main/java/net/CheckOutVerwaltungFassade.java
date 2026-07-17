@@ -1,4 +1,4 @@
-package netzwerk;
+package net;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import entities.Artikel;
