@@ -21,7 +21,7 @@ public class WarenkorbVerwaltung {
 
     private final ArtikelVerwaltung artikelVerwaltung;
 
-    public WarenkorbVerwaltung(ArtikelVerwaltung artikelVerwaltung) {
+    public WarenkorbVerwaltung(ArtikelVerwaltung artikelVerwaltung) throws IOException {
         this.artikelVerwaltung = artikelVerwaltung;
         datenLaden(); // Lädt den Korb beim Starten
     }
@@ -30,7 +30,7 @@ public class WarenkorbVerwaltung {
         return warenkorbListe;
     }
 
-    public void artikelHinzufuegen(Artikel artikel, int menge) {
+    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
         if (menge > 0) {
             // 1. Logik: Bisherige Menge aus der Datenhaltung abfragen
             int alteMenge = warenkorbListe.getMenge(artikel);
@@ -45,49 +45,43 @@ public class WarenkorbVerwaltung {
         }
     }
 
-    public void artikelEntfernen(Artikel artikel) {
+    public void artikelEntfernen(Artikel artikel) throws IOException {
         warenkorbListe.artikelEntfernen(artikel);
         safe();
     }
 
-    public void leeren() {
+    public void leeren() throws IOException {
         warenkorbListe.leeren();
         safe();
     }
 
-    public void safe() {
-        try {
-            // ID-basiertes Speichern: Wir mappen ArtikelNummer -> Menge
-            HashMap<Integer, Integer> speicherMap = new HashMap<>();
-            for (Artikel a : warenkorbListe.getAlleArtikel().keySet()) {
-                speicherMap.put(a.getArtikelNummer(), warenkorbListe.getAlleArtikel().get(a));
-            }
-            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherMap);
-        } catch (IOException e) {
-            System.err.println("Fehler beim Speichern des Warenkorbs: " + e.getMessage());
+    public void safe() throws IOException {
+        // ID-basiertes Speichern: Wir mappen ArtikelNummer -> Menge
+        HashMap<Integer, Integer> speicherMap = new HashMap<>();
+        for (Artikel a : warenkorbListe.getAlleArtikel().keySet()) {
+            speicherMap.put(a.getArtikelNummer(), warenkorbListe.getAlleArtikel().get(a));
         }
+        mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherMap);
     }
 
-    private void datenLaden() {
+    private void datenLaden() throws IOException, IllegalArgumentException {
         if (!datei.exists()) return;
-        try {
-            HashMap<Integer, Integer> geladeneIds = mapper.readValue(
-                    datei,
-                    new TypeReference<HashMap<Integer, Integer>>() {}
-            );
+        HashMap<Integer, Integer> geladeneIds = mapper.readValue(
+                datei,
+                new TypeReference<HashMap<Integer, Integer>>() {}
+        );
 
-            warenkorbListe.leeren();
+        warenkorbListe.leeren();
 
-            for (Integer artikelNummer : geladeneIds.keySet()) {
-                try {
-                    Artikel a = artikelVerwaltung.findeArtikel(artikelNummer);
-                    warenkorbListe.speichern(a, geladeneIds.get(artikelNummer));
-                } catch (ArtikelNichtGefunden e) {
-                    System.err.println("Artikel Nr. " + artikelNummer + " aus altem Warenkorb nicht mehr im Lager.");
-                }
+        for (Integer artikelNummer : geladeneIds.keySet()) {
+            // Fachlicher Sonderfall: ein früher gespeicherter Artikel ist nicht mehr im Lager.
+            // Das wird hier bewusst übersprungen (kein Abbruch des Ladevorgangs).
+            try {
+                Artikel a = artikelVerwaltung.findeArtikel(artikelNummer);
+                warenkorbListe.speichern(a, geladeneIds.get(artikelNummer));
+            } catch (ArtikelNichtGefunden e) {
+                System.err.println("Artikel Nr. " + artikelNummer + " aus altem Warenkorb nicht mehr im Lager.");
             }
-        } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Fehler beim Laden des Warenkorbs: " + e.getMessage());
         }
     }
 }

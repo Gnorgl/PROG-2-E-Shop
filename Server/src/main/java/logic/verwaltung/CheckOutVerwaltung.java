@@ -12,6 +12,7 @@ import entities.Kunde;
 import entities.Massengutartikel; // <-- NEU: Import hinzugefügt
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.ArtikelNullException;
 import interfaces.moduls.IAV;
 import interfaces.moduls.ICV;
 import persistence.shop.OrderListe;
@@ -27,28 +28,20 @@ public class CheckOutVerwaltung implements ICV {
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-    public CheckOutVerwaltung() {
+    public CheckOutVerwaltung() throws IOException {
         datenLaden();
     }
 
-    public void safe() {
-        try {
-            Object[] speicherContainer = new Object[]{ this.rechnungsNummerZaehler, this.orderListe };
-            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
-        } catch (IOException e) {
-            System.err.println("Fehler beim Speichern der Rechnungen: " + e.getMessage());
-        }
+    public void safe() throws IOException {
+        Object[] speicherContainer = new Object[]{ this.rechnungsNummerZaehler, this.orderListe };
+        mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
     }
 
-    private void datenLaden() {
+    private void datenLaden() throws IOException, IllegalArgumentException {
         if (!datei.exists()) return;
-        try {
-            Object[] speicherContainer = mapper.readValue(datei, Object[].class);
-            this.rechnungsNummerZaehler = mapper.convertValue(speicherContainer[0], Integer.class);
-            this.orderListe = mapper.convertValue(speicherContainer[1], OrderListe.class);
-        } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Fehler beim Laden der Rechnungen: " + e.getMessage());
-        }
+        Object[] speicherContainer = mapper.readValue(datei, Object[].class);
+        this.rechnungsNummerZaehler = mapper.convertValue(speicherContainer[0], Integer.class);
+        this.orderListe = mapper.convertValue(speicherContainer[1], OrderListe.class);
     }
 
     public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
@@ -83,7 +76,7 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden {
+    public Rechnung checkOut(Kunde kunde, WarenkorbListe warenkorbListe, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
         HashMap<Artikel, Integer> warenkorbItems = warenkorbListe.getAlleArtikel();
 
         if (warenkorbItems.isEmpty()) {
@@ -111,11 +104,7 @@ public class CheckOutVerwaltung implements ICV {
                 throw new RuntimeException("Fehler beim Reduzieren des Bestands für Artikel " + artikel.getArtikelNummer() + ": " + e.getMessage(), e);
             }
 
-            try {
-                ereignisVerwaltung.logEreignis(artikel, menge, kunde, "AUSLAGERUNG_KAUF");
-            } catch (exceptions.artikel.ArtikelNullException e) {
-                System.err.println("Fehler beim Loggen des Ereignisses: " + e.getMessage());
-            }
+            ereignisVerwaltung.logEreignis(artikel, menge, kunde, "AUSLAGERUNG_KAUF");
         }
 
         // MwSt und Brutto berechnen

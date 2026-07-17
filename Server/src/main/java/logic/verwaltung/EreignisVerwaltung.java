@@ -22,27 +22,19 @@ public class EreignisVerwaltung {
     private EreignisListe ereignisListe = new EreignisListe();
 
 
-    public EreignisVerwaltung() {
+    public EreignisVerwaltung() throws IOException {
         datenLaden();
     }
 
-    public void safe() {
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, this.ereignisListe);
-        } catch (IOException e) {
-            System.err.println("Fehler beim Speichern der Ereignisse: " + e.getMessage());
-        }
+    public void safe() throws IOException {
+        mapper.writerWithDefaultPrettyPrinter().writeValue(datei, this.ereignisListe);
     }
 
-    private void datenLaden() {
+    private void datenLaden() throws IOException {
         if (!datei.exists()) {
             return;
         }
-        try {
-            this.ereignisListe = mapper.readValue(datei, EreignisListe.class);
-        } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Fehler beim Laden der Ereignisse: " + e.getMessage());
-        }
+        this.ereignisListe = mapper.readValue(datei, EreignisListe.class);
     }
 
 
@@ -50,7 +42,7 @@ public class EreignisVerwaltung {
 
 
 
-    public void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) throws ArtikelNullException {
+    public void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) throws ArtikelNullException, IOException {
 
         // Validierung
         if (artikel == null) {

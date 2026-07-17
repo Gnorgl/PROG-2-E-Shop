@@ -6,6 +6,7 @@ import ui.cui.navigation.*;
 import logic.Eshop;
 
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class EshopCUI {
@@ -24,7 +25,7 @@ public class EshopCUI {
     private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
 
     //Konstruktor
-    public EshopCUI(Eshop eshop) {
+    public EshopCUI(Eshop eshop) throws IOException {
 
         //Management Klassen:
         this.generalServiceManager = new GeneralServiceManager(eshop, scanner, session);
@@ -69,6 +70,7 @@ public class EshopCUI {
                 System.out.println("[P] Produkt hinzufügen");
                 System.out.println("[D] Produkt löschen");
                 System.out.println("[I] Orderverlauf einsehen");
+                System.out.println("[H] Bestandshistorie (letzte 30 Tage)");
                 System.out.println("[M] Neuen Mitarbeiter erstellen");
             } else {
                 //Benutzer ist Kunde:
@@ -119,6 +121,7 @@ public class EshopCUI {
                     case "p" -> adminDialogManager.produktErstellen();
                     case "d" -> adminDialogManager.produktLoeschen();
                     case "i" -> adminDialogManager.orderVerlauf();
+                    case "h" -> bestandshistorieAbfragen();
                     //case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
                     case "w" -> shoppingServiceManager.warenkatalog();
                     case "a" -> loginLogoutManager.logout();
@@ -139,6 +142,16 @@ public class EshopCUI {
         }
     }
 
+    private void bestandshistorieAbfragen() {
+        System.out.print("Artikel-Nummer: ");
+        try {
+            int artikelNr = Integer.parseInt(scanner.nextLine().trim());
+            shoppingServiceManager.zeigeBestandsHistorie(artikelNr);
+        } catch (NumberFormatException e) {
+            System.out.println("Fehler: Ungültige Artikel-Nummer!");
+        }
+    }
+
     private void unbekannterBefehl() {
         System.out.println("----------------");
         System.out.println("Unbekannter Befehl!");
@@ -154,9 +167,16 @@ public class EshopCUI {
 
     //Main-Methode
     public static void main(String[] args) {
-        Eshop eshop = new Eshop();
-        EshopCUI eShopCUI = new EshopCUI(eshop);
-        eShopCUI.start();
+        try {
+            Eshop eshop = new Eshop();
+            EshopCUI eShopCUI = new EshopCUI(eshop);
+            eShopCUI.start();
+        } catch (IOException e) {
+            System.out.println("----------------");
+            System.out.println("Der Eshop konnte nicht gestartet werden.");
+            System.out.println("Die gespeicherten Daten konnten nicht geladen werden. Bitte prüfe die JSON-Dateien.");
+            System.out.println("----------------");
+        }
     }
 }
 

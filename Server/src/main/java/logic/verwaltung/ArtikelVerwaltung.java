@@ -6,6 +6,7 @@ import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.MengeUngueltigException;
 import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.ArtikelNullException;
 import interfaces.moduls.IAV;
 import persistence.shop.ArtikelListe;
 import entities.Ereignis;
@@ -29,7 +30,7 @@ public class ArtikelVerwaltung implements IAV {
     private long idCounter = 0;
 
 
-    public ArtikelVerwaltung() {
+    public ArtikelVerwaltung() throws IOException {
         this.artikelListe = new ArtikelListe();
         datenLaden();
     }
@@ -44,45 +45,37 @@ public class ArtikelVerwaltung implements IAV {
 
 
 
-    private void datenLaden() {
+    private void datenLaden() throws IOException, IllegalArgumentException {
         if (!datei.exists()) {
             return;
         }
-        try {
-            // Liest das allgemeine Object-Array ein
-            Object[] speicherContainer = mapper.readValue(datei, Object[].class);
+        // Liest das allgemeine Object-Array ein
+        Object[] speicherContainer = mapper.readValue(datei, Object[].class);
 
-            // Konvertiert die einzelnen Elemente im Array in die korrekten Zielklassen
-            this.artikelListe = mapper.convertValue(speicherContainer[0], ArtikelListe.class);
-            this.idCounter = mapper.convertValue(speicherContainer[1], Long.class);
+        // Konvertiert die einzelnen Elemente im Array in die korrekten Zielklassen
+        this.artikelListe = mapper.convertValue(speicherContainer[0], ArtikelListe.class);
+        this.idCounter = mapper.convertValue(speicherContainer[1], Long.class);
 
-            // Falls die Liste leer ist, wird der Counter zurückgesetzt
-            if (this.artikelListe.getArtikelImLager().isEmpty()) {
-                this.idCounter = 0;
-            }
-        } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Fehler beim Laden der Artikel: " + e.getMessage());
+        // Falls die Liste leer ist, wird der Counter zurückgesetzt
+        if (this.artikelListe.getArtikelImLager().isEmpty()) {
+            this.idCounter = 0L;
         }
     }
 
 
 
-    public void safe() {
-        try {
-            // Speichert sowohl die Liste als auch den Counter im Container-Array
-            Object[] speicherContainer = new Object[]{ this.artikelListe, this.idCounter };
+    public void safe() throws IOException {
+        // Speichert sowohl die Liste als auch den Counter im Container-Array
+        Object[] speicherContainer = new Object[]{ this.artikelListe, this.idCounter };
 
-            mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
-        } catch (IOException e) {
-            System.err.println("Fehler beim Speichern der Artikel: " + e.getMessage());
-        }
+        mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
     }
 
 
 
 
     @Override
-    public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits {
+    public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
 
         int neueNr = (int) ++idCounter;
 
@@ -99,16 +92,12 @@ public class ArtikelVerwaltung implements IAV {
         safe();
 
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
-        try {
-            ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
-        } catch (Exception ex) {
-            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
-        }
+        ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
         return true;
     }
 
     @Override
-    public void loeschen(int nr) {
+    public void loeschen(int nr) throws IOException {
         Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
         while (it.hasNext()) {
             Artikel artikel = it.next();
@@ -121,7 +110,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse)
-            throws ArtikelExistiertBereits, MengeUngueltigException {
+            throws ArtikelExistiertBereits, MengeUngueltigException, ArtikelNullException, IOException {
 
         int neueNr = (int) ++idCounter;
 
@@ -143,17 +132,14 @@ public class ArtikelVerwaltung implements IAV {
 
         safe();
 
+
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
-        try {
-            ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
-        } catch (Exception ex) {
-            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
-        }
+        ereignisVerwaltung.logEreignis(neuerArtikel, bestand, aktuellerMitarbeiter, "EINLAGERUNG");
         return true;
     }
 
     @Override
-    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, MengeUngueltigException {
+    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, MengeUngueltigException, ArtikelNullException, IOException {
         Artikel a = findeArtikel(nr);
 
         if (anzahl <= 0) {
@@ -173,15 +159,11 @@ public class ArtikelVerwaltung implements IAV {
         safe();
 
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
-        try {
-            ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "EINLAGERUNG_M");
-        } catch (Exception ex) {
-            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
-        }
+        ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "EINLAGERUNG_M");
     }
 
     // Reduziert Bestand (z. B. beim Checkout)
-    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, BestandNichtAusreichendException, MengeUngueltigException {
+    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
         Artikel a = findeArtikel(nr);
 
         if (anzahl <= 0) {
@@ -205,11 +187,7 @@ public class ArtikelVerwaltung implements IAV {
         safe();
 
         Mitarbeiter aktuellerMitarbeiter = getCurrentMitarbeiter();
-        try {
-            ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "AUSLAGERUNG_M");
-        } catch (Exception ex) {
-            System.err.println("Fehler beim Loggen des Ereignisses: " + ex.getMessage());
-        }
+        ereignisVerwaltung.logEreignis(a, anzahl, aktuellerMitarbeiter, "AUSLAGERUNG_M");
     }
 
     // Berechnet den täglichen Bestandsverlauf eines Artikels über die letzten 30 Tage
@@ -285,6 +263,3 @@ public class ArtikelVerwaltung implements IAV {
         throw new ArtikelNichtGefunden(String.valueOf(nr));
     }
 }
-
-
-

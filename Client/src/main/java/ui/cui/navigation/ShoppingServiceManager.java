@@ -2,8 +2,10 @@ package ui.cui.navigation;
 
 
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.ArtikelNullException;
 import logic.Eshop;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -26,7 +28,7 @@ public class ShoppingServiceManager {
     private final WarenkorbVerwaltung warenkorbVerwaltung;
     private final WarenkorbListe warenkorb;
 
-    public ShoppingServiceManager(Eshop eshop, Scanner scanner, SessionManager session) {
+    public ShoppingServiceManager(Eshop eshop, Scanner scanner, SessionManager session) throws IOException {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
@@ -125,6 +127,8 @@ public class ShoppingServiceManager {
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
+        } catch (IOException e) {
+            System.out.println("Fehler: Der Warenkorb konnte nicht gespeichert werden.");
         }
     }
 
@@ -201,6 +205,8 @@ public class ShoppingServiceManager {
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
+        } catch (IOException e) {
+            System.out.println("Fehler: Der Warenkorb konnte nicht gespeichert werden.");
         }
     }
 
@@ -226,6 +232,8 @@ public class ShoppingServiceManager {
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
+        } catch (IOException e) {
+            System.out.println("Fehler: Der Warenkorb konnte nicht gespeichert werden.");
         }
     }
 
@@ -241,17 +249,20 @@ public class ShoppingServiceManager {
         }
 
         Kunde kunde = (Kunde) session.getBenutzer();
-        Rechnung rechnung = null;
         // Übergeben die ArtikelVerwaltung damit Bestand reduziert werden kann
         try {
-            rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorb, eshop.getArtikelVerwaltung());
+            Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorb, eshop.getArtikelVerwaltung());
+            if (rechnung != null) {
+                eshop.getBestellVerwaltungV().rechnungAnzeigen(rechnung);
+                warenkorbVerwaltung.safe();
+                System.out.println("Bestellung erfolgreich abgeschlossen!");
+            }
         } catch (ArtikelNichtGefunden e) {
             System.out.println("Artikel nicht gefunden!");
-        }
-        if (rechnung != null) {
-            eshop.getBestellVerwaltungV().rechnungAnzeigen(rechnung);
-            warenkorbVerwaltung.safe();
-            System.out.println("Bestellung erfolgreich abgeschlossen!");
+        } catch (ArtikelNullException e) {
+            System.out.println("Fehler beim Buchen der Bestellung: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Fehler: Die Bestellung konnte nicht gespeichert werden.");
         }
     }
 

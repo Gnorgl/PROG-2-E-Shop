@@ -5,6 +5,7 @@ import exceptions.artikel.MengeUngueltigException;
 import logic.Eshop;
 import logic.SessionManager;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class AdminDialogManager {
@@ -132,6 +133,8 @@ public class AdminDialogManager {
             System.out.println("Fehler: Ungültige Eingabe!");
         } catch (MengeUngueltigException e) {
             System.out.println("Fehler: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Fehler: Das Produkt konnte nicht gespeichert werden.");
         } catch (Exception e) {
             System.out.println("Fehler: " + e.getMessage());
         }
@@ -146,6 +149,8 @@ public class AdminDialogManager {
             System.out.println("------Produkt erfolgreich gelöscht------");
         } catch (NumberFormatException e) {
             System.out.println("Fehler: Ungültige Artikel-Nummer!");
+        } catch (IOException e) {
+            System.out.println("Fehler: Die Änderung konnte nicht gespeichert werden.");
         }
     }
     public void orderVerlauf() {

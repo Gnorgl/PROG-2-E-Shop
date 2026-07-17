@@ -3,6 +3,8 @@ import interfaces.InterfaceEshop;
 import logic.verwaltung.EreignisVerwaltung;
 import logic.verwaltung.*;
 
+import java.io.IOException;
+
 
 public class Eshop implements InterfaceEshop {
     private ArtikelVerwaltung  artikelVerwaltung = new ArtikelVerwaltung();
@@ -11,7 +13,7 @@ public class Eshop implements InterfaceEshop {
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
     private WarenkorbVerwaltung warenkorbVerwaltung = new WarenkorbVerwaltung(artikelVerwaltung);
 
-    public Eshop() {}
+    public Eshop() throws IOException {}
 
     public ArtikelVerwaltung getArtikelVerwaltung() {
         return artikelVerwaltung;
