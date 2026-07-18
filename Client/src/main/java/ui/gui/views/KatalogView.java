@@ -148,7 +148,7 @@ public class KatalogView extends VBox {
                 finaleMenge = eingabeMenge * packGroesse;
             }
 
-            eshop.getWarenkorbVerwaltung().artikelHinzufuegen(ausgewaehlterArtikel, finaleMenge); //Illegal
+            eshop.artikelHinzufuegen(ausgewaehlterArtikel, finaleMenge);
 
             // Für die Erfolgsmeldung zeigen wir weiterhin die Packungsanzahl an
             System.out.println(eingabeMenge + "x " + ausgewaehlterArtikel.getBezeichnung() + " in den Warenkorb gelegt.");
