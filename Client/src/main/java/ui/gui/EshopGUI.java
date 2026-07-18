@@ -14,16 +14,21 @@ import ui.gui.scenes.RegistrationScene;
 
 public class EshopGUI extends Application {
 
+    // JavaFX erzeugt die Application-Klasse selbst (Reflection, kein eigener
+    // Konstruktor möglich)
+    private static InterfaceEshop eshopFuerStart;
+
     private InterfaceEshop eshop;
     private SessionManager session;
     private Stage primaryStage;
 
     public static void setEshop(InterfaceEshop eshop) {
-        eshop = eshop;
+        eshopFuerStart = eshop;
     }
+
     @Override
     public void init() throws Exception {
-         //funktioniert nicht und woher kommt der InterfaceEshop eshop parameter?
+        this.eshop = eshopFuerStart;
         this.session = new SessionManager();
     }
 

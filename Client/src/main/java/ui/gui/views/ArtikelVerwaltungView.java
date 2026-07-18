@@ -252,9 +252,13 @@ public class ArtikelVerwaltungView extends VBox {
         historieAnzeigenBtn = new CustomButton("Historie anzeigen", CustomButton.ButtonType.PRIMARY);
         historieAnzeigenBtn.setOnAction(e -> HistorieAnzeigen());
 
-        historieChart = new BestandsHistorieView(400, 250);
+        // TESTCODE - erzeugt 30 frei erfundene Tageswerte (kein echter Bestand),
+        CustomButton simulierenBtn = new CustomButton("Simulation: 30 Tage (Test)", CustomButton.ButtonType.SECONDARY);
+        simulierenBtn.setOnAction(e -> HistorieSimulieren());
 
-        box.getChildren().addAll(header, historieRow, historieAnzeigenBtn, historieChart);
+        historieChart = new BestandsHistorieView(500, 300);
+
+        box.getChildren().addAll(header, historieRow, historieAnzeigenBtn, simulierenBtn, historieChart);
         return box;
     }
 
@@ -262,6 +266,35 @@ public class ArtikelVerwaltungView extends VBox {
         try {
             int nr = Integer.parseInt(historieNrField.getText().trim());
             historieChart.zeichne(eshop, nr);
+        } catch (NumberFormatException ex) {
+            showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige Artikelnummer eingeben.");
+        } catch (ArtikelNichtGefunden ex) {
+            showAlert(Alert.AlertType.WARNING, "Nicht gefunden", "Artikel-ID existiert nicht.");
+        }
+    }
+
+    // TESTCODE - kann später wieder raus, siehe Kommentar oben am Button.
+    // Erzeugt 30 frei erfundene Werte (Zufalls-Auf-und-Ab), die beim echten
+    private void HistorieSimulieren() {
+        try {
+            int nr = Integer.parseInt(historieNrField.getText().trim());
+            Artikel artikel = eshop.findeArtikel(nr);
+            int aktuellerBestand = artikel.getBestand();
+
+            List<Integer> fakeWerte = new java.util.ArrayList<>();
+            int startWert = Math.max(1, aktuellerBestand + new java.util.Random().nextInt(20));
+            int wert = startWert;
+            java.util.Random zufall = new java.util.Random();
+
+            for (int tag = 0; tag < 29; tag++) {
+                fakeWerte.add(wert);
+                // Zufällige Änderung, aber immer Richtung Endwert lenken, damit Tag 30 realistisch beim echten Bestand landet
+                int schritt = zufall.nextInt(7) - 3; // zwischen -3 und +3
+                wert = Math.max(0, wert + schritt);
+            }
+            fakeWerte.add(aktuellerBestand); // Tag 30 = echter, aktueller Bestand
+
+            historieChart.zeichneWerte(fakeWerte);
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige Artikelnummer eingeben.");
         } catch (ArtikelNichtGefunden ex) {

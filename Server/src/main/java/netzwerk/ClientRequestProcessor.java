@@ -44,16 +44,18 @@ public class ClientRequestProcessor implements Runnable {
                     return;
                 }
 
+                final String aktuellesKommando = kommando;
+
                 KommandoHandler zustaendiger = handler.stream()
-                        .filter(h -> h.istZustaendig(kommando))
+                        .filter(h -> h.istZustaendig(aktuellesKommando))
                         .findFirst()
                         .orElse(null);
 
                 if (zustaendiger != null) {
-                    zustaendiger.verarbeite(kommando);
+                    zustaendiger.verarbeite(aktuellesKommando);
                 } else {
                     out.println("ERROR");
-                    out.println("Unbekanntes Kommando: " + kommando);
+                    out.println("Unbekanntes Kommando: " + aktuellesKommando);
                 }
             }
         } catch (IOException e) {

@@ -3,20 +3,21 @@ package net;
 import com.fasterxml.jackson.core.type.TypeReference;
 import entities.Artikel;
 import exceptions.artikel.ArtikelNichtGefunden;
+import interfaces.moduls.IWV;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-// Sieht für die GUI genauso aus wie die echte WarenkorbVerwaltung (gleiche
-// öffentliche Methoden), leitet die Aufrufe aber über die ServerVerbindung
+// Sieht für die GUI genauso aus wie die echte WarenkorbVerwaltung (implementiert
+// dasselbe Interface IWV), leitet die Aufrufe aber über die ServerVerbindung
 // an den Server weiter.
 //
 // HINWEIS: Der Warenkorb ist serverseitig aktuell EINE gemeinsame Instanz für
 // alle Clients (siehe Kommentar in ClientRequestProcessor). Für echten
 // Mehrbenutzerbetrieb muss das noch pro Kunde/Session getrennt werden, sobald
 // Login/Session (nicht unser Bereich) so weit ist.
-public class WarenkorbVerwaltungFassade {
+public class WarenkorbVerwaltungFassade implements IWV {
 
     private final ServerVerbindung verbindung;
     private final ArtikelVerwaltungFassade artikelVerwaltung;
@@ -26,6 +27,7 @@ public class WarenkorbVerwaltungFassade {
         this.artikelVerwaltung = artikelVerwaltung;
     }
 
+    @Override
     public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
         try {
             verbindung.sendeKommando("WARENKORB_HINZUFUEGEN", String.valueOf(artikel.getArtikelNummer()), String.valueOf(menge));
@@ -34,6 +36,7 @@ public class WarenkorbVerwaltungFassade {
         }
     }
 
+    @Override
     public void artikelEntfernen(Artikel artikel) throws IOException {
         try {
             verbindung.sendeKommando("WARENKORB_ENTFERNEN", String.valueOf(artikel.getArtikelNummer()));
@@ -42,6 +45,7 @@ public class WarenkorbVerwaltungFassade {
         }
     }
 
+    @Override
     public void leeren() throws IOException {
         try {
             verbindung.sendeKommando("WARENKORB_LEEREN");
@@ -50,15 +54,18 @@ public class WarenkorbVerwaltungFassade {
         }
     }
 
+    @Override
     public boolean istLeer() {
-        return getAlleArtikel().isEmpty();
+        return getAlleWarenkorbArtikel().isEmpty();
     }
 
+    @Override
     public int getMenge(Artikel artikel) {
-        return getAlleArtikel().getOrDefault(artikel, 0);
+        return getAlleWarenkorbArtikel().getOrDefault(artikel, 0);
     }
 
-    public HashMap<Artikel, Integer> getAlleArtikel() {
+    @Override
+    public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
         try {
             String json = verbindung.sendeKommandoMitAntwort("WARENKORB_ANZEIGEN");
             Map<Integer, Integer> nrMap = verbindung.mapper.readValue(json, new TypeReference<Map<Integer, Integer>>() {

@@ -52,14 +52,54 @@ public class CheckOutVerwaltungFassade implements ICV {
         }
     }
 
-    // Nicht Teil von ICV, aber auf CheckOutVerwaltung vorhanden - für die
-    // Kassen-Anzeige (Brutto = Netto + 19% MwSt.) wird kein extra Server-Aufruf
-    // gebraucht, das lässt sich lokal aus der Nettosumme ableiten.
+    // Brutto = Netto + 19% MwSt. - kein extra Server-Aufruf nötig, lässt sich
+    // lokal aus der Nettosumme ableiten.
+    @Override
     public double berechneBruttoSumme(Map<Artikel, Integer> warenkorbInhalt) {
         return berechneNettoSumme(warenkorbInhalt) * 1.19;
     }
 
-    // Nicht Teil von ICV, aber auf CheckOutVerwaltung vorhanden (Bestellverlauf).
+    // Reine Textformatierung, keine Fachlogik - deshalb ohne Server-Aufruf lokal
+    // erzeugt, genau wie es CheckOutVerwaltung auf dem Server auch tut.
+    @Override
+    public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
+        StringBuilder beleg = new StringBuilder();
+        beleg.append("==================================================\n");
+        beleg.append("                    RECHNUNG                      \n");
+        beleg.append("==================================================\n");
+        beleg.append("Rechnungsnummer: ").append(rechnung.getRechnungsNummer()).append("\n");
+        beleg.append("Datum: ").append(java.time.LocalDate.now()).append("\n\n");
+        beleg.append("Lieferadresse:\n");
+        beleg.append(lieferadresse).append("\n");
+        beleg.append("--------------------------------------------------\n");
+
+        List<Artikel> schonGedruckt = new java.util.ArrayList<>();
+        for (Artikel artikel : rechnung.getArtikel()) {
+            if (!schonGedruckt.contains(artikel)) {
+                int menge = java.util.Collections.frequency(rechnung.getArtikel(), artikel);
+                double gesamt = artikel.berechneGesamtpreis(menge);
+
+                String anzeigeName = artikel.getBezeichnung();
+                if (artikel instanceof entities.Massengutartikel) {
+                    anzeigeName += " (" + ((entities.Massengutartikel) artikel).getPackungsGroesse() + "er Pack)";
+                }
+
+                beleg.append(String.format("%dx %-25s %10.2f €\n", menge, anzeigeName, gesamt));
+                schonGedruckt.add(artikel);
+            }
+        }
+
+        beleg.append("--------------------------------------------------\n");
+        beleg.append(String.format("%-30s %10.2f €\n", "Netto:", rechnung.getNettosumme()));
+        beleg.append(String.format("%-30s %10.2f €\n", "MwSt (19%):", rechnung.getMwstBetrag()));
+        beleg.append(String.format("%-30s %10.2f €\n", "BRUTTO GESAMT:", rechnung.getBruttoSumme()));
+        beleg.append("==================================================");
+
+        return beleg.toString();
+    }
+
+    // Bestellverlauf (Rechnungshistorie eines Kunden).
+    @Override
     public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
         try {
             String kundeJson = verbindung.mapper.writeValueAsString(kunde);
