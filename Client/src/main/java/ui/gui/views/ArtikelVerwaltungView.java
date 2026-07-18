@@ -261,7 +261,7 @@ public class ArtikelVerwaltungView extends VBox {
     private void HistorieAnzeigen() {
         try {
             int nr = Integer.parseInt(historieNrField.getText().trim());
-            historieChart.zeichne(eshop.getArtikelVerwaltung(), nr); //Illegal
+            historieChart.zeichne(eshop, nr);
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige Artikelnummer eingeben.");
         } catch (ArtikelNichtGefunden ex) {

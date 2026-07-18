@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import logic.verwaltung.ArtikelVerwaltung; //Auch hier gleiches Problem
+import interfaces.moduls.IAV;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class BestandsHistorieView extends VBox {
         this.getChildren().addAll(new Label("Bestands-Historie"), canvas);
     }
 
-    public void zeichne(ArtikelVerwaltung artikelVerwaltung, int artikelNr) throws ArtikelNichtGefunden {
+    public void zeichne(IAV artikelVerwaltung, int artikelNr) throws ArtikelNichtGefunden {
         List<Integer> werte = artikelVerwaltung.getBestandsHistorie(artikelNr).values().stream().toList();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
