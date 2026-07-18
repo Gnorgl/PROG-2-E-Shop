@@ -1,4 +1,4 @@
-package ui.gui;
+package net;
 
 import entities.*;
 import exceptions.artikel.*;
