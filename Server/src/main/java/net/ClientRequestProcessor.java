@@ -32,9 +32,8 @@ public class ClientRequestProcessor implements Runnable {
             List<KommandoHandler> handler = List.of(
                     new ArtikelKommandoHandler(eshop, in, out),
                     new CheckoutKommandoHandler(eshop, in, out),
-                    new WarenkorbKommandoHandler(eshop, in, out)
-                    // Sobald es ihn gibt, kommt hier z.B. dazu:
-                    // new BenutzerKommandoHandler(eshop, in, out)
+                    new WarenkorbKommandoHandler(eshop, in, out),
+                    new BenutzerKommandoHandler(eshop, in, out)
             );
 
             String kommando;
