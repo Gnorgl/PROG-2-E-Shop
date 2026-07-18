@@ -51,12 +51,11 @@ public class CheckoutView extends VBox {
     }
 
     private void datenLaden() {
-        //Das ist eigentlich Logik:
-        double netto = eshop.getAlleArtikel();
-        double brutto = eshop.getAlleArtikel();
+        HashMap<Artikel, Integer> warenkorbMap = eshop.getAlleWarenkorbArtikel();
+        double netto = eshop.berechneNettoSumme(warenkorbMap);
+        double brutto = eshop.berechneBruttoSumme(warenkorbMap);
 
         summaryArtikelBox.getChildren().clear();
-        HashMap<Artikel, Integer> warenkorbMap = eshop.getAlleWarenkorbArtikel();
 
         for (Artikel a : warenkorbMap.keySet()) {
             int mengeStueck = warenkorbMap.get(a);
@@ -208,7 +207,7 @@ public class CheckoutView extends VBox {
             Rechnung rechnung = eshop.checkOut(
                     kunde,
                     eshop.getAlleWarenkorbArtikel(),
-                    eshop.getArtikelVerwaltung() //illegal
+                    eshop
             );
 
             if (rechnung == null) {
@@ -216,7 +215,7 @@ public class CheckoutView extends VBox {
                 return;
             }
 
-            eshop.getWarenkorbVerwaltung().leeren(); //fehlt im interface
+            eshop.leeren();
 
             // Adresse aus den Feldern für die Rechnung zusammenbauen
             String lieferadresse = vornameField.getText() + " " + nachnameField.getText() + "\n" +
@@ -238,7 +237,7 @@ public class CheckoutView extends VBox {
         alert.setTitle("Kaufbestätigung");
         alert.setHeaderText("Vielen Dank für Ihren Einkauf!");
 
-        String belegText = eshop.getBestellVerwaltungV().generiereRechnungsText(rechnung, lieferadresse); //Gibt es noch nicht in Interface
+        String belegText = eshop.generiereRechnungsText(rechnung, lieferadresse);
 
         TextArea textArea = new TextArea(belegText);
         textArea.setEditable(false);

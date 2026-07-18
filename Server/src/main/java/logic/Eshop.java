@@ -99,8 +99,23 @@ public class Eshop implements InterfaceEshop {
     }
 
     @Override
+    public double berechneBruttoSumme(Map<Artikel, Integer> warenkorbInhalt) {
+        return this.checkOutVerwaltung.berechneBruttoSumme(warenkorbInhalt);
+    }
+
+    @Override
     public void rechnungAnzeigen(Rechnung rechnung) {
         this.checkOutVerwaltung.rechnungAnzeigen(rechnung);
+    }
+
+    @Override
+    public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
+        return this.checkOutVerwaltung.generiereRechnungsText(rechnung, lieferadresse);
+    }
+
+    @Override
+    public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
+        return this.checkOutVerwaltung.getRechnungenFuerKunde(kunde);
     }
 
 
@@ -111,6 +126,31 @@ public class Eshop implements InterfaceEshop {
     @Override
     public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
         return warenkorbVerwaltung.getAlleWarenkorbArtikel();
+    }
+
+    @Override
+    public boolean istLeer() {
+        return warenkorbVerwaltung.istLeer();
+    }
+
+    @Override
+    public int getMenge(Artikel artikel) {
+        return warenkorbVerwaltung.getMenge(artikel);
+    }
+
+    @Override
+    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
+        warenkorbVerwaltung.artikelHinzufuegen(artikel, menge);
+    }
+
+    @Override
+    public void artikelEntfernen(Artikel artikel) throws IOException {
+        warenkorbVerwaltung.artikelEntfernen(artikel);
+    }
+
+    @Override
+    public void leeren() throws IOException {
+        warenkorbVerwaltung.leeren();
     }
 
 

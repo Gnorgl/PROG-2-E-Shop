@@ -61,7 +61,7 @@ public class WarenkorbView extends VBox {
         TableColumn<Artikel, Integer> colMenge = new TableColumn<>("Menge");
         colMenge.setCellValueFactory(cellData -> {
             Artikel a = cellData.getValue();
-            int mengeStueck = eshop.getWarenkorbVerwaltung().getMenge(a); //Illegal
+            int mengeStueck = eshop.getMenge(a);
 
             if (a instanceof entities.Massengutartikel) {
                 int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
@@ -97,7 +97,11 @@ public class WarenkorbView extends VBox {
                 btn.setOnAction(event -> {
                     Artikel artikel = getTableView().getItems().get(getIndex());
                     // Artikel aus der Logik entfernen
-                    eshop.getWarenkorbVerwaltung().artikelEntfernen(artikel); //Illegal
+                    try {
+                        eshop.artikelEntfernen(artikel);
+                    } catch (java.io.IOException ex) {
+                        System.err.println("Fehler beim Entfernen aus dem Warenkorb: " + ex.getMessage());
+                    }
                     // View sofort neu laden, damit die Summen und die Tabelle aktualisiert werden
                     datenLaden();
                 });
@@ -156,7 +160,7 @@ public class WarenkorbView extends VBox {
         btnZurKasse.setMaxWidth(Double.MAX_VALUE);
         btnZurKasse.setOnAction(e -> {
             // Verhindert das Navigieren zur Kasse, wenn der Korb leer ist
-            if (eshop.getWarenkorbVerwaltung().istLeer()) { //Illegal
+            if (eshop.istLeer()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Dein Warenkorb ist leer!");
                 alert.setHeaderText(null);
                 alert.showAndWait();
@@ -170,7 +174,7 @@ public class WarenkorbView extends VBox {
     }
 
     private void datenLaden() {
-        HashMap<Artikel, Integer> warenkorbMap = eshop.getWarenkorbVerwaltung().getAlleArtikel(); //Illegal
+        HashMap<Artikel, Integer> warenkorbMap = eshop.getAlleWarenkorbArtikel();
 
         warenkorbListe = javafx.collections.FXCollections.observableArrayList(warenkorbMap.keySet());
         warenkorbTable.setItems(warenkorbListe);
@@ -202,7 +206,7 @@ public class WarenkorbView extends VBox {
             summaryArtikelBox.getChildren().add(itemRow);
         }
 
-        double gesamt = eshop.getBestellVerwaltungV().berechneNettoSumme(eshop.getWarenkorbVerwaltung().getAlleArtikel()); //Illegal und Methoden in Interface fehlen
+        double gesamt = eshop.berechneNettoSumme(eshop.getAlleWarenkorbArtikel());
 
         String preisString = String.format("€%.2f", gesamt);
         lblZwischensumme.setText(preisString);
