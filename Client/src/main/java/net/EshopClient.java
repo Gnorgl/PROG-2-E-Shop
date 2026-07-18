@@ -119,7 +119,6 @@ public class EshopClient implements InterfaceEshop {
         return 0;
     }
 
-
     @Override
     public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
 
@@ -129,8 +128,6 @@ public class EshopClient implements InterfaceEshop {
     public void artikelEntfernen(Artikel artikel) throws IOException {
 
     }
-
-
 
     @Override
     public void leeren() throws IOException {
@@ -184,17 +181,6 @@ public class EshopClient implements InterfaceEshop {
     public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
         return null;
     }
-
-    @Override
-    public Benutzer benutzercheck(String email) throws BenutzerExistiertNichtException {
-        return null;
-    }
-
-    @Override
-    public boolean passwordcheck(Benutzer benutzer, String password) {
-        return false;
-    }
-
 
 }
 
