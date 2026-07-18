@@ -3,7 +3,7 @@ package ui.cui.navigation;
 import entities.Benutzer;
 import exceptions.artikel.MengeUngueltigException;
 import logic.Eshop;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -123,10 +123,10 @@ public class AdminDialogManager {
             }
 
             if (istMassengut) {
-                eshop.getArtikelVerwaltung().legeMassengutartikelAn(name, bestand, preis, packungsGroesse);
+                eshop.legeMassengutartikelAn(name, bestand, preis, packungsGroesse);
                 System.out.println("------Massengutartikel erfolgreich erstellt (Packungsgröße: " + packungsGroesse + ")------");
             } else {
-                eshop.getArtikelVerwaltung().legeArtikelAn(name, bestand, preis);
+                eshop.legeArtikelAn(name, bestand, preis);
                 System.out.println("------Einzelartikel erfolgreich erstellt------");
             }
         } catch (NumberFormatException e) {
@@ -145,7 +145,7 @@ public class AdminDialogManager {
         try {
             System.out.print("Artikel-Nummer: ");
             int nr = Integer.parseInt(scanner.nextLine().trim());
-            eshop.getArtikelVerwaltung().loeschen(nr);
+            eshop.loeschen(nr);
             System.out.println("------Produkt erfolgreich gelöscht------");
         } catch (NumberFormatException e) {
             System.out.println("Fehler: Ungültige Artikel-Nummer!");

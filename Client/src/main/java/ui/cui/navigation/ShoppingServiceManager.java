@@ -14,24 +14,21 @@ import entities.Ereignis;
 import entities.Kunde;
 import entities.Massengutartikel;
 import entities.Rechnung;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 import logic.verwaltung.EreignisVerwaltung;
 import java.util.HashMap;
-import logic.verwaltung.WarenkorbVerwaltung;
 
 public class ShoppingServiceManager {
     private final Eshop eshop;
     private final EreignisVerwaltung ereignisVerwaltung;
     private final Scanner scanner;
     private final SessionManager session;
-    private final WarenkorbVerwaltung warenkorbVerwaltung;
 
     public ShoppingServiceManager(Eshop eshop, Scanner scanner, SessionManager session) throws IOException {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
         this.ereignisVerwaltung = eshop.getEreignisVerwaltung();
-        this.warenkorbVerwaltung = new WarenkorbVerwaltung(eshop.getArtikelVerwaltung());
     }
 
     public void warenkatalog() {
@@ -64,7 +61,7 @@ public class ShoppingServiceManager {
 
     private void artikelAnzeigen() {
         System.out.println("\n--- Verfügbare Artikel ---");
-        var artikel = eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
+        var artikel = eshop.getAlleArtikel();
 
         if (artikel.isEmpty()) {
             System.out.println("Keine Artikel vorhanden!");
@@ -88,7 +85,7 @@ public class ShoppingServiceManager {
 
         try {
             int artikelNr = Integer.parseInt(scanner.nextLine().trim());
-            Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
+            Artikel artikel = eshop.findeArtikel(artikelNr);
 
             if (artikel == null) {
                 System.out.println("Artikel nicht gefunden!");
@@ -118,8 +115,8 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            int aktueleMenge = warenkorbVerwaltung.getMenge(artikel);
-            warenkorbVerwaltung.artikelHinzufuegen(artikel, aktueleMenge + menge);
+            int aktueleMenge = eshop.getMenge(artikel);
+            eshop.artikelHinzufuegen(artikel, aktueleMenge + menge);
             System.out.println( menge + "x " + artikel.getBezeichnung() + " zum Warenkorb hinzugefügt!");
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
@@ -130,7 +127,7 @@ public class ShoppingServiceManager {
     }
 
     private void warenkorbAnzeigen() {
-        HashMap<Artikel, Integer> items = warenkorbVerwaltung.getAlleArtikel();
+        HashMap<Artikel, Integer> items = eshop.getAlleWarenkorbArtikel();
 
         if (items.isEmpty()) {
             System.out.println("\nWarenkorb ist leer!");
@@ -152,7 +149,7 @@ public class ShoppingServiceManager {
         }
 
 
-        double summeNetto = eshop.getBestellVerwaltungV().berechneNettoSumme(warenkorbVerwaltung.getAlleArtikel());
+        double summeNetto = eshop.berechneNettoSumme(eshop.getAlleWarenkorbArtikel());
         double mwst = summeNetto * 0.19;
         double brutto = summeNetto + mwst;
 
@@ -163,7 +160,7 @@ public class ShoppingServiceManager {
     }
 
     private void mengeAendern() {
-        if (warenkorbVerwaltung.istLeer()) {
+        if (eshop.istLeer()) {
             System.out.println("\nWarenkorb ist leer!");
             return;
         }
@@ -172,9 +169,9 @@ public class ShoppingServiceManager {
         System.out.print("\nArtikel-Nummer eingeben: ");
         try {
             int artikelNr = Integer.parseInt(scanner.nextLine().trim());
-            Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
+            Artikel artikel = eshop.findeArtikel(artikelNr);
 
-            if (artikel == null || warenkorbVerwaltung.getMenge(artikel) == 0) {
+            if (artikel == null || eshop.getMenge(artikel) == 0) {
                 System.out.println("Artikel nicht im Warenkorb!");
                 return;
             }
@@ -197,7 +194,7 @@ public class ShoppingServiceManager {
                 return;
             }
 
-            warenkorbVerwaltung.artikelHinzufuegen(artikel, neueMenge);
+            eshop.artikelHinzufuegen(artikel, neueMenge);
             System.out.println(" Menge geändert!");
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
@@ -208,7 +205,7 @@ public class ShoppingServiceManager {
     }
 
     private void artikelAusWarenkorbEntfernen() {
-        if (warenkorbVerwaltung.istLeer()) {
+        if (eshop.istLeer()) {
             System.out.println("\nWarenkorb ist leer!");
             return;
         }
@@ -217,14 +214,14 @@ public class ShoppingServiceManager {
         System.out.print("\nArtikel-Nummer eingeben: ");
         try {
             int artikelNr = Integer.parseInt(scanner.nextLine().trim());
-            Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
+            Artikel artikel = eshop.findeArtikel(artikelNr);
 
-            if (artikel == null || warenkorbVerwaltung.getMenge(artikel) == 0) {
+            if (artikel == null || eshop.getMenge(artikel) == 0) {
                 System.out.println("Artikel nicht im Warenkorb!");
                 return;
             }
 
-            warenkorbVerwaltung.artikelEntfernen(artikel);
+            eshop.artikelEntfernen(artikel);
             System.out.println( artikel.getBezeichnung() + " entfernt!");
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
@@ -235,7 +232,7 @@ public class ShoppingServiceManager {
     }
 
     private void checkout() {
-        if (warenkorbVerwaltung.istLeer()) {
+        if (eshop.istLeer()) {
             System.out.println("\nWarenkorb ist leer!");
             return;
         }
@@ -246,12 +243,12 @@ public class ShoppingServiceManager {
         }
 
         Kunde kunde = (Kunde) session.getBenutzer();
-        // Übergeben die ArtikelVerwaltung damit Bestand reduziert werden kann
+        // eshop wird als IAV-Parameter übergeben, damit der Bestand reduziert werden kann
         try {
-            Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorbVerwaltung.getAlleArtikel(), eshop.getArtikelVerwaltung());
+            Rechnung rechnung = eshop.checkOut(kunde, eshop.getAlleWarenkorbArtikel(), eshop);
             if (rechnung != null) {
-                eshop.getBestellVerwaltungV().rechnungAnzeigen(rechnung);
-                warenkorbVerwaltung.leeren();
+                eshop.rechnungAnzeigen(rechnung);
+                eshop.leeren();
                 System.out.println("Bestellung erfolgreich abgeschlossen!");
             }
         } catch (ArtikelNichtGefunden e) {
@@ -300,7 +297,7 @@ public class ShoppingServiceManager {
         }
 
         // Alle gespeicherten Rechnungen dieses Kunden aus der CheckOutVerwaltung holen
-        List<Rechnung> rechnungen = eshop.getBestellVerwaltungV().getRechnungenFuerKunde(kunde);
+        List<Rechnung> rechnungen = eshop.getRechnungenFuerKunde(kunde);
 
         if (rechnungen.isEmpty()) {
             System.out.println("\nKeine Bestellungen vorhanden.");
@@ -340,8 +337,8 @@ public class ShoppingServiceManager {
     public void zeigeBestandsHistorie(int artikelNr) {
         try {
             // Berechnung liegt in ArtikelVerwaltung, hier nur noch Ausgabe
-            Map<LocalDate, Integer> historie = eshop.getArtikelVerwaltung().getBestandsHistorie(artikelNr);
-            Artikel artikel = eshop.getArtikelVerwaltung().findeArtikel(artikelNr);
+            Map<LocalDate, Integer> historie = eshop.getBestandsHistorie(artikelNr);
+            Artikel artikel = eshop.findeArtikel(artikelNr);
 
             System.out.println("\n==================== BESTANDSHISTORIE ====================");
             System.out.println("Artikel: " + artikel.getBezeichnung() + " (Nr. " + artikel.getArtikelNummer() + ")");

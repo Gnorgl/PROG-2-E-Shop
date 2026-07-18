@@ -67,7 +67,7 @@ public class WarenkorbKommandoHandler extends KommandoHandler {
     }
 
     private void warenkorbAnzeigen() throws IOException {
-        Map<Artikel, Integer> alleArtikel = eshop.getWarenkorbVerwaltung().getAlleArtikel();
+        Map<Artikel, Integer> alleArtikel = eshop.getWarenkorbVerwaltung().getAlleWarenkorbArtikel();
         Map<Integer, Integer> nrMap = new LinkedHashMap<>();
         for (Map.Entry<Artikel, Integer> eintrag : alleArtikel.entrySet()) {
             nrMap.put(eintrag.getKey().getArtikelNummer(), eintrag.getValue());
