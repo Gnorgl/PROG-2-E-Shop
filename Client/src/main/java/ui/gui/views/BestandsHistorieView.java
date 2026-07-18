@@ -1,6 +1,7 @@
 package ui.gui.views;
 
 import exceptions.artikel.ArtikelNichtGefunden;
+import interfaces.InterfaceEshop;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -11,20 +12,21 @@ import interfaces.moduls.IAV;
 import java.util.List;
 
 public class BestandsHistorieView extends VBox {
-
+    private final InterfaceEshop eshop;
     private static final double RAND = 40;
     private final Canvas canvas;
 
     // Zeichenblock
 
-    public BestandsHistorieView(double breite, double hoehe) {
+    public BestandsHistorieView(InterfaceEshop eshop, double breite, double hoehe) {
+        this.eshop = eshop;
         canvas = new Canvas(breite, hoehe);
         this.setSpacing(20);
         this.getChildren().addAll(new Label("Bestands-Historie"), canvas);
     }
 
-    public void zeichne(IAV artikelVerwaltung, int artikelNr) throws ArtikelNichtGefunden {
-        List<Integer> werte = artikelVerwaltung.getBestandsHistorie(artikelNr).values().stream().toList();
+    public void zeichne(int artikelNr) throws ArtikelNichtGefunden {
+        List<Integer> werte = eshop.getBestandsHistorie(artikelNr).values().stream().toList();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         // löscht alles, was vorher schon mal gezeichnet wurde

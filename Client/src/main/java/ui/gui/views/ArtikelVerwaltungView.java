@@ -252,7 +252,7 @@ public class ArtikelVerwaltungView extends VBox {
         historieAnzeigenBtn = new CustomButton("Historie anzeigen", CustomButton.ButtonType.PRIMARY);
         historieAnzeigenBtn.setOnAction(e -> HistorieAnzeigen());
 
-        historieChart = new BestandsHistorieView(400, 250);
+        historieChart = new BestandsHistorieView(eshop,400, 250);
 
         box.getChildren().addAll(header, historieRow, historieAnzeigenBtn, historieChart);
         return box;
@@ -261,7 +261,7 @@ public class ArtikelVerwaltungView extends VBox {
     private void HistorieAnzeigen() {
         try {
             int nr = Integer.parseInt(historieNrField.getText().trim());
-            historieChart.zeichne(eshop, nr);
+            historieChart.zeichne(nr);
         } catch (NumberFormatException ex) {
             showAlert(Alert.AlertType.ERROR, "Eingabefehler", "Bitte eine gültige Artikelnummer eingeben.");
         } catch (ArtikelNichtGefunden ex) {
