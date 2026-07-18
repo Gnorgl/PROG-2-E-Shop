@@ -31,20 +31,25 @@ public class WarenkorbVerwaltung implements IWV {
         return warenkorbListe;
     }
 
-    public boolean istLeer() {
+    // synchronized: der Warenkorb wird aktuell von allen Client-Threads gemeinsam genutzt
+    // (eine WarenkorbVerwaltung pro Eshop-Instanz), deshalb müssen gleichzeitige
+    // Hinzufuegen/Entfernen/Lesen-Zugriffe auf das interne HashMap serialisiert werden.
+    public synchronized boolean istLeer() {
         return warenkorbListe.istLeer();
     }
 
-    public int getMenge(Artikel artikel) {
+    public synchronized int getMenge(Artikel artikel) {
         return warenkorbListe.getMenge(artikel);
     }
 
     @Override
-    public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
-        return warenkorbListe.getAlleArtikel();
+    public synchronized HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
+        // Kopie zurückgeben, damit ein anderer Thread die Map nicht mehr verändern kann,
+        // während der Aufrufer (z.B. beim Senden ans GUI/JSON) noch darüber iteriert
+        return new HashMap<>(warenkorbListe.getAlleArtikel());
     }
 
-    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
+    public synchronized void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
         if (menge > 0) {
             // 1. Logik: Bisherige Menge aus der Datenhaltung abfragen
             int alteMenge = warenkorbListe.getMenge(artikel);
@@ -59,12 +64,12 @@ public class WarenkorbVerwaltung implements IWV {
         }
     }
 
-    public void artikelEntfernen(Artikel artikel) throws IOException {
+    public synchronized void artikelEntfernen(Artikel artikel) throws IOException {
         warenkorbListe.artikelEntfernen(artikel);
         safe();
     }
 
-    public void leeren() throws IOException {
+    public synchronized void leeren() throws IOException {
         warenkorbListe.leeren();
         safe();
     }

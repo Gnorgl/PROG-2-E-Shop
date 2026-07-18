@@ -57,6 +57,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
         try {
             eshop.getArtikelVerwaltung().legeArtikelAn(name, bestand, preis);
             ok();
+            BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
         } catch (ArtikelExistiertBereits | ArtikelNullException e) {
             fehler(e);
         }
@@ -71,6 +72,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
         try {
             eshop.getArtikelVerwaltung().legeMassengutartikelAn(bezeichnung, bestand, preis, packungsGroesse);
             ok();
+            BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
         } catch (ArtikelExistiertBereits | MengeUngueltigException | ArtikelNullException e) {
             fehler(e);
         }
@@ -83,6 +85,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
         try {
             eshop.getArtikelVerwaltung().bestandErhoehen(nr, anzahl);
             ok();
+            BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
         } catch (ArtikelNichtGefunden | MengeUngueltigException | ArtikelNullException e) {
             fehler(e);
         }
@@ -95,6 +98,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
         try {
             eshop.getArtikelVerwaltung().bestandReduzieren(nr, anzahl);
             ok();
+            BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
         } catch (ArtikelNichtGefunden | BestandNichtAusreichendException | MengeUngueltigException | ArtikelNullException e) {
             fehler(e);
         }
@@ -104,6 +108,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
         int nr = Integer.parseInt(in.readLine());
         eshop.getArtikelVerwaltung().loeschen(nr);
         ok();
+        BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
     }
 
     private void bestandshistorie() throws IOException {

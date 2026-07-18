@@ -43,7 +43,10 @@ public class CheckOutVerwaltung implements ICV {
         this.orderListe = mapper.convertValue(speicherContainer[1], OrderListe.class);
     }
 
-    public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
+    // synchronized: orderListe und rechnungsNummerZaehler werden von allen Client-Threads
+    // gemeinsam benutzt (checkOut() beim Kauf, getRechnungenFuerKunde() beim Anzeigen der
+    // Bestellhistorie können gleichzeitig von verschiedenen Kunden aufgerufen werden)
+    public synchronized List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
         List<Rechnung> ergebnis = new ArrayList<>();
         for (Rechnung r : orderListe.getAlleRechnungen()) {
             if (r.getKunde().getEmail().equals(kunde.getEmail())) {
@@ -73,7 +76,7 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
+    public synchronized Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
         if (warenkorbInhalt.isEmpty()) {
             return null;
         }

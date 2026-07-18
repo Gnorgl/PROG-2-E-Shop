@@ -143,11 +143,11 @@ public class WarenkorbView extends VBox {
 
         HBox rowZwischen = new HBox();
         lblZwischensumme = new Label("€0,00");
-        rowZwischen.getChildren().addAll(new Label("Zwischensumme"), new Region(), lblZwischensumme);
+        rowZwischen.getChildren().addAll(new Label("Netto-Zwischensumme"), new Region(), lblZwischensumme);
         HBox.setHgrow(rowZwischen.getChildren().get(1), Priority.ALWAYS);
 
         HBox rowGesamt = new HBox();
-        Label lblGesamt = new Label("Gesamt");
+        Label lblGesamt = new Label("Brutto Gesamt");
         lblGesamt.getStyleClass().add("summary-text-bold");
 
         lblGesamtPreis = new Label("€0,00");
@@ -206,10 +206,10 @@ public class WarenkorbView extends VBox {
             summaryArtikelBox.getChildren().add(itemRow);
         }
 
-        double gesamt = eshop.berechneNettoSumme(eshop.getAlleWarenkorbArtikel());
+        double netto = eshop.berechneNettoSumme(eshop.getAlleWarenkorbArtikel());
+        double brutto = eshop.berechneBruttoSumme(eshop.getAlleWarenkorbArtikel());
 
-        String preisString = String.format("€%.2f", gesamt);
-        lblZwischensumme.setText(preisString);
-        lblGesamtPreis.setText(preisString);
+        lblZwischensumme.setText(String.format("€%.2f", netto));
+        lblGesamtPreis.setText(String.format("€%.2f", brutto));
     }
 }

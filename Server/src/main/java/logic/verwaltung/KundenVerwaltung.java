@@ -29,13 +29,15 @@ public class KundenVerwaltung implements IKV {
         return kundenListe;
     }
 
+    // synchronized: kundenListe/idCounter werden von allen Client-Threads gemeinsam
+    // benutzt (Login, Registrierung usw. können von mehreren Clients gleichzeitig kommen)
     @Override
-    public List<Kunde> getAlleKunden() {
+    public synchronized List<Kunde> getAlleKunden() {
         return new ArrayList<>(this.kundenListe.getKunden().values());
     }
 
     @Override
-    public Kunde getKunde(String email) throws KundeNichtGefundenException {
+    public synchronized Kunde getKunde(String email) throws KundeNichtGefundenException {
         Kunde kunde = this.kundenListe.getKunden().get(email);
         if (kunde == null) {
             throw new KundeNichtGefundenException(email);
@@ -46,7 +48,7 @@ public class KundenVerwaltung implements IKV {
     //Methode um einen neuen Kunden zu erstellen. Gibt einen Boolean Wert wieder.
 
     @Override
-    public boolean createNewKunden(String email, String passwort, String nachname, String vorname, String adresse) throws EmailBereitsVergebenException {
+    public synchronized boolean createNewKunden(String email, String passwort, String nachname, String vorname, String adresse) throws EmailBereitsVergebenException {
         if (this.kundenListe.getKunden().containsKey(email)) {
             throw new EmailBereitsVergebenException(email);
         } else {

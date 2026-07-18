@@ -42,7 +42,9 @@ public class EreignisVerwaltung {
 
 
 
-    public void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) throws ArtikelNullException, IOException {
+    // synchronized: logEreignis() wird von ArtikelVerwaltung/CheckOutVerwaltung aus
+    // verschiedenen Client-Threads heraus aufgerufen und schreibt in dieselbe ereignisListe
+    public synchronized void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) throws ArtikelNullException, IOException {
 
         // Validierung
         if (artikel == null) {
@@ -61,7 +63,7 @@ public class EreignisVerwaltung {
         safe();
     }
 
-    public List<Ereignis> getEreignisseFuerArtikel(int artikelNr) {
+    public synchronized List<Ereignis> getEreignisseFuerArtikel(int artikelNr) {
         return ereignisListe.getAlleEreignisse()
                 .stream()
                 .filter(e -> e.getArtikel().getArtikelNummer() == artikelNr)

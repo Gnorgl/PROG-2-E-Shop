@@ -22,6 +22,7 @@ public class EshopClient implements InterfaceEshop {
     private final CheckOutVerwaltungFassade checkOutVerwaltungFassade;
     private final WarenkorbVerwaltungFassade warenkorbVerwaltungFassade;
     private final BenutzerVerwaltungFassade benutzerVerwaltungFassade;
+    private final PushListener pushListener;
 
     public EshopClient (String host, int port) throws IOException {
         this.verbindung = new ServerVerbindung(host, port);
@@ -29,6 +30,20 @@ public class EshopClient implements InterfaceEshop {
         this.checkOutVerwaltungFassade = new CheckOutVerwaltungFassade(verbindung);
         this.warenkorbVerwaltungFassade = new WarenkorbVerwaltungFassade(verbindung, artikelVerwaltungFassade);
         this.benutzerVerwaltungFassade = new BenutzerVerwaltungFassade(verbindung);
+        // Zweiter, separater Kanal: der Server meldet hierüber unaufgefordert Änderungen
+        // (z.B. Bestandsänderungen durch andere Clients), damit die GUI sich ohne
+        // Refresh-Button aktualisieren kann.
+        this.pushListener = new PushListener(host, port);
+    }
+
+    // Views registrieren sich hier (z.B. mit this::datenLaden), um bei jeder
+    // Server-Aktualisierung automatisch neu zu laden.
+    public void aktualisierungAbonnieren(Runnable r) {
+        pushListener.aktualisierungAbonnieren(r);
+    }
+
+    public void aktualisierungAbmelden(Runnable r) {
+        pushListener.abmelden(r);
     }
 
     // Artikelverwaltung
@@ -186,6 +201,7 @@ public class EshopClient implements InterfaceEshop {
 
     public void verbindungSchliessen() {
         this.verbindung.schliessen();
+        this.pushListener.schliessen();
     }
 
 }

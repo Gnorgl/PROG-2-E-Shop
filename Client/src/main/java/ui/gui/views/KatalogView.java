@@ -46,6 +46,12 @@ public class KatalogView extends VBox {
 
         initUI();
         datenLaden();
+
+        // Wenn ein anderer Client den Bestand ändert (Kauf, Einlagerung, ...),
+        // meldet der Server das über den Push-Kanal -> Tabelle automatisch neu laden
+        if (eshop instanceof net.EshopClient client) {
+            client.aktualisierungAbonnieren(this::datenLaden);
+        }
     }
 
     private void initUI() {

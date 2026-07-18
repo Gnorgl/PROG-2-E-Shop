@@ -64,6 +64,7 @@ public class NavigationSidebar extends VBox {
             addSidebarButtons(shopBtn, warenkorbBtn, historieBtn);
             shopBtn.setOnAction(e -> mainLayout.setCenterView(new KatalogView(eshop, session, guiController)));
             warenkorbBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.WarenkorbView(eshop, session, guiController, mainLayout)));
+            historieBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.MeineBestellungenView(eshop, session, guiController)));
         }
 
         // --- Logout-Bereich ---

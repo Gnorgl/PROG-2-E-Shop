@@ -73,8 +73,13 @@ public class ArtikelVerwaltung implements IAV {
 
 
 
+    // synchronized: mehrere Client-Threads können gleichzeitig auf artikelListe/idCounter
+    // zugreifen (jeder Client läuft in seinem eigenen Thread, teilt sich aber dieselbe
+    // Eshop-Instanz). Ohne Synchronisierung könnten z.B. zwei gleichzeitige Käufe
+    // desselben Artikels den Bestand falsch berechnen (Lost Update) oder ein gleichzeitiges
+    // Anlegen/Lesen die ArrayList beschädigen (ConcurrentModificationException).
     @Override
-    public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
+    public synchronized boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
 
         int neueNr = (int) ++idCounter;
 
@@ -96,7 +101,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     @Override
-    public void loeschen(int nr) throws IOException {
+    public synchronized void loeschen(int nr) throws IOException {
         Iterator<Artikel> it = artikelListe.getArtikelImLager().iterator();
         while (it.hasNext()) {
             Artikel artikel = it.next();
@@ -109,7 +114,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     @Override
-    public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse)
+    public synchronized boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse)
             throws ArtikelExistiertBereits, MengeUngueltigException, ArtikelNullException, IOException {
 
         int neueNr = (int) ++idCounter;
@@ -139,7 +144,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     @Override
-    public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, MengeUngueltigException, ArtikelNullException, IOException {
+    public synchronized void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, MengeUngueltigException, ArtikelNullException, IOException {
         Artikel a = findeArtikel(nr);
 
         if (anzahl <= 0) {
@@ -164,7 +169,7 @@ public class ArtikelVerwaltung implements IAV {
 
     // Reduziert Bestand (z. B. beim Checkout)
     @Override
-    public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
+    public synchronized void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, AnzahlUngueltigException, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
         Artikel a = findeArtikel(nr);
 
         if (anzahl <= 0) {
@@ -193,7 +198,7 @@ public class ArtikelVerwaltung implements IAV {
 
     // Berechnet den täglichen Bestandsverlauf eines Artikels über die letzten 30 Tage
     @Override
-    public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
+    public synchronized Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
         Artikel artikel = findeArtikel(artikelNr);
 
         int aktuellerBestand = artikel.getBestand();
@@ -253,8 +258,11 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     @Override
-    public List<Artikel> getAlleArtikel() {
-        return this.artikelListe.getArtikelImLager();
+    public synchronized List<Artikel> getAlleArtikel() {
+        // Kopie statt der internen Liste zurückgeben: sonst könnte ein anderer Thread
+        // die Liste noch während ein Aufrufer sie außerhalb dieser Methode durchläuft
+        // (z.B. beim Serialisieren für den Client) verändern.
+        return new ArrayList<>(this.artikelListe.getArtikelImLager());
     }
 
     public ArtikelListe getArtikelListe() {
@@ -262,7 +270,7 @@ public class ArtikelVerwaltung implements IAV {
     }
 
     @Override
-    public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
+    public synchronized Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
         for (Artikel a : artikelListe.getArtikelImLager()) {
             if (a.getArtikelNummer() == nr) {
                 return a;

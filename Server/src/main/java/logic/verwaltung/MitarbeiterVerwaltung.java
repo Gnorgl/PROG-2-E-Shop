@@ -29,13 +29,15 @@ public class MitarbeiterVerwaltung implements IMV {
         return mitarbeiterListe;
     }
 
+    // synchronized: mitarbeiterListe/idCounter werden von allen Client-Threads gemeinsam
+    // benutzt (Login, Mitarbeiter-Anlegen usw. können von mehreren Clients gleichzeitig kommen)
     @Override
-    public List<Mitarbeiter> getAlleMitarbeiter() {
+    public synchronized List<Mitarbeiter> getAlleMitarbeiter() {
         return new ArrayList<>(this.mitarbeiterListe.getMitarbeiter().values());
     }
 
     @Override
-    public Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException {
+    public synchronized Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException {
         // immer kleinbuchstabe
         if (email != null) {
             email = email.toLowerCase().trim();
@@ -49,7 +51,7 @@ public class MitarbeiterVerwaltung implements IMV {
     }
 
     @Override
-    public Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname) {
+    public synchronized Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname) {
         String nummer = generateBenutzerNummer();
 
         String email = (vorname.trim() + nummer + "@shop.com").toLowerCase();

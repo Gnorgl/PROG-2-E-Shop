@@ -30,6 +30,11 @@ public class CheckoutView extends VBox {
     private Label lblZwischensumme;
     private VBox summaryArtikelBox;
 
+    // Zahlungsmethode
+    private RadioButton rbKredit;
+    private RadioButton rbPayPal;
+    private RadioButton rbRechnung;
+
     public CheckoutView(InterfaceEshop eshop, SessionManager session, EshopGUI guiController, MainLayoutScene mainLayout) {
         this.eshop = eshop;
         this.session = session;
@@ -125,14 +130,14 @@ public class CheckoutView extends VBox {
         VBox zahlungBox = new VBox(10);
         ToggleGroup paymentGroup = new ToggleGroup();
 
-        RadioButton rbKredit = new RadioButton("Kreditkarte / EC-Karte");
+        rbKredit = new RadioButton("Kreditkarte / EC-Karte");
         rbKredit.setToggleGroup(paymentGroup);
         rbKredit.setSelected(true);
 
-        RadioButton rbPayPal = new RadioButton("PayPal");
+        rbPayPal = new RadioButton("PayPal");
         rbPayPal.setToggleGroup(paymentGroup);
 
-        RadioButton rbRechnung = new RadioButton("Rechnung");
+        rbRechnung = new RadioButton("Rechnung");
         rbRechnung.setToggleGroup(paymentGroup);
 
         zahlungBox.getChildren().addAll(rbKredit, rbPayPal, rbRechnung);
@@ -202,6 +207,12 @@ public class CheckoutView extends VBox {
                 showAlert(Alert.AlertType.ERROR, "Fehler", "Nur angemeldete Kunden können einkaufen!");
                 return;
             }
+
+            // Je nach gewählter Zahlungsart Popup zeigen; bricht ab, wenn der Nutzer abbricht
+            if (!zahlungAbwickeln()) {
+                return;
+            }
+
             Kunde kunde = (Kunde) session.getBenutzer();
 
             Rechnung rechnung = eshop.checkOut(
@@ -230,6 +241,70 @@ public class CheckoutView extends VBox {
         } catch (Exception ex) {
             showAlert(Alert.AlertType.ERROR, "Kauf fehlgeschlagen", ex.getMessage());
         }
+    }
+
+    // Zeigt je nach gewählter Zahlungsmethode ein passendes Popup.
+    // Gibt true zurück, wenn der Bezahlvorgang abgeschlossen wurde und der Kauf weiterlaufen soll,
+    // false wenn der Nutzer abgebrochen hat.
+    private boolean zahlungAbwickeln() {
+        if (rbKredit.isSelected()) {
+            return zeigeKreditkartenDialog();
+        } else if (rbPayPal.isSelected()) {
+            return zeigePayPalDialog();
+        } else {
+            // Rechnung: kein Popup nötig, direkt weiter
+            return true;
+        }
+    }
+
+    private boolean zeigeKreditkartenDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Kreditkarte / EC-Karte");
+        dialog.setHeaderText("Bitte Kartendaten eingeben (Fake, es wird nichts wirklich belastet)");
+
+        ButtonType bezahlenBtn = new ButtonType("Bezahlen", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(bezahlenBtn, ButtonType.CANCEL);
+
+        TextField kartennummerField = new TextField();
+        kartennummerField.setPromptText("1234 5678 9012 3456");
+        TextField ablaufField = new TextField();
+        ablaufField.setPromptText("MM/JJ");
+        TextField cvcField = new TextField();
+        cvcField.setPromptText("CVC");
+
+        VBox content = new VBox(10,
+                new FormRow("Kartennummer:", kartennummerField),
+                new FormRow("Ablaufdatum:", ablaufField),
+                new FormRow("CVC:", cvcField)
+        );
+        content.setPrefWidth(320);
+        dialog.getDialogPane().setContent(content);
+
+        // Verhindert das Schließen, solange Pflichtfelder leer sind
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(bezahlenBtn);
+        okButton.addEventFilter(javafx.event.ActionEvent.ACTION, event -> {
+            if (kartennummerField.getText().trim().isEmpty() || ablaufField.getText().trim().isEmpty()
+                    || cvcField.getText().trim().isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Fehlende Angaben", "Bitte alle Kartenfelder ausfüllen.");
+                event.consume();
+            }
+        });
+
+        java.util.Optional<ButtonType> result = dialog.showAndWait();
+        return result.isPresent() && result.get() == bezahlenBtn;
+    }
+
+    private boolean zeigePayPalDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("PayPal");
+        alert.setHeaderText("Weiterleitung zu PayPal (Fake)");
+        alert.setContentText("Sie werden jetzt zu PayPal weitergeleitet, um die Zahlung abzuschließen.");
+
+        ButtonType weiterBtn = new ButtonType("Bei PayPal bezahlen", ButtonBar.ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(weiterBtn, ButtonType.CANCEL);
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == weiterBtn;
     }
 
     private void zeigeRechnung(Rechnung rechnung, String lieferadresse) {

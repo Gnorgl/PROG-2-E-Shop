@@ -52,6 +52,8 @@ public class CheckoutKommandoHandler extends KommandoHandler {
             Map<Artikel, Integer> warenkorbInhalt = zuArtikelMap(warenkorbNrMap);
             Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorbInhalt, eshop.getArtikelVerwaltung());
             ok(mapper.writeValueAsString(rechnung));
+            // Checkout reduziert den Bestand der gekauften Artikel -> alle Clients informieren
+            BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
         } catch (ArtikelNichtGefunden | ArtikelNullException e) {
             fehler(e);
         }
