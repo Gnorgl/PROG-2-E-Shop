@@ -14,9 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-// Sieht für die GUI genauso aus wie die echte ArtikelVerwaltung (implementiert
-// dasselbe Interface IAV), leitet die Aufrufe aber über die ServerVerbindung
-// an den Server weiter, statt sie lokal auszuführen.
+
 public class ArtikelVerwaltungFassade implements IAV {
 
     private final ServerVerbindung verbindung;
@@ -130,9 +128,7 @@ public class ArtikelVerwaltungFassade implements IAV {
         }
     }
 
-    // Wandelt eine ServerFehlerException in ArtikelNichtGefunden um (für
-    // getBestandsHistorie/findeArtikel, die laut IAV nur diese eine Checked-
-    // Exception deklarieren dürfen).
+    // Wandelt eine ServerFehlerException in ArtikelNichtGefunden um (für Methoden, die keine IOException werfen)
     private void werfeArtikelFehlerOhneIO(ServerFehlerException e) throws ArtikelNichtGefunden {
         if ("ArtikelNichtGefunden".equals(e.getExceptionName())) {
             throw new ArtikelNichtGefunden(e.getNachricht());

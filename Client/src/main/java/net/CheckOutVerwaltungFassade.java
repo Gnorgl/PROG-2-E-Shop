@@ -13,9 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-// Sieht für die GUI genauso aus wie die echte CheckOutVerwaltung (implementiert
-// dasselbe Interface ICV), leitet Checkout/Bestellverlauf aber über die
-// ServerVerbindung an den Server weiter.
+
 public class CheckOutVerwaltungFassade implements ICV {
 
     private final ServerVerbindung verbindung;
@@ -59,8 +57,7 @@ public class CheckOutVerwaltungFassade implements ICV {
         return berechneNettoSumme(warenkorbInhalt) * 1.19;
     }
 
-    // Reine Textformatierung, keine Fachlogik - deshalb ohne Server-Aufruf lokal
-    // erzeugt, genau wie es CheckOutVerwaltung auf dem Server auch tut.
+    // Reine Textformatierung, keine Fachlogik
     @Override
     public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
         StringBuilder beleg = new StringBuilder();
@@ -113,8 +110,7 @@ public class CheckOutVerwaltungFassade implements ICV {
 
     @Override
     public void rechnungAnzeigen(Rechnung rechnung) {
-        // Reine Anzeige-Funktion, dafür braucht es keinen Server-Aufruf -
-        // die Rechnung liegt dem Client durch checkOut(...) bereits vollständig vor.
+        // Reine Anzeige-Funktion
         if (rechnung == null) {
             System.out.println("Keine Rechnung vorhanden!");
             return;

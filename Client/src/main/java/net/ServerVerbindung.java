@@ -10,10 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-// Eine gemeinsame Socket-Verbindung zum Server, die von allen Fassaden
-// (Artikel, Checkout, Warenkorb, ...) benutzt wird. Ein Kommando besteht
-// aus mehreren Zeilen (Kommandowort + Parameter), die Antwort beginnt
-// immer mit "OK" oder "ERROR".
+// Eine gemeinsame Socket-Verbindung zum Server, die von allen Fassaden (Artikel, Checkout, Warenkorb, ...) benutzt wird.
 public class ServerVerbindung {
 
     private final Socket socket;

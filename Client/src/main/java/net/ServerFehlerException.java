@@ -1,8 +1,8 @@
 package net;
 
-// Transportiert eine Fehlermeldung vom Server (Format "ExceptionName: Nachricht")
+
 // zur aufrufenden Fassade-Methode, die daraus die passende, im Common-Modul
-// bekannte Exception (z.B. ArtikelNichtGefunden) wieder herstellt.
+
 public class ServerFehlerException extends Exception {
 
     private final String rohtext;
