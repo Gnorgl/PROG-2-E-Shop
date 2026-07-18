@@ -21,12 +21,14 @@ public class EshopClient implements InterfaceEshop {
     private final ArtikelVerwaltungFassade artikelVerwaltungFassade;
     private final CheckOutVerwaltungFassade checkOutVerwaltungFassade;
     private final WarenkorbVerwaltungFassade warenkorbVerwaltungFassade;
+    private final BenutzerVerwaltungFassade benutzerVerwaltungFassade;
 
     public EshopClient (String host, int port) throws IOException {
         this.verbindung = new ServerVerbindung(host, port);
         this.artikelVerwaltungFassade = new ArtikelVerwaltungFassade(verbindung);
         this.checkOutVerwaltungFassade = new CheckOutVerwaltungFassade(verbindung);
         this.warenkorbVerwaltungFassade = new WarenkorbVerwaltungFassade(verbindung, artikelVerwaltungFassade);
+        this.benutzerVerwaltungFassade = new BenutzerVerwaltungFassade(verbindung);
     }
 
     // Artikelverwaltung
@@ -180,6 +182,10 @@ public class EshopClient implements InterfaceEshop {
     @Override
     public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
         return null;
+    }
+
+    public void verbindungSchliessen() {
+        this.verbindung.schliessen();
     }
 
 }

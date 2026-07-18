@@ -2,6 +2,7 @@ package ui.gui;
 
 import interfaces.InterfaceEshop;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -36,7 +37,11 @@ public class EshopGUI extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Eshop");
 
-        //Hier die erste Szene also vielleicht login mit registrierungsmöglichkeit
+        this.primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
+
         showLoginScene();
 
         this.primaryStage.setWidth(1280);

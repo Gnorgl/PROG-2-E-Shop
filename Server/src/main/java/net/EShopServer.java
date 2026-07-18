@@ -10,7 +10,7 @@ import java.net.Socket;
 // einen eigenen ClientRequestProcessor in einem eigenen Thread.
 public class EShopServer {
 
-    public static final int DEFAULT_PORT = 6789;
+    public static final int DEFAULT_PORT = 8080;
 
     private final int port;
     private final Eshop eshop;
