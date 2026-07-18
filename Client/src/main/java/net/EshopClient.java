@@ -17,6 +17,20 @@ import java.util.Map;
 
 public class EshopClient implements InterfaceEshop {
 
+    private final ServerVerbindung verbindung;
+    private final ArtikelVerwaltungFassade artikelVerwaltungFassade;
+    private final CheckOutVerwaltungFassade checkOutVerwaltungFassade;
+    private final WarenkorbVerwaltungFassade warenkorbVerwaltungFassade;
+
+    public EshopClient (String host, int port) throws IOException {
+        this.verbindung = new ServerVerbindung(host, port);
+        this.artikelVerwaltungFassade = new ArtikelVerwaltungFassade(verbindung);
+        this.checkOutVerwaltungFassade = new CheckOutVerwaltungFassade(verbindung);
+        this.warenkorbVerwaltungFassade = new WarenkorbVerwaltungFassade(verbindung, artikelVerwaltungFassade);
+    }
+
+    // Artikelverwaltung
+
     @Override
     public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
         return false;
@@ -57,6 +71,8 @@ public class EshopClient implements InterfaceEshop {
         return null;
     }
 
+    // Benutzerverwaltung
+
     @Override
     public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
         return null;
@@ -77,6 +93,8 @@ public class EshopClient implements InterfaceEshop {
         return null;
     }
 
+    // Warenkorbverwaltung
+
     @Override
     public double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt) {
         return 0;
@@ -93,6 +111,34 @@ public class EshopClient implements InterfaceEshop {
     }
 
     @Override
+    public boolean istLeer() {
+        return false;
+    }
+    @Override
+    public int getMenge(Artikel artikel) {
+        return 0;
+    }
+
+
+    @Override
+    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
+
+    }
+
+    @Override
+    public void artikelEntfernen(Artikel artikel) throws IOException {
+
+    }
+
+
+
+    @Override
+    public void leeren() throws IOException {
+
+    }
+    // Rechnungsverwaltung
+
+    @Override
     public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
         return "";
     }
@@ -101,6 +147,8 @@ public class EshopClient implements InterfaceEshop {
     public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
         return List.of();
     }
+
+    // Kunden- und Mitarbeiterverwaltung
 
     @Override
     public List<Kunde> getAlleKunden() {
@@ -138,27 +186,17 @@ public class EshopClient implements InterfaceEshop {
     }
 
     @Override
-    public boolean istLeer() {
+    public Benutzer benutzercheck(String email) throws BenutzerExistiertNichtException {
+        return null;
+    }
+
+    @Override
+    public boolean passwordcheck(Benutzer benutzer, String password) {
         return false;
     }
 
-    @Override
-    public int getMenge(Artikel artikel) {
-        return 0;
-    }
 
-    @Override
-    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
-
-    }
-
-    @Override
-    public void artikelEntfernen(Artikel artikel) throws IOException {
-
-    }
-
-    @Override
-    public void leeren() throws IOException {
-
-    }
 }
+
+
+
