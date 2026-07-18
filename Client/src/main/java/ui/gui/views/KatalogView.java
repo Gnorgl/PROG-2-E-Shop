@@ -47,15 +47,10 @@ public class KatalogView extends VBox {
         initUI();
         datenLaden();
 
-        // Wenn ein anderer Client den Bestand ändert (Kauf, Einlagerung, ...),
-        // meldet der Server das über den Push-Kanal -> Tabelle automatisch neu laden
         if (eshop instanceof net.EshopClient client) {
             Runnable refreshCallback = this::datenLaden;
             client.aktualisierungAbonnieren(refreshCallback);
 
-            // Sobald diese View aus dem Szenengraph entfernt wird (View-Wechsel),
-            // wieder abmelden - sonst bleibt die Referenz für immer im PushListener
-            // hängen (Memory-Leak + unnötige datenLaden()-Aufrufe auf toter View).
             this.sceneProperty().addListener((obs, alteScene, neueScene) -> {
                 if (neueScene == null) {
                     client.aktualisierungAbmelden(refreshCallback);
@@ -68,9 +63,8 @@ public class KatalogView extends VBox {
         Label titelLabel = new Label("Artikelkatalog");
         titelLabel.getStyleClass().add("katalog-title"); // CSS statt setStyle
 
-        // Sortierung Top Bar
         HBox topBar = new HBox();
-        topBar.getStyleClass().add("katalog-bar"); // Steuert Spacing über CSS
+        topBar.getStyleClass().add("katalog-bar");
 
         Label sortLabel = new Label("Sortieren nach:");
         sortBox = new ComboBox<>();
@@ -106,15 +100,15 @@ public class KatalogView extends VBox {
         colBestand.setCellValueFactory(new PropertyValueFactory<>("bestand"));
 
         table.getColumns().addAll(colNr, colBez, colArt, colPreis, colBestand);
-        VBox.setVgrow(table, Priority.ALWAYS); // Tabelle nimmt restlichen Platz ein
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         // In Warenkorb legen
         HBox bottomBar = new HBox();
-        bottomBar.getStyleClass().add("katalog-bar"); // Steuert Spacing über CSS
+        bottomBar.getStyleClass().add("katalog-bar");
 
         Label mengeLabel = new Label("Menge:");
         mengeField = new TextField("1");
-        mengeField.getStyleClass().add("menge-input"); // Breite über CSS gesteuert
+        mengeField.getStyleClass().add("menge-input");
 
         CustomButton btnWarenkorb = new CustomButton("In den Warenkorb", CustomButton.ButtonType.PRIMARY);
         btnWarenkorb.setOnAction(e -> artikelInWarenkorbLegen());
@@ -128,7 +122,6 @@ public class KatalogView extends VBox {
         List<Artikel> alleArtikel = eshop.getAlleArtikel();
         artikelListe = FXCollections.observableArrayList(alleArtikel);
 
-        // Wir verpacken die Liste in eine SortedList
         sortedListe = new SortedList<>(artikelListe);
         table.setItems(sortedListe);
 
@@ -157,7 +150,6 @@ public class KatalogView extends VBox {
             int eingabeMenge = Integer.parseInt(mengeField.getText().trim());
             if (eingabeMenge <= 0) throw new NumberFormatException();
 
-            // NEU: Bei Massengut die Eingabe (Packungen) in Stückzahlen umrechnen
             int finaleMenge = eingabeMenge;
             if (ausgewaehlterArtikel instanceof entities.Massengutartikel) {
                 int packGroesse = ((entities.Massengutartikel) ausgewaehlterArtikel).getPackungsGroesse();
@@ -166,7 +158,6 @@ public class KatalogView extends VBox {
 
             eshop.artikelHinzufuegen(ausgewaehlterArtikel, finaleMenge);
 
-            // Für die Erfolgsmeldung zeigen wir weiterhin die Packungsanzahl an
             System.out.println(eingabeMenge + "x " + ausgewaehlterArtikel.getBezeichnung() + " in den Warenkorb gelegt.");
             showAlert(Alert.AlertType.INFORMATION, "Erfolg", eingabeMenge + "x " + ausgewaehlterArtikel.getBezeichnung() + " wurde zum Warenkorb hinzugefügt.");
 

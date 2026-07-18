@@ -29,8 +29,6 @@ public class MitarbeiterVerwaltung implements IMV {
         return mitarbeiterListe;
     }
 
-    // synchronized: mitarbeiterListe/idCounter werden von allen Client-Threads gemeinsam
-    // benutzt (Login, Mitarbeiter-Anlegen usw. können von mehreren Clients gleichzeitig kommen)
     @Override
     public synchronized List<Mitarbeiter> getAlleMitarbeiter() {
         return new ArrayList<>(this.mitarbeiterListe.getMitarbeiter().values());

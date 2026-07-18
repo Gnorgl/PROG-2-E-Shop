@@ -10,7 +10,6 @@ public class BenutzerVerwaltung implements IBV {
     private final KundenVerwaltung kundenVerwaltung;
     private final MitarbeiterVerwaltung mitarbeiterVerwaltung;
 
-    // Konstruktor verlangt die fertigen Verwaltungen
     public BenutzerVerwaltung(KundenVerwaltung kv, MitarbeiterVerwaltung mv) {
         this.kundenVerwaltung = kv;
         this.mitarbeiterVerwaltung = mv;

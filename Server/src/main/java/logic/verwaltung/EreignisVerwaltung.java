@@ -37,13 +37,6 @@ public class EreignisVerwaltung {
         this.ereignisListe = mapper.readValue(datei, EreignisListe.class);
     }
 
-
-
-
-
-
-    // synchronized: logEreignis() wird von ArtikelVerwaltung/CheckOutVerwaltung aus
-    // verschiedenen Client-Threads heraus aufgerufen und schreibt in dieselbe ereignisListe
     public synchronized void logEreignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) throws ArtikelNullException, IOException {
 
         // Validierung
@@ -51,7 +44,6 @@ public class EreignisVerwaltung {
             throw new ArtikelNullException();
         }
         if (anzahl <= 0) {
-            // AnzahlUngueltigException is unchecked; throw it directly
             throw new exceptions.artikel.AnzahlUngueltigException();
         }
 

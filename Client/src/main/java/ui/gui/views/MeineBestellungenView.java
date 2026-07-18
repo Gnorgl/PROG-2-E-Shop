@@ -98,8 +98,6 @@ public class MeineBestellungenView extends VBox {
     }
 
     private void zeigeBeleg(Rechnung rechnung) {
-        // Adresse ist hier nicht mehr bekannt (wird nicht auf der Rechnung gespeichert),
-        // daher nur ein Platzhalter im nachträglich angezeigten Beleg
         String belegText = eshop.generiereRechnungsText(rechnung, "(Lieferadresse nicht gespeichert)");
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

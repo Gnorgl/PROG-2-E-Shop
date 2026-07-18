@@ -53,14 +53,10 @@ public class BestandsHistorieView extends VBox {
         gc.strokeLine(RAND, RAND, RAND, RAND + hoehe);
         gc.strokeLine(RAND, RAND + hoehe, RAND + breite, RAND + hoehe);
 
-        // Achsentitel: "Bestand" über der Y-Achse, "Tag" unter der X-Achse rechts außen,
-        // beide mit Abstand zu den Zahlen, damit nichts überlappt
         gc.setFont(Font.font(11));
         gc.fillText("Bestand", RAND - 15, RAND - 12);
         gc.fillText("Tag", RAND + breite - 8, RAND + hoehe + 32);
 
-        // Y-Achsen-Beschriftung: zeigt den tatsächlichen Bestand an drei Punkten
-        // (unten = min, Mitte, oben = max), rechtsbündig links von der Achse
         gc.setFont(Font.font(10));
         gc.setFill(Color.BLACK);
         int mitte = (min + max) / 2;
@@ -71,16 +67,12 @@ public class BestandsHistorieView extends VBox {
         // Abstand zwischen den 30 Punkten auf der X-Achse
         double schrittX = breite / (werte.size() - 1);
 
-        // Verlaufslinie in blau, extra dick damit sie sich von der schwarzen
-        // Achse abhebt, falls der Bestand länger am Minimum (= Achsenhöhe) liegt
         gc.setStroke(Color.STEELBLUE);
         gc.setLineWidth(3);
 
-        // erster Punkt (Tag 1) sitzt direkt am linken Rand
         double letztesX = RAND;
         double letztesY = berechneY(werte.get(0), min, max, hoehe);
 
-        // verbindet jeden Punkt mit dem nächsten und ergibt so den Linienzug
         for (int i = 1; i < werte.size(); i++) {
             double x = RAND + i * schrittX;
             double y = berechneY(werte.get(i), min, max, hoehe);
@@ -95,9 +87,6 @@ public class BestandsHistorieView extends VBox {
         gc.setFill(Color.BLACK);
         gc.fillText("Aktuell: " + aktuellerBestand, letztesX - 40, letztesY - 10);
 
-        // X-Achsen-Beschriftung: wie im Beispiel nur Tag 1-5 und die letzten beiden Tage
-        // ausschreiben, dazwischen nur "...", damit es bei 30 Tagen nicht überfüllt wird.
-        // Kleinere Schrift, damit sich "29" und "30" am rechten Rand nicht überlappen.
         int n = werte.size();
         boolean puenktchenGezeichnet = false;
         gc.setStroke(Color.BLACK);
@@ -107,13 +96,11 @@ public class BestandsHistorieView extends VBox {
             int tag = i + 1;
             double x = RAND + i * schrittX;
 
-            // kleiner Strich für jeden einzelnen Tag auf der Achse
             gc.strokeLine(x, RAND + hoehe, x, RAND + hoehe + 5);
 
             if (tag <= 5) {
                 gc.fillText(String.valueOf(tag), x - 3, RAND + hoehe + 16);
             } else if (tag > n - 2) {
-                // die letzten beiden Tage rechtsbündig, damit "30" nicht über den Rand hinausläuft
                 gc.fillText(String.valueOf(tag), x - 8, RAND + hoehe + 16);
             } else if (!puenktchenGezeichnet && i >= n / 2) {
                 gc.fillText("...", x - 6, RAND + hoehe + 16);
@@ -122,7 +109,6 @@ public class BestandsHistorieView extends VBox {
         }
     }
 
-    // rechnet einen Bestandswert in eine Y-Pixel-Position um, je höher der Bestand desto weiter oben
     private double berechneY(int wert, int min, int max, double hoehe) {
         double anteil = (wert - min) / (double) (max - min);
         return RAND + hoehe - anteil * hoehe;

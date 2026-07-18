@@ -1,4 +1,4 @@
-package ui.gui.views; // Neues Package für die "Inhalte" in der Mitte
+package ui.gui.views;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;

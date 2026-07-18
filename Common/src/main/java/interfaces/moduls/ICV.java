@@ -12,10 +12,8 @@ import java.util.Map;
 
 public interface ICV { //Interface CheckOutVerwaltung
 
-    // Die aktualisierte checkOut-Methode (mit ArtikelVerwaltung für die Bestandsänderung)
     Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException;
 
-    // Die neue Methode zur Berechnung des Warenkorb-Werts
     double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt);
 
     double berechneBruttoSumme(Map<Artikel, Integer> warenkorbInhalt);

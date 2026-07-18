@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 
 public class WarenkorbListe {
-    //Muss als String oder ähnliches gespeichert werden, sonst funktioniert es nicht. Setter Methoden fehlen! Json funktioniert nicht.
     private HashMap<Artikel, Integer> warenkorb = new HashMap<>();
 
     public WarenkorbListe() {}
@@ -45,5 +44,3 @@ public class WarenkorbListe {
 }
 
 
-
-//Produkte die aus Lager genommen werden und für den Kauf vorbereitet sind.

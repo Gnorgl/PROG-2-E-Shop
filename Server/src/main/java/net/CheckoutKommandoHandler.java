@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// Zuständig für Checkout- und Order-Kommandos (ICV + Bestellverlauf).
 public class CheckoutKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(
@@ -52,7 +51,6 @@ public class CheckoutKommandoHandler extends KommandoHandler {
             Map<Artikel, Integer> warenkorbInhalt = zuArtikelMap(warenkorbNrMap);
             Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorbInhalt, eshop.getArtikelVerwaltung());
             ok(mapper.writeValueAsString(rechnung));
-            // Checkout reduziert den Bestand der gekauften Artikel -> alle Clients informieren
             BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
         } catch (ArtikelNichtGefunden | ArtikelNullException e) {
             fehler(e);
@@ -78,7 +76,6 @@ public class CheckoutKommandoHandler extends KommandoHandler {
         ok(mapper.writeValueAsString(rechnungen));
     }
 
-    // Wandelt Artikelnummer->Menge in Artikel->Menge um (Nachschlagen im Lager).
     private Map<Artikel, Integer> zuArtikelMap(Map<Integer, Integer> nrMap) throws ArtikelNichtGefunden {
         Map<Artikel, Integer> ergebnis = new HashMap<>();
         for (Map.Entry<Integer, Integer> eintrag : nrMap.entrySet()) {

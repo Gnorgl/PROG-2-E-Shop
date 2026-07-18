@@ -19,7 +19,7 @@ public class NavigationSidebar extends VBox {
         this.eshop = eshop;
         this.mainLayout = mainLayout;
 
-        // Basis-Styling wird komplett aus der CSS geladen
+        // Styling wird komplett aus der CSS geladen
         this.getStyleClass().add("sidebar");
 
         // --- Benutzer-Info ---
@@ -54,7 +54,7 @@ public class NavigationSidebar extends VBox {
 
             infoBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.ArtikelVerwaltungView(eshop, session, guiController)));
             mitarbeiterAnlegenBtn.setOnAction(e -> mainLayout.setCenterView(new EmployeeCreationView(eshop, session, guiController)));
-            //Hier noch die event listener, wenn die anderen views erstellt wurden.
+            //Hier noch die event listener, wenn die anderen views erstellt wurden aber mal gucken.
         } else {
             Button shopBtn = new Button("Zum Marktplatz");
             Button warenkorbBtn = new Button("Warenkorb");

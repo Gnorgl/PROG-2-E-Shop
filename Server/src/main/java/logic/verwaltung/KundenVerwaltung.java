@@ -29,8 +29,6 @@ public class KundenVerwaltung implements IKV {
         return kundenListe;
     }
 
-    // synchronized: kundenListe/idCounter werden von allen Client-Threads gemeinsam
-    // benutzt (Login, Registrierung usw. können von mehreren Clients gleichzeitig kommen)
     @Override
     public synchronized List<Kunde> getAlleKunden() {
         return new ArrayList<>(this.kundenListe.getKunden().values());
