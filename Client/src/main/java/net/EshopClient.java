@@ -35,153 +35,153 @@ public class EshopClient implements InterfaceEshop {
 
     @Override
     public boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
-        return false;
+        return artikelVerwaltungFassade.legeArtikelAn(name, bestand, preis);
     }
 
     @Override
     public boolean legeMassengutartikelAn(String bezeichnung, int bestand, double preis, int packungsGroesse) throws ArtikelExistiertBereits, MengeUngueltigException, ArtikelNullException, IOException {
-        return false;
+        return artikelVerwaltungFassade.legeMassengutartikelAn(bezeichnung, bestand, preis, packungsGroesse);
     }
 
     @Override
     public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, MengeUngueltigException, ArtikelNullException, IOException {
-
+        artikelVerwaltungFassade.bestandErhoehen(nr, anzahl);
     }
 
     @Override
     public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
-
+        artikelVerwaltungFassade.bestandReduzieren(nr, anzahl);
     }
 
     @Override
     public void loeschen(int nr) throws IOException {
-
+        artikelVerwaltungFassade.loeschen(nr);
     }
 
     @Override
     public Map<LocalDate, Integer> getBestandsHistorie(int artikelNr) throws ArtikelNichtGefunden {
-        return Map.of();
+        return artikelVerwaltungFassade.getBestandsHistorie(artikelNr);
     }
 
     @Override
     public List<Artikel> getAlleArtikel() {
-        return List.of();
+        return artikelVerwaltungFassade.getAlleArtikel();
     }
 
     @Override
     public Artikel findeArtikel(int nr) throws ArtikelNichtGefunden {
-        return null;
+        return artikelVerwaltungFassade.findeArtikel(nr);
     }
 
     // Benutzerverwaltung
 
     @Override
     public Benutzer benutzerCheck(String email) throws BenutzerExistiertNichtException {
-        return null;
+        return benutzerVerwaltungFassade.benutzerCheck(email);
     }
 
     @Override
     public boolean passwordCheck(Benutzer benutzer, String password) {
-        return false;
+        return benutzerVerwaltungFassade.passwordCheck(benutzer, password);
     }
 
     @Override
     public boolean istEmailVergeben(String email) {
-        return false;
+        return benutzerVerwaltungFassade.istEmailVergeben(email);
     }
 
     @Override
     public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
-        return null;
+        return checkOutVerwaltungFassade.checkOut(kunde, warenkorbInhalt, artikelVerwaltung);
     }
 
     // Warenkorbverwaltung
 
     @Override
     public double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt) {
-        return 0;
+        return checkOutVerwaltungFassade.berechneNettoSumme(warenkorbInhalt);
     }
 
     @Override
     public double berechneBruttoSumme(Map<Artikel, Integer> warenkorbInhalt) {
-        return 0;
+        return checkOutVerwaltungFassade.berechneBruttoSumme(warenkorbInhalt);
     }
 
     @Override
     public void rechnungAnzeigen(Rechnung rechnung) {
-
+        checkOutVerwaltungFassade.rechnungAnzeigen(rechnung);
     }
 
     @Override
     public boolean istLeer() {
-        return false;
+        return warenkorbVerwaltungFassade.istLeer();
     }
     @Override
     public int getMenge(Artikel artikel) {
-        return 0;
+        return warenkorbVerwaltungFassade.getMenge(artikel);
     }
 
     @Override
     public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
-
+        warenkorbVerwaltungFassade.artikelHinzufuegen(artikel, menge);
     }
 
     @Override
     public void artikelEntfernen(Artikel artikel) throws IOException {
-
+        warenkorbVerwaltungFassade.artikelEntfernen(artikel);
     }
 
     @Override
     public void leeren() throws IOException {
-
+        warenkorbVerwaltungFassade.leeren();
     }
     // Rechnungsverwaltung
 
     @Override
     public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
-        return "";
+        return checkOutVerwaltungFassade.generiereRechnungsText(rechnung, lieferadresse);
     }
 
     @Override
     public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
-        return List.of();
+        return checkOutVerwaltungFassade.getRechnungenFuerKunde(kunde);
     }
 
     // Kunden- und Mitarbeiterverwaltung
 
     @Override
     public List<Kunde> getAlleKunden() {
-        return List.of();
+        return benutzerVerwaltungFassade.getAlleKunden();
     }
 
     @Override
     public Kunde getKunde(String email) throws KundeNichtGefundenException {
-        return null;
+        return benutzerVerwaltungFassade.getKunde(email);
     }
 
     @Override
     public boolean createNewKunden(String email, String passwort, String nachname, String vorname, String adresse) throws EmailBereitsVergebenException {
-        return false;
+        return benutzerVerwaltungFassade.createNewKunden(email, passwort, nachname, vorname, adresse);
     }
 
     @Override
     public List<Mitarbeiter> getAlleMitarbeiter() {
-        return List.of();
+        return benutzerVerwaltungFassade.getAlleMitarbeiter();
     }
 
     @Override
     public Mitarbeiter getMitarbeiter(String email) throws MitarbeiterNichtGefundenException {
-        return null;
+        return benutzerVerwaltungFassade.getMitarbeiter(email);
     }
 
     @Override
     public Mitarbeiter createNewMitarbeiter(String passwort, String nachname, String vorname) {
-        return null;
+        return benutzerVerwaltungFassade.createNewMitarbeiter(passwort, nachname, vorname);
     }
 
     @Override
     public HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
-        return null;
+        return warenkorbVerwaltungFassade.getAlleWarenkorbArtikel();
     }
 
     public void verbindungSchliessen() {
@@ -189,6 +189,3 @@ public class EshopClient implements InterfaceEshop {
     }
 
 }
-
-
-
