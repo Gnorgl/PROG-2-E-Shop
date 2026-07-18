@@ -77,7 +77,17 @@ public class ArtikelVerwaltungView extends VBox {
         // Wenn ein anderer Client (z.B. ein Kunde beim Kauf) den Bestand ändert,
         // meldet der Server das über den Push-Kanal -> Tabelle automatisch neu laden
         if (eshop instanceof net.EshopClient client) {
-            client.aktualisierungAbonnieren(this::datenLaden);
+            Runnable refreshCallback = this::datenLaden;
+            client.aktualisierungAbonnieren(refreshCallback);
+
+            // Sobald diese View aus dem Szenengraph entfernt wird (View-Wechsel),
+            // wieder abmelden - sonst bleibt die Referenz für immer im PushListener
+            // hängen (Memory-Leak + unnötige datenLaden()-Aufrufe auf toter View).
+            this.sceneProperty().addListener((obs, alteScene, neueScene) -> {
+                if (neueScene == null) {
+                    client.aktualisierungAbmelden(refreshCallback);
+                }
+            });
         }
     }
 
