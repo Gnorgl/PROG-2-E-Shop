@@ -1,4 +1,4 @@
-package netzwerk;
+package net;
 
 import logic.Eshop;
 

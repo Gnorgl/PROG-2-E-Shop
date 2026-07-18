@@ -26,13 +26,14 @@ public class EshopCUI {
     //Konstruktor
     public EshopCUI() throws IOException {
 
+        this.session = new SessionManager();
+
         //Management Klassen:
         this.generalServiceManager = new GeneralServiceManager(eshop, scanner, session);
         this.registrationManager = new RegistrationManager(eshop, scanner, session);
         this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
         this.shoppingServiceManager = new ShoppingServiceManager(eshop, scanner, session);
         this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
-        this.session = new SessionManager();
     }
 
     public void start() {
@@ -168,7 +169,6 @@ public class EshopCUI {
     //Main-Methode
     public static void main(String[] args) {
         try {
-            InterfaceEshop eshop;
             EshopCUI eShopCUI = new EshopCUI();
             eShopCUI.start();
         } catch (IOException e) {

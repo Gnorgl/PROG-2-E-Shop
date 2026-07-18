@@ -1,4 +1,4 @@
-package netzwerk;
+package net;
 
 import entities.Artikel;
 import exceptions.artikel.ArtikelNichtGefunden;
