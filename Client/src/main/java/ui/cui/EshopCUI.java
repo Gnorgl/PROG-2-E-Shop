@@ -3,7 +3,7 @@ package ui.cui;
 import entities.*;
 import ui.gui.SessionManager;
 import ui.cui.navigation.*;
-import logic.Eshop;
+//import logic.Eshop;
 
 
 import java.io.IOException;
@@ -22,17 +22,17 @@ public class EshopCUI {
     private final RegistrationManager registrationManager; //Für Erstellung von Benutzern.
     private final LoginLogoutManager loginLogoutManager; //Für den An- und Abmeldeprozess.
     private final ShoppingServiceManager shoppingServiceManager; //Alle shopping Methoden.
-    private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
+    //private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
 
     //Konstruktor
-    public EshopCUI(Eshop eshop) throws IOException {
+    public EshopCUI() throws IOException {
 
         //Management Klassen:
         this.generalServiceManager = new GeneralServiceManager(eshop, scanner, session);
         this.registrationManager = new RegistrationManager(eshop, scanner, session);
         this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
         this.shoppingServiceManager = new ShoppingServiceManager(eshop, scanner, session);
-        this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
+        //this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
     }
 
     public void start() {

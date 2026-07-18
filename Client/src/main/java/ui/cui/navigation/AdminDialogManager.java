@@ -2,24 +2,26 @@ package ui.cui.navigation;
 
 import entities.Benutzer;
 import exceptions.artikel.MengeUngueltigException;
-import logic.Eshop;
+import exceptions.user.BenutzerExistiertNichtException;
+import exceptions.user.EmailBereitsVergebenException;
+import interfaces.InterfaceEshop;
 import ui.gui.SessionManager;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 public class AdminDialogManager {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final Scanner scanner;
     private final SessionManager session;
 
-    public AdminDialogManager(Eshop eshop, Scanner scanner, SessionManager session) {
+    public AdminDialogManager(InterfaceEshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
     }
 
-    /*public void mitarbeiterKontoErstellen() {
+    public void mitarbeiterKontoErstellen() {
         if (session.getBenutzer() == null || !session.istBenutzerEinMitarbeiter()) {
             System.out.println("Fehler: Zugriff verweigert. Nur Mitarbeiter dürfen Konten erstellen!");
             return;
@@ -42,7 +44,7 @@ public class AdminDialogManager {
             }
 
             try {
-                eshop.getBenutzerVerwaltung().benutzerCheck(email);
+                eshop.benutzerCheck(email);
                 System.out.println("Fehler: Benutzer existiert bereits!");
             } catch (BenutzerExistiertNichtException e) {
                 emailGueltig = true;
@@ -59,22 +61,20 @@ public class AdminDialogManager {
         String vorname = scanner.nextLine().trim();
 
         try {
-            eshop.getBenutzerVerwaltung().getMitarbeiterVerwaltung().createNewMitarbeiter(password, nachname, vorname);
+            eshop.createNewMitarbeiter(password, nachname, vorname);
 
             System.out.println("----------------");
             System.out.println("Neuen Mitarbeiter erfolgreich erstellt!");
             System.out.println("----------------");
 
-            Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+            Benutzer benutzer = eshop.benutzerCheck(email);
             session.login(benutzer);
 
-        } catch (EmailBereitsVergebenException e) {
-            System.out.println("Fehler: " + e.getMessage());
         } catch (BenutzerExistiertNichtException e) {
             System.out.println("Systemfehler beim automatischen Login.");
         }
     }
-    */
+
     public void produktErstellen() {
         System.out.println("------Neues Produkt------");
         System.out.println("[1] Einzelartikel");
@@ -145,7 +145,7 @@ public class AdminDialogManager {
         try {
             System.out.print("Artikel-Nummer: ");
             int nr = Integer.parseInt(scanner.nextLine().trim());
-            eshop.loeschen(nr);
+            //eshop.loeschen(nr);
             System.out.println("------Produkt erfolgreich gelöscht------");
         } catch (NumberFormatException e) {
             System.out.println("Fehler: Ungültige Artikel-Nummer!");
