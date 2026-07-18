@@ -1,9 +1,9 @@
 package ui.cui;
 
 import entities.*;
+import interfaces.InterfaceEshop;
 import ui.gui.SessionManager;
 import ui.cui.navigation.*;
-//import logic.Eshop;
 
 
 import java.io.IOException;
@@ -11,18 +11,17 @@ import java.util.Scanner;
 
 public class EshopCUI {
 
-    private final Scanner scanner = new Scanner(System.in);
+    private InterfaceEshop eshop;
+    private SessionManager session;
     private boolean running = true;
-
-    //SessionManager
-    private final SessionManager session = new SessionManager();
+    private final Scanner scanner = new Scanner(System.in);
 
     //Management Klassen:
     private final GeneralServiceManager generalServiceManager; //Alle service Methoden, wie Support.
     private final RegistrationManager registrationManager; //Für Erstellung von Benutzern.
     private final LoginLogoutManager loginLogoutManager; //Für den An- und Abmeldeprozess.
     private final ShoppingServiceManager shoppingServiceManager; //Alle shopping Methoden.
-    //private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
+    private final AdminDialogManager adminDialogManager; //Alle Admin Fähigkeiten-Methoden.
 
     //Konstruktor
     public EshopCUI() throws IOException {
@@ -32,7 +31,7 @@ public class EshopCUI {
         this.registrationManager = new RegistrationManager(eshop, scanner, session);
         this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
         this.shoppingServiceManager = new ShoppingServiceManager(eshop, scanner, session);
-        //this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
+        this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
     }
 
     public void start() {
@@ -122,7 +121,7 @@ public class EshopCUI {
                     case "d" -> adminDialogManager.produktLoeschen();
                     case "i" -> adminDialogManager.orderVerlauf();
                     case "h" -> bestandshistorieAbfragen();
-                    //case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
+                    case "m" -> adminDialogManager.mitarbeiterKontoErstellen();
                     case "w" -> shoppingServiceManager.warenkatalog();
                     case "a" -> loginLogoutManager.logout();
                     default -> unbekannterBefehl();
@@ -168,8 +167,8 @@ public class EshopCUI {
     //Main-Methode
     public static void main(String[] args) {
         try {
-            Eshop eshop = new Eshop();
-            EshopCUI eShopCUI = new EshopCUI(eshop);
+            InterfaceEshop eshop;
+            EshopCUI eShopCUI = new EshopCUI();
             eShopCUI.start();
         } catch (IOException e) {
             System.out.println("----------------");

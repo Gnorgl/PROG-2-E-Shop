@@ -1,16 +1,16 @@
 package ui.cui.navigation;
 
-import logic.Eshop;
+import interfaces.InterfaceEshop;
 import ui.gui.SessionManager;
 
 import java.util.Scanner;
 
 public class GeneralServiceManager {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final Scanner scanner;
     private final SessionManager session;
 
-    public GeneralServiceManager(Eshop eshop, Scanner scanner, SessionManager session) {
+    public GeneralServiceManager(InterfaceEshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;

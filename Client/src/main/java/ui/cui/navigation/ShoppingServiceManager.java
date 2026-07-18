@@ -3,7 +3,7 @@ package ui.cui.navigation;
 
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
-import logic.Eshop;
+import interfaces.InterfaceEshop;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -15,20 +15,17 @@ import entities.Kunde;
 import entities.Massengutartikel;
 import entities.Rechnung;
 import ui.gui.SessionManager;
-import logic.verwaltung.EreignisVerwaltung;
 import java.util.HashMap;
 
 public class ShoppingServiceManager {
-    private final Eshop eshop;
-    private final EreignisVerwaltung ereignisVerwaltung;
+    private final InterfaceEshop eshop;
     private final Scanner scanner;
     private final SessionManager session;
 
-    public ShoppingServiceManager(Eshop eshop, Scanner scanner, SessionManager session) throws IOException {
+    public ShoppingServiceManager(InterfaceEshop eshop, Scanner scanner, SessionManager session) throws IOException {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
-        this.ereignisVerwaltung = eshop.getEreignisVerwaltung();
     }
 
     public void warenkatalog() {

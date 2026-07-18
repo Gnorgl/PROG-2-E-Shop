@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entities.Artikel;
 import entities.Kunde;
-import entities.Massengutartikel; // <-- NEU: Import hinzugefügt
+import entities.Massengutartikel;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;

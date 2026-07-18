@@ -3,17 +3,17 @@ package ui.cui.navigation;
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import exceptions.user.EmailBereitsVergebenException;
-import logic.Eshop;
+import interfaces.InterfaceEshop;
 import ui.gui.SessionManager;
 
 import java.util.Scanner;
 
 public class RegistrationManager {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final Scanner scanner;
     private final SessionManager session;
 
-    public RegistrationManager(Eshop eshop, Scanner scanner, SessionManager session) {
+    public RegistrationManager(InterfaceEshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
@@ -40,7 +40,7 @@ public class RegistrationManager {
 
             try {
                 // Wenn benutzerCheck KEINE Exception wirft, existiert der Benutzer bereits!
-                eshop.getBenutzerVerwaltung().benutzerCheck(email);
+                eshop.benutzerCheck(email);
                 System.out.println("Fehler: Benutzer existiert bereits!");
             } catch (BenutzerExistiertNichtException e) {
                 //E-Mail ist noch frei!
@@ -61,20 +61,19 @@ public class RegistrationManager {
         String adresse = scanner.nextLine().trim();
 
         try {
-            eshop.getBenutzerVerwaltung().getKundenVerwaltung().createNewKunden(email, password, nachname, vorname, adresse);
+            eshop.createNewKunden(email, password, nachname, vorname, adresse);
 
             System.out.println("----------------");
             System.out.println("Neues Kundenkonto erfolgreich erstellt!");
             System.out.println("----------------");
 
 
-            Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+            Benutzer benutzer = eshop.benutzerCheck(email);
             session.login(benutzer);
 
         } catch (EmailBereitsVergebenException e) {
             System.out.println("Fehler bei der Registrierung: " + e.getMessage());
         } catch (BenutzerExistiertNichtException e) {
-            // Dieser Fall ist rein theoretisch, da wir den Benutzer gerade erstellt haben
             System.out.println("Systemfehler.");
         }
     }

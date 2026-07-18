@@ -2,17 +2,17 @@ package ui.cui.navigation;
 
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
-import logic.Eshop;
+import interfaces.InterfaceEshop;
 import ui.gui.SessionManager;
 
 import java.util.Scanner;
 
 public class LoginLogoutManager {
-    private final Eshop eshop;
+    private final InterfaceEshop eshop;
     private final Scanner scanner;
     private final SessionManager session;
 
-    public LoginLogoutManager(Eshop eshop, Scanner scanner, SessionManager session) {
+    public LoginLogoutManager(InterfaceEshop eshop, Scanner scanner, SessionManager session) {
         this.eshop = eshop;
         this.scanner = scanner;
         this.session = session;
@@ -25,14 +25,14 @@ public class LoginLogoutManager {
 
         try {
             // Wenn der Benutzer nicht existiert
-            Benutzer benutzer = eshop.getBenutzerVerwaltung().benutzerCheck(email);
+            Benutzer benutzer = eshop.benutzerCheck(email);
 
             System.out.print("Passwort: ");
             String passwort = scanner.nextLine();
 
             //Mit Loop gegebenenfalls damit man neu eingeben kann → GUI
 
-            if (eshop.getBenutzerVerwaltung().passwordCheck(benutzer, passwort)) {
+            if (eshop.passwordCheck(benutzer, passwort)) {
                 session.login(benutzer);
 
                 System.out.format("Willkommen im Eshop %s (%s)\n",

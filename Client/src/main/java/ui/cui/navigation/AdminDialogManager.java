@@ -145,7 +145,7 @@ public class AdminDialogManager {
         try {
             System.out.print("Artikel-Nummer: ");
             int nr = Integer.parseInt(scanner.nextLine().trim());
-            //eshop.loeschen(nr);
+            eshop.loeschen(nr);
             System.out.println("------Produkt erfolgreich gelöscht------");
         } catch (NumberFormatException e) {
             System.out.println("Fehler: Ungültige Artikel-Nummer!");
