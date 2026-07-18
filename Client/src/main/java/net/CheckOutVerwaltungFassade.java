@@ -32,7 +32,7 @@ public class CheckOutVerwaltungFassade implements ICV {
             return verbindung.mapper.readValue(json, Rechnung.class);
         } catch (ServerFehlerException e) {
             switch (e.getExceptionName()) {
-                case "ArtikelNichtGefunden" -> throw new ArtikelNichtGefunden(e.getNachricht());
+                case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
                 default -> throw new IOException("Serverfehler: " + e.getMessage());
             }

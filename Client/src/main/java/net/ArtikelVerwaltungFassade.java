@@ -30,7 +30,7 @@ public class ArtikelVerwaltungFassade implements IAV {
             return true;
         } catch (ServerFehlerException e) {
             switch (e.getExceptionName()) {
-                case "ArtikelExistiertBereits" -> throw new ArtikelExistiertBereits(e.getNachricht());
+                case "ArtikelExistiertBereits" -> throw ArtikelExistiertBereits.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
                 default -> throw new IOException("Serverfehler: " + e.getMessage());
             }
@@ -44,8 +44,8 @@ public class ArtikelVerwaltungFassade implements IAV {
             return true;
         } catch (ServerFehlerException e) {
             switch (e.getExceptionName()) {
-                case "ArtikelExistiertBereits" -> throw new ArtikelExistiertBereits(e.getNachricht());
-                case "MengeUngueltigException" -> throw new MengeUngueltigException(e.getNachricht());
+                case "ArtikelExistiertBereits" -> throw ArtikelExistiertBereits.mitFertigerNachricht(e.getNachricht());
+                case "MengeUngueltigException" -> throw MengeUngueltigException.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
                 default -> throw new IOException("Serverfehler: " + e.getMessage());
             }
@@ -58,8 +58,8 @@ public class ArtikelVerwaltungFassade implements IAV {
             verbindung.sendeKommando("BESTAND_ERHOEHEN", String.valueOf(nr), String.valueOf(anzahl));
         } catch (ServerFehlerException e) {
             switch (e.getExceptionName()) {
-                case "ArtikelNichtGefunden" -> throw new ArtikelNichtGefunden(e.getNachricht());
-                case "MengeUngueltigException" -> throw new MengeUngueltigException(e.getNachricht());
+                case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
+                case "MengeUngueltigException" -> throw MengeUngueltigException.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
                 default -> throw new IOException("Serverfehler: " + e.getMessage());
             }
@@ -72,9 +72,9 @@ public class ArtikelVerwaltungFassade implements IAV {
             verbindung.sendeKommando("BESTAND_REDUZIEREN", String.valueOf(nr), String.valueOf(anzahl));
         } catch (ServerFehlerException e) {
             switch (e.getExceptionName()) {
-                case "ArtikelNichtGefunden" -> throw new ArtikelNichtGefunden(e.getNachricht());
+                case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
                 case "BestandNichtAusreichendException" -> throw new BestandNichtAusreichendException(0, 0);
-                case "MengeUngueltigException" -> throw new MengeUngueltigException(e.getNachricht());
+                case "MengeUngueltigException" -> throw MengeUngueltigException.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
                 default -> throw new IOException("Serverfehler: " + e.getMessage());
             }
@@ -131,7 +131,7 @@ public class ArtikelVerwaltungFassade implements IAV {
     // Wandelt eine ServerFehlerException in ArtikelNichtGefunden um (für Methoden, die keine IOException werfen)
     private void werfeArtikelFehlerOhneIO(ServerFehlerException e) throws ArtikelNichtGefunden {
         if ("ArtikelNichtGefunden".equals(e.getExceptionName())) {
-            throw new ArtikelNichtGefunden(e.getNachricht());
+            throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
         }
         throw new RuntimeException("Serverfehler: " + e.getMessage());
     }
