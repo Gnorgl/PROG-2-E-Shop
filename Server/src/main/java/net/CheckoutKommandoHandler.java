@@ -6,6 +6,8 @@ import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
 import logic.Eshop;
 
 import java.io.BufferedReader;
@@ -52,7 +54,7 @@ public class CheckoutKommandoHandler extends KommandoHandler {
             Rechnung rechnung = eshop.getBestellVerwaltungV().checkOut(kunde, warenkorbInhalt, eshop.getArtikelVerwaltung());
             ok(mapper.writeValueAsString(rechnung));
             BroadcastManager.getInstanz().broadcast("ARTIKEL_GEAENDERT");
-        } catch (ArtikelNichtGefunden | ArtikelNullException e) {
+        } catch (ArtikelNichtGefunden | ArtikelNullException | BestandNichtAusreichendException | MengeUngueltigException e) {
             fehler(e);
         }
     }

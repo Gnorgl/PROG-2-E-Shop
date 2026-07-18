@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entities.Artikel;
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.BestandNichtAusreichendException;
 import interfaces.moduls.IWV;
 import persistence.shop.WarenkorbListe;
 
@@ -44,13 +45,17 @@ public class WarenkorbVerwaltung implements IWV {
         return new HashMap<>(warenkorbListe.getAlleArtikel());
     }
 
-    public synchronized void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
+    public synchronized void artikelHinzufuegen(Artikel artikel, int menge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         if (menge > 0) {
             // 1. Logik: Bisherige Menge aus der Datenhaltung abfragen
             int alteMenge = warenkorbListe.getMenge(artikel);
 
             // 2. Logik: Die neue Endmenge berechnen
             int neueMenge = alteMenge + menge;
+
+            // Ein Kunde darf nicht mehr in den Warenkorb legen, als tatsächlich im Lager
+            // verfügbar ist (unabhängig davon, was schon vorher im Warenkorb lag).
+            pruefeGegenLagerbestand(artikel, neueMenge);
 
             // 3. Persistenz: Nur noch den fertigen Endwert zum Speichern übergeben
             warenkorbListe.speichern(artikel, neueMenge);
@@ -66,13 +71,25 @@ public class WarenkorbVerwaltung implements IWV {
 
     // Setzt die Stückzahl direkt auf neueMenge (im Gegensatz zu artikelHinzufuegen(),
     // das die bisherige Menge nur erhöht). Bei neueMenge <= 0 wird der Artikel entfernt.
-    public synchronized void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException {
+    public synchronized void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         if (neueMenge <= 0) {
             warenkorbListe.artikelEntfernen(artikel);
         } else {
+            pruefeGegenLagerbestand(artikel, neueMenge);
             warenkorbListe.speichern(artikel, neueMenge);
         }
         safe();
+    }
+
+    // Verhindert, dass mehr Stück im Warenkorb landen, als im Lager tatsächlich vorhanden
+    // sind. Fragt den aktuellen Bestand frisch bei der ArtikelVerwaltung ab (nicht das
+    // ggf. veraltete Artikel-Objekt aus dem Aufrufer), damit gleichzeitige Änderungen durch
+    // andere Clients (Kauf, Einlagerung) korrekt berücksichtigt werden.
+    private void pruefeGegenLagerbestand(Artikel artikel, int gewuenschteMenge) throws ArtikelNichtGefunden, BestandNichtAusreichendException {
+        Artikel aktuellerArtikel = artikelVerwaltung.findeArtikel(artikel.getArtikelNummer());
+        if (gewuenschteMenge > aktuellerArtikel.getBestand()) {
+            throw new BestandNichtAusreichendException(aktuellerArtikel.getBestand(), gewuenschteMenge);
+        }
     }
 
     public synchronized void leeren() throws IOException {

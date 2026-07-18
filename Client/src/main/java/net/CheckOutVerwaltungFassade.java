@@ -6,6 +6,8 @@ import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
 import interfaces.moduls.ICV;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class CheckOutVerwaltungFassade implements ICV {
     }
 
     @Override
-    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, interfaces.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
+    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, interfaces.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, BestandNichtAusreichendException, MengeUngueltigException, IOException {
         try {
             String kundeJson = verbindung.mapper.writeValueAsString(kunde);
             String warenkorbJson = verbindung.mapper.writeValueAsString(zuNrMap(warenkorbInhalt));
@@ -34,6 +36,8 @@ public class CheckOutVerwaltungFassade implements ICV {
             switch (e.getExceptionName()) {
                 case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
+                case "BestandNichtAusreichendException" -> throw BestandNichtAusreichendException.mitFertigerNachricht(e.getNachricht());
+                case "MengeUngueltigException" -> throw MengeUngueltigException.mitFertigerNachricht(e.getNachricht());
                 default -> throw new IOException("Serverfehler: " + e.getMessage());
             }
         }

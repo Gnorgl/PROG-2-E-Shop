@@ -5,6 +5,8 @@ import entities.Kunde;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.Map;
 
 public interface ICV { //Interface CheckOutVerwaltung
 
-    Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException;
+    Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, BestandNichtAusreichendException, MengeUngueltigException, IOException;
 
     double berechneNettoSumme(Map<Artikel, Integer> warenkorbInhalt);
 

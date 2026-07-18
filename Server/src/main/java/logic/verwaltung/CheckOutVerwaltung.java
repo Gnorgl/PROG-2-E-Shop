@@ -13,6 +13,8 @@ import entities.Massengutartikel;
 import entities.Rechnung;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
+import exceptions.artikel.MengeUngueltigException;
 import interfaces.moduls.IAV;
 import interfaces.moduls.ICV;
 import persistence.shop.OrderListe;
@@ -73,7 +75,7 @@ public class CheckOutVerwaltung implements ICV {
     }
 
     @Override
-    public synchronized Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
+    public synchronized Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, BestandNichtAusreichendException, MengeUngueltigException, IOException {
         if (warenkorbInhalt.isEmpty()) {
             return null;
         }
@@ -90,10 +92,14 @@ public class CheckOutVerwaltung implements ICV {
                 gekaufteArtikel.add(artikel);
             }
 
-            // Artikelbestand im Lager nach dem Kauf reduzieren
+            // Artikelbestand im Lager nach dem Kauf reduzieren. Wichtig: BestandNichtAusreichendException
+            // (und die anderen fachlichen Exceptions) müssen als sie selbst nach oben durchgereicht werden,
+            // nicht in eine generische RuntimeException gewrappt werden - sonst fängt sie der
+            // CheckoutKommandoHandler nicht ab, die Server-Verbindung bricht unkontrolliert ab, und der
+            // Kunde bekommt keine Fehlermeldung ("Kauf wird nicht gestoppt").
             try {
                 artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
-            } catch (ArtikelNichtGefunden e) {
+            } catch (ArtikelNichtGefunden | BestandNichtAusreichendException | MengeUngueltigException e) {
                 throw e;
             } catch (Exception e) {
                 throw new RuntimeException("Fehler beim Reduzieren des Bestands für Artikel " + artikel.getArtikelNummer() + ": " + e.getMessage(), e);

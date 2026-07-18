@@ -94,7 +94,7 @@ public class Eshop implements InterfaceEshop {
     // ==========================================
 
     @Override
-    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, interfaces.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, IOException {
+    public Rechnung checkOut(Kunde kunde, Map<Artikel, Integer> warenkorbInhalt, interfaces.moduls.IAV artikelVerwaltung) throws ArtikelNichtGefunden, ArtikelNullException, BestandNichtAusreichendException, MengeUngueltigException, IOException {
         return this.checkOutVerwaltung.checkOut(kunde, warenkorbInhalt, artikelVerwaltung);
     }
 
@@ -143,7 +143,7 @@ public class Eshop implements InterfaceEshop {
     }
 
     @Override
-    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
+    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         warenkorbVerwaltung.artikelHinzufuegen(artikel, menge);
     }
 
@@ -153,7 +153,7 @@ public class Eshop implements InterfaceEshop {
     }
 
     @Override
-    public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException {
+    public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         warenkorbVerwaltung.artikelMengeAendern(artikel, neueMenge);
     }
 

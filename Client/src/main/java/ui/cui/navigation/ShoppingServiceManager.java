@@ -3,6 +3,7 @@ package ui.cui.navigation;
 
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
+import exceptions.artikel.BestandNichtAusreichendException;
 import interfaces.InterfaceEshop;
 
 import java.io.IOException;
@@ -118,6 +119,8 @@ public class ShoppingServiceManager {
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
+        } catch (BestandNichtAusreichendException e) {
+            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println("Fehler: Der Warenkorb konnte nicht gespeichert werden.");
         }
@@ -196,6 +199,8 @@ public class ShoppingServiceManager {
 
         } catch (NumberFormatException | ArtikelNichtGefunden e) {
             System.out.println("Ungültige Eingabe!");
+        } catch (BestandNichtAusreichendException e) {
+            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println("Fehler: Der Warenkorb konnte nicht gespeichert werden.");
         }
@@ -251,6 +256,8 @@ public class ShoppingServiceManager {
             System.out.println("Artikel nicht gefunden!");
         } catch (ArtikelNullException e) {
             System.out.println("Fehler beim Buchen der Bestellung: " + e.getMessage());
+        } catch (BestandNichtAusreichendException | exceptions.artikel.MengeUngueltigException e) {
+            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println("Fehler: Die Bestellung konnte nicht gespeichert werden.");
         }

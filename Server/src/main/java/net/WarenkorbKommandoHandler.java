@@ -2,6 +2,7 @@ package net;
 
 import entities.Artikel;
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.BestandNichtAusreichendException;
 import logic.Eshop;
 
 import java.io.BufferedReader;
@@ -46,7 +47,7 @@ public class WarenkorbKommandoHandler extends KommandoHandler {
             Artikel a = eshop.getArtikelVerwaltung().findeArtikel(nr);
             eshop.getWarenkorbVerwaltung().artikelHinzufuegen(a, menge);
             ok();
-        } catch (ArtikelNichtGefunden e) {
+        } catch (ArtikelNichtGefunden | BestandNichtAusreichendException e) {
             fehler(e);
         }
     }
@@ -74,7 +75,7 @@ public class WarenkorbKommandoHandler extends KommandoHandler {
             Artikel a = eshop.getArtikelVerwaltung().findeArtikel(nr);
             eshop.getWarenkorbVerwaltung().artikelMengeAendern(a, neueMenge);
             ok();
-        } catch (ArtikelNichtGefunden e) {
+        } catch (ArtikelNichtGefunden | BestandNichtAusreichendException e) {
             fehler(e);
         }
     }

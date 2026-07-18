@@ -211,7 +211,10 @@ public class WarenkorbView extends VBox {
                 eshop.artikelMengeAendern(a, neueMengeStueck);
             }
             datenLaden();
-        } catch (java.io.IOException ex) {
+        } catch (exceptions.artikel.BestandNichtAusreichendException ex) {
+            showAlert(Alert.AlertType.WARNING, "Nicht genug auf Lager", ex.getMessage());
+            datenLaden(); // Tabelle neu laden, falls sich der Bestand zwischenzeitlich geändert hat
+        } catch (Exception ex) {
             showAlert(Alert.AlertType.ERROR, "Fehler", "Menge konnte nicht geändert werden: " + ex.getMessage());
         }
     }

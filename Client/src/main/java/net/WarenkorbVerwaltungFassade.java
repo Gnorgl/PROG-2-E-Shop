@@ -3,6 +3,7 @@ package net;
 import com.fasterxml.jackson.core.type.TypeReference;
 import entities.Artikel;
 import exceptions.artikel.ArtikelNichtGefunden;
+import exceptions.artikel.BestandNichtAusreichendException;
 import interfaces.moduls.IWV;
 
 import java.io.IOException;
@@ -20,11 +21,11 @@ public class WarenkorbVerwaltungFassade implements IWV {
     }
 
     @Override
-    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException {
+    public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         try {
             verbindung.sendeKommando("WARENKORB_HINZUFUEGEN", String.valueOf(artikel.getArtikelNummer()), String.valueOf(menge));
         } catch (ServerFehlerException e) {
-            throw new IOException("Serverfehler: " + e.getMessage());
+            werfeWarenkorbFehler(e);
         }
     }
 
@@ -38,11 +39,21 @@ public class WarenkorbVerwaltungFassade implements IWV {
     }
 
     @Override
-    public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException {
+    public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         try {
             verbindung.sendeKommando("WARENKORB_MENGE_AENDERN", String.valueOf(artikel.getArtikelNummer()), String.valueOf(neueMenge));
         } catch (ServerFehlerException e) {
-            throw new IOException("Serverfehler: " + e.getMessage());
+            werfeWarenkorbFehler(e);
+        }
+    }
+
+    // Wandelt eine ServerFehlerException anhand des mitgeschickten Exception-Namens in die
+    // passende typisierte Exception um (analog zu ArtikelVerwaltungFassade).
+    private void werfeWarenkorbFehler(ServerFehlerException e) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
+        switch (e.getExceptionName()) {
+            case "BestandNichtAusreichendException" -> throw BestandNichtAusreichendException.mitFertigerNachricht(e.getNachricht());
+            case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
+            default -> throw new IOException("Serverfehler: " + e.getMessage());
         }
     }
 
