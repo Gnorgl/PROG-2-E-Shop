@@ -4,32 +4,41 @@ import interfaces.InterfaceEshop;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import net.EshopClient;
 import ui.gui.views.ArtikelVerwaltungView;
 import ui.gui.views.EmployeeCreationView;
 import ui.gui.scenes.LoginScene;
 import ui.gui.scenes.MainLayoutScene;
 import ui.gui.scenes.RegistrationScene;
 
+import java.io.IOException;
 
 public class EshopGUI extends Application {
 
-
-    private static InterfaceEshop eshopFuerStart;
+    private static final String SERVER_HOST = "localhost";
+    private static final int SERVER_PORT = 8080;
 
     private InterfaceEshop eshop;
     private SessionManager session;
     private Stage primaryStage;
-
-    public static void setEshop(InterfaceEshop eshop) {
-        eshopFuerStart = eshop;
-    }
+    private boolean verbindungErfolgreich = false;
 
     @Override
-    public void init() throws Exception {
-        this.eshop = eshopFuerStart;
+    public void init() {
         this.session = new SessionManager();
+
+        try {
+            System.out.println("Verbinde mit EShop-Server auf Port " + SERVER_PORT + "...");
+            this.eshop = new EshopClient(SERVER_HOST, SERVER_PORT);
+            this.verbindungErfolgreich = true;
+        } catch (IOException e) {
+            System.err.println("Netzwerkfehler beim Starten: " + e.getMessage());
+            this.verbindungErfolgreich = false;
+        }
     }
 
     @Override
@@ -37,11 +46,29 @@ public class EshopGUI extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Eshop");
 
+        // 1. Verbindung ist fehlgeschlagen
+        if (!verbindungErfolgreich) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Verbindungsfehler");
+            alert.setHeaderText("Server nicht erreichbar");
+            alert.setContentText("Es konnte keine Verbindung zum Eshop-Server hergestellt werden.\n" +
+                    "Bitte stellen Sie sicher, dass der Server gestartet ist.");
+            alert.showAndWait();
+            Platform.exit();
+            return;
+        }
+
+        // 2. Verbindung steht
         this.primaryStage.setOnCloseRequest(event -> {
+            if (eshop instanceof EshopClient client) {
+                System.out.println("Schliesse Verbindung zum Server...");
+                client.verbindungSchliessen();
+            }
             Platform.exit();
             System.exit(0);
         });
 
+        // Erste Szene zeigen
         showLoginScene();
 
         this.primaryStage.setWidth(1280);
@@ -49,7 +76,6 @@ public class EshopGUI extends Application {
         this.primaryStage.show();
     }
 
-    //Methode für den Wechsel der einzelnen Scenes
     public void changeScene(Pane newScene) {
         Scene aktuelleScene = primaryStage.getScene();
         if (aktuelleScene == null) {
@@ -59,7 +85,6 @@ public class EshopGUI extends Application {
         }
     }
 
-    //Show-Methoden der einzelnen Scenen, die wir erstellen.
     public void showLoginScene() {
         LoginScene loginScene = new LoginScene(eshop, session, this);
         changeScene(loginScene);
@@ -88,5 +113,4 @@ public class EshopGUI extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 }
