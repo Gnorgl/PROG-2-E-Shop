@@ -9,14 +9,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-// Sieht für die GUI genauso aus wie die echte WarenkorbVerwaltung (implementiert
-// dasselbe Interface IWV), leitet die Aufrufe aber über die ServerVerbindung
-// an den Server weiter.
-//
-// HINWEIS: Der Warenkorb ist serverseitig aktuell EINE gemeinsame Instanz für
-// alle Clients (siehe Kommentar in ClientRequestProcessor). Für echten
-// Mehrbenutzerbetrieb muss das noch pro Kunde/Session getrennt werden, sobald
-// Login/Session (nicht unser Bereich) so weit ist.
 public class WarenkorbVerwaltungFassade implements IWV {
 
     private final ServerVerbindung verbindung;

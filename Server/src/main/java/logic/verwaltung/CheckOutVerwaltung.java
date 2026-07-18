@@ -220,4 +220,4 @@ public class CheckOutVerwaltung implements ICV {
     }
 }
 
-//Funktionen für Warenkauf aus Warenkorb und Bestand aus Lager
+

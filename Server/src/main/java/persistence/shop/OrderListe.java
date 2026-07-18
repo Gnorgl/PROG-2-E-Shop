@@ -11,18 +11,14 @@ public class OrderListe {
         this.alleRechnungen = new ArrayList<>();
     }
 
-    /**
-     * Fügt eine neue Rechnung zur Liste der Bestellungen hinzu.
-     * @param rechnung Die hinzuzufügende Rechnung.
-     */
+    // Fügt eine neue Rechnung zur Liste der Bestellungen hinzu.
+
     public void addRechnung(Rechnung rechnung) {
         alleRechnungen.add(rechnung);
     }
 
-    /**
-     * Gibt alle gespeicherten Rechnungen zurück.
-     * @return Eine Liste aller Rechnungen.
-     */
+   //Gibt alle gespeicherten Rechnungen zurück.
+
     public List<Rechnung> getAlleRechnungen() {
         return alleRechnungen;
     }
@@ -30,11 +26,8 @@ public class OrderListe {
         this.alleRechnungen = alleRechnungen;
     }
 
-    /**
-     * Sucht eine Rechnung anhand ihrer Rechnungsnummer.
-     * @param nummer Die Rechnungsnummer.
-     * @return Die gefundene Rechnung oder null.
-     */
+    //Sucht eine Rechnung anhand ihrer Rechnungsnummer.
+
     public Rechnung getRechnungByNummer(int nummer) {
         for (Rechnung r : alleRechnungen) {
             if (r.getRechnungsNummer() == nummer) {

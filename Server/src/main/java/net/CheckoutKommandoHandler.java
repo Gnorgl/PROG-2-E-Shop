@@ -77,9 +77,6 @@ public class CheckoutKommandoHandler extends KommandoHandler {
     }
 
     // Wandelt Artikelnummer->Menge in Artikel->Menge um (Nachschlagen im Lager).
-    // HINWEIS: Der Warenkorb ist aktuell serverweit EINE gemeinsame Instanz -
-    // für echten Mehrbenutzerbetrieb müsste hier noch pro Kunde/Session eine
-    // eigene WarenkorbVerwaltung her (Absprache mit Richard zu SessionManager).
     private Map<Artikel, Integer> zuArtikelMap(Map<Integer, Integer> nrMap) throws ArtikelNichtGefunden {
         Map<Artikel, Integer> ergebnis = new HashMap<>();
         for (Map.Entry<Integer, Integer> eintrag : nrMap.entrySet()) {

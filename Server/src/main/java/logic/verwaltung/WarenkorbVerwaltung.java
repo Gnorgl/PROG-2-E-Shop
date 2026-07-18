@@ -88,8 +88,7 @@ public class WarenkorbVerwaltung implements IWV {
         warenkorbListe.leeren();
 
         for (Integer artikelNummer : geladeneIds.keySet()) {
-            // Fachlicher Sonderfall: ein früher gespeicherter Artikel ist nicht mehr im Lager.
-            // Das wird hier bewusst übersprungen (kein Abbruch des Ladevorgangs).
+
             try {
                 Artikel a = artikelVerwaltung.findeArtikel(artikelNummer);
                 warenkorbListe.speichern(a, geladeneIds.get(artikelNummer));

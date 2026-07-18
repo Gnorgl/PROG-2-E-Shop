@@ -39,10 +39,7 @@ public class ServerVerbindung {
         }
     }
 
-    // Für Kommandos, deren "OK"-Antwort zusätzlich eine Daten-Zeile hat
-    // (z.B. ALLE_ARTIKEL, BESTANDSHISTORIE, CHECKOUT, ...).
-    // Gibt im Erfolgsfall die Daten-Zeile zurück, wirft sonst eine ServerFehlerException
-    // mit der vom Server gesendeten Fehlermeldung.
+    // Für Kommandos, deren "OK"-Antwort zusätzlich eine Daten-Zeile hat (z.B. ARTIKEL_SUCHE).
     public synchronized String sendeKommandoMitAntwort(String... zeilen) throws IOException, ServerFehlerException {
         for (String zeile : zeilen) {
             out.println(zeile);

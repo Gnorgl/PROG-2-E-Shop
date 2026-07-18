@@ -25,7 +25,7 @@ public class CheckoutScene extends VBox {
         this.session = session;
         this.guiController = guiController;
 
-        // CSS laden (Pfad anpassen, falls nötig)
+        // CSS laden
         try {
             String cssPath = getClass().getResource("/ui/gui/css/style.css").toExternalForm();
             this.getStylesheets().add(cssPath);

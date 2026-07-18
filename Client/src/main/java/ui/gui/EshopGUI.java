@@ -14,8 +14,7 @@ import ui.gui.scenes.RegistrationScene;
 
 public class EshopGUI extends Application {
 
-    // JavaFX erzeugt die Application-Klasse selbst (Reflection, kein eigener
-    // Konstruktor möglich)
+
     private static InterfaceEshop eshopFuerStart;
 
     private InterfaceEshop eshop;
