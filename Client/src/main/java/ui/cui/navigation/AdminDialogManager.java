@@ -131,8 +131,6 @@ public class AdminDialogManager {
             }
         } catch (NumberFormatException e) {
             System.out.println("Fehler: Ungültige Eingabe!");
-        } catch (MengeUngueltigException e) {
-            System.out.println("Fehler: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("Fehler: Das Produkt konnte nicht gespeichert werden.");
         } catch (Exception e) {
