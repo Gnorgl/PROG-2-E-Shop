@@ -32,6 +32,7 @@ public class EshopCUI {
         this.loginLogoutManager = new LoginLogoutManager(eshop, scanner, session);
         this.shoppingServiceManager = new ShoppingServiceManager(eshop, scanner, session);
         this.adminDialogManager = new AdminDialogManager(eshop, scanner, session);
+        this.session = new SessionManager();
     }
 
     public void start() {
