@@ -84,6 +84,11 @@ public class Eshop implements InterfaceEshop {
         return this.artikelVerwaltung.findeArtikel(nr);
     }
 
+    @Override
+    public List<entities.Ereignis> getAlleEreignisse() {
+        return this.ereignisVerwaltung.getAlleEreignisse();
+    }
+
     // ==========================================
     // CHECKOUT
     // ==========================================
@@ -146,6 +151,11 @@ public class Eshop implements InterfaceEshop {
     @Override
     public void artikelEntfernen(Artikel artikel) throws IOException {
         warenkorbVerwaltung.artikelEntfernen(artikel);
+    }
+
+    @Override
+    public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException {
+        warenkorbVerwaltung.artikelMengeAendern(artikel, neueMenge);
     }
 
     @Override

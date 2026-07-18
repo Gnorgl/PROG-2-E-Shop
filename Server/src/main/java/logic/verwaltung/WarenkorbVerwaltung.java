@@ -69,6 +69,17 @@ public class WarenkorbVerwaltung implements IWV {
         safe();
     }
 
+    // Setzt die Stückzahl direkt auf neueMenge (im Gegensatz zu artikelHinzufuegen(),
+    // das die bisherige Menge nur erhöht). Bei neueMenge <= 0 wird der Artikel entfernt.
+    public synchronized void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException {
+        if (neueMenge <= 0) {
+            warenkorbListe.artikelEntfernen(artikel);
+        } else {
+            warenkorbListe.speichern(artikel, neueMenge);
+        }
+        safe();
+    }
+
     public synchronized void leeren() throws IOException {
         warenkorbListe.leeren();
         safe();

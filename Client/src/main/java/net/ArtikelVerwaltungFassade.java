@@ -2,6 +2,7 @@ package net;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import entities.Artikel;
+import entities.Ereignis;
 import exceptions.artikel.ArtikelExistiertBereits;
 import exceptions.artikel.ArtikelNichtGefunden;
 import exceptions.artikel.ArtikelNullException;
@@ -124,6 +125,18 @@ public class ArtikelVerwaltungFassade implements IAV {
             werfeArtikelFehlerOhneIO(e);
             return null; // unerreichbar
         } catch (IOException e) {
+            throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
+        }
+    }
+
+    // Kein @Override: diese Fassade implementiert nur IAV, nicht IEV. Wird von
+    // EshopClient.getAlleEreignisse() (Override von IEV) aufgerufen.
+    public List<Ereignis> getAlleEreignisse() {
+        try {
+            String json = verbindung.sendeKommandoMitAntwort("ALLE_EREIGNISSE");
+            return verbindung.mapper.readValue(json, new TypeReference<List<Ereignis>>() {
+            });
+        } catch (IOException | ServerFehlerException e) {
             throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
         }
     }

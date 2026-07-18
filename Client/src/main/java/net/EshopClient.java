@@ -83,6 +83,11 @@ public class EshopClient implements InterfaceEshop {
         return artikelVerwaltungFassade.findeArtikel(nr);
     }
 
+    @Override
+    public List<Ereignis> getAlleEreignisse() {
+        return artikelVerwaltungFassade.getAlleEreignisse();
+    }
+
     // Benutzerverwaltung
 
     @Override
@@ -139,6 +144,11 @@ public class EshopClient implements InterfaceEshop {
     @Override
     public void artikelEntfernen(Artikel artikel) throws IOException {
         warenkorbVerwaltungFassade.artikelEntfernen(artikel);
+    }
+
+    @Override
+    public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException {
+        warenkorbVerwaltungFassade.artikelMengeAendern(artikel, neueMenge);
     }
 
     @Override

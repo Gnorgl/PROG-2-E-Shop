@@ -69,4 +69,10 @@ public class EreignisVerwaltung {
                 .filter(e -> e.getArtikel().getArtikelNummer() == artikelNr)
                 .collect(Collectors.toList());
     }
+
+    // Für die allgemeine Ereignisübersicht in der GUI (Tabelle aller Ein-/Auslagerungen).
+    // Defensive Kopie, damit die aufrufende Seite nicht die interne Liste live referenziert.
+    public synchronized List<Ereignis> getAlleEreignisse() {
+        return new java.util.ArrayList<>(ereignisListe.getAlleEreignisse());
+    }
 }

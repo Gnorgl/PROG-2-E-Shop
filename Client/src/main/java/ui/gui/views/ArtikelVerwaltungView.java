@@ -9,6 +9,7 @@ import exceptions.artikel.MengeUngueltigException;
 import interfaces.InterfaceEshop;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -21,6 +22,7 @@ import ui.gui.components.CustomButton;
 import ui.gui.components.CustomInputField;
 import ui.gui.components.FormRow;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ArtikelVerwaltungView extends VBox {
@@ -31,6 +33,8 @@ public class ArtikelVerwaltungView extends VBox {
     // Tabelle für die Übersicht
     private TableView<Artikel> artikelTable;
     private ObservableList<Artikel> artikelListe;
+    private SortedList<Artikel> sortedListe;
+    private ComboBox<String> sortBox;
 
     // Artikel anlegen
     private CheckBox massengutCheckBox;
@@ -132,6 +136,14 @@ public class ArtikelVerwaltungView extends VBox {
         Label header = new Label("Aktueller Inventarbestand");
         header.getStyleClass().add("section-header");
 
+        HBox sortierBar = new HBox(10);
+        Label sortLabel = new Label("Sortieren nach:");
+        sortBox = new ComboBox<>();
+        sortBox.getItems().addAll("Artikelnummer", "Bezeichnung");
+        sortBox.setValue("Artikelnummer");
+        sortBox.setOnAction(e -> sortiereTabelle());
+        sortierBar.getChildren().addAll(sortLabel, sortBox);
+
         artikelTable = new TableView<>();
         artikelTable.setPrefHeight(200); // Feste Höhe, damit genug Platz für die Formulare bleibt
 
@@ -163,7 +175,7 @@ public class ArtikelVerwaltungView extends VBox {
 
         artikelTable.getColumns().addAll(colNr, colBez, colArt, colBestand, colPreis);
 
-        box.getChildren().addAll(header, artikelTable);
+        box.getChildren().addAll(header, sortierBar, artikelTable);
         return box;
     }
 
@@ -175,8 +187,23 @@ public class ArtikelVerwaltungView extends VBox {
         // Baut eine Liste aus dem aktuellen Lagerbestand
         artikelListe = FXCollections.observableArrayList(alleArtikel);
 
-        artikelTable.setItems(artikelListe);
-        artikelTable.refresh();
+        // Wir verpacken die Liste in eine SortedList, damit die Sortierauswahl
+        // greift (analog zu KatalogView)
+        sortedListe = new SortedList<>(artikelListe);
+        artikelTable.setItems(sortedListe);
+
+        sortiereTabelle();
+    }
+
+    private void sortiereTabelle() {
+        if (sortedListe == null || sortBox == null) return;
+
+        String kriterium = sortBox.getValue();
+        if (kriterium.equals("Artikelnummer")) {
+            sortedListe.setComparator(Comparator.comparingInt(Artikel::getArtikelNummer));
+        } else if (kriterium.equals("Bezeichnung")) {
+            sortedListe.setComparator(Comparator.comparing(Artikel::getBezeichnung, String.CASE_INSENSITIVE_ORDER));
+        }
     }
 
     private VBox createAnlegenBereich() {

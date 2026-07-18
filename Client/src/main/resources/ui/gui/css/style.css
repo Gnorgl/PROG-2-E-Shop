@@ -310,3 +310,12 @@
 .delete-table-btn:hover {
     -fx-background-color: #c9302c;
 }
+
+/* Kleine +/- Buttons zum Ändern der Warenkorb-Stückzahl direkt in der Tabellenzelle */
+.menge-btn {
+    -fx-min-width: 24px;
+    -fx-max-width: 24px;
+    -fx-padding: 2px 0;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}

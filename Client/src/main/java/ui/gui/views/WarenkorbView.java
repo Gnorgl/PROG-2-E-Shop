@@ -2,7 +2,6 @@ package ui.gui.views;
 
 import entities.Artikel;
 import interfaces.InterfaceEshop;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -57,17 +56,33 @@ public class WarenkorbView extends VBox {
 
         warenkorbTable = new TableView<>();
 
-        // 1. Spalte: Menge
-        TableColumn<Artikel, Integer> colMenge = new TableColumn<>("Menge");
-        colMenge.setCellValueFactory(cellData -> {
-            Artikel a = cellData.getValue();
-            int mengeStueck = eshop.getMenge(a);
+        // 1. Spalte: Menge (jetzt mit +/- zum direkten Ändern der Stückzahl)
+        TableColumn<Artikel, Void> colMenge = new TableColumn<>("Menge");
+        colMenge.setCellFactory(param -> new TableCell<>() {
+            private final Button btnMinus = new Button("-");
+            private final Button btnPlus = new Button("+");
+            private final Label lblMenge = new Label();
+            private final HBox box = new HBox(6, btnMinus, lblMenge, btnPlus);
 
-            if (a instanceof entities.Massengutartikel) {
-                int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
-                return new ReadOnlyObjectWrapper<>(mengeStueck / packGroesse);
+            {
+                box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                btnMinus.getStyleClass().add("menge-btn");
+                btnPlus.getStyleClass().add("menge-btn");
+                btnMinus.setOnAction(event -> mengeAendern(getTableView().getItems().get(getIndex()), -1));
+                btnPlus.setOnAction(event -> mengeAendern(getTableView().getItems().get(getIndex()), +1));
             }
-            return new ReadOnlyObjectWrapper<>(mengeStueck);
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Artikel a = getTableView().getItems().get(getIndex());
+                    lblMenge.setText(String.valueOf(anzeigeMenge(a)));
+                    setGraphic(box);
+                }
+            }
         });
 
         // 2. Spalte: Bezeichnung (Packungsgröße anhängen)
@@ -173,11 +188,57 @@ public class WarenkorbView extends VBox {
         return box;
     }
 
+    // Zeigt bei Massengutartikeln die Anzahl Packungen, sonst die Stückzahl
+    private int anzeigeMenge(Artikel a) {
+        int mengeStueck = eshop.getMenge(a);
+        if (a instanceof entities.Massengutartikel) {
+            int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
+            return mengeStueck / packGroesse;
+        }
+        return mengeStueck;
+    }
+
+    // Ändert die Stückzahl eines Artikels im Warenkorb um +/-1 Einheit (bzw. +/- 1 Packung
+    // bei Massengutartikeln). Erreicht die Menge 0, wird der Artikel komplett entfernt.
+    private void mengeAendern(Artikel a, int deltaPackungen) {
+        int schrittStueck = 1;
+        if (a instanceof entities.Massengutartikel) {
+            schrittStueck = ((entities.Massengutartikel) a).getPackungsGroesse();
+        }
+
+        int aktuelleMengeStueck = eshop.getMenge(a);
+        int neueMengeStueck = aktuelleMengeStueck + (deltaPackungen * schrittStueck);
+
+        try {
+            if (neueMengeStueck <= 0) {
+                eshop.artikelEntfernen(a);
+            } else {
+                eshop.artikelMengeAendern(a, neueMengeStueck);
+            }
+            datenLaden();
+        } catch (java.io.IOException ex) {
+            showAlert(Alert.AlertType.ERROR, "Fehler", "Menge konnte nicht geändert werden: " + ex.getMessage());
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     private void datenLaden() {
         HashMap<Artikel, Integer> warenkorbMap = eshop.getAlleWarenkorbArtikel();
 
         warenkorbListe = javafx.collections.FXCollections.observableArrayList(warenkorbMap.keySet());
         warenkorbTable.setItems(warenkorbListe);
+        // Seit Artikel.equals()/hashCode() auf die Artikelnummer eingeführt wurden, hält die
+        // TableView eine reine Mengenänderung (gleiche Artikel-"Menge" nach equals(), nur der
+        // gemappte Wert dahinter hat sich geändert) für unverändert und ruft updateItem() für
+        // die Menge-Spalte nicht erneut auf. refresh() erzwingt das Neuzeichnen aller Zellen.
+        warenkorbTable.refresh();
 
         summaryArtikelBox.getChildren().clear();
 

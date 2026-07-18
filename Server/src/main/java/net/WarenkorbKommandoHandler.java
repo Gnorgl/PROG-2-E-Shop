@@ -15,7 +15,7 @@ import java.util.Set;
 public class WarenkorbKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(
-            "WARENKORB_HINZUFUEGEN", "WARENKORB_ENTFERNEN", "WARENKORB_LEEREN", "WARENKORB_ANZEIGEN"
+            "WARENKORB_HINZUFUEGEN", "WARENKORB_ENTFERNEN", "WARENKORB_LEEREN", "WARENKORB_ANZEIGEN", "WARENKORB_MENGE_AENDERN"
     );
 
     public WarenkorbKommandoHandler(Eshop eshop, BufferedReader in, PrintWriter out) {
@@ -34,6 +34,7 @@ public class WarenkorbKommandoHandler extends KommandoHandler {
             case "WARENKORB_ENTFERNEN" -> warenkorbEntfernen();
             case "WARENKORB_LEEREN" -> warenkorbLeeren();
             case "WARENKORB_ANZEIGEN" -> warenkorbAnzeigen();
+            case "WARENKORB_MENGE_AENDERN" -> warenkorbMengeAendern();
             default -> fehler("Unbekanntes Warenkorb-Kommando: " + kommando);
         }
     }
@@ -64,6 +65,18 @@ public class WarenkorbKommandoHandler extends KommandoHandler {
     private void warenkorbLeeren() throws IOException {
         eshop.getWarenkorbVerwaltung().leeren();
         ok();
+    }
+
+    private void warenkorbMengeAendern() throws IOException {
+        int nr = Integer.parseInt(in.readLine());
+        int neueMenge = Integer.parseInt(in.readLine());
+        try {
+            Artikel a = eshop.getArtikelVerwaltung().findeArtikel(nr);
+            eshop.getWarenkorbVerwaltung().artikelMengeAendern(a, neueMenge);
+            ok();
+        } catch (ArtikelNichtGefunden e) {
+            fehler(e);
+        }
     }
 
     private void warenkorbAnzeigen() throws IOException {

@@ -22,7 +22,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(
             "ARTIKEL_ANLEGEN", "MASSENGUT_ANLEGEN", "BESTAND_ERHOEHEN", "BESTAND_REDUZIEREN",
-            "ARTIKEL_LOESCHEN", "BESTANDSHISTORIE", "ALLE_ARTIKEL", "ARTIKEL_FINDEN"
+            "ARTIKEL_LOESCHEN", "BESTANDSHISTORIE", "ALLE_ARTIKEL", "ARTIKEL_FINDEN", "ALLE_EREIGNISSE"
     );
 
     public ArtikelKommandoHandler(Eshop eshop, BufferedReader in, PrintWriter out) {
@@ -45,6 +45,7 @@ public class ArtikelKommandoHandler extends KommandoHandler {
             case "BESTANDSHISTORIE" -> bestandshistorie();
             case "ALLE_ARTIKEL" -> alleArtikel();
             case "ARTIKEL_FINDEN" -> artikelFinden();
+            case "ALLE_EREIGNISSE" -> alleEreignisse();
             default -> fehler("Unbekanntes Artikel-Kommando: " + kommando);
         }
     }
@@ -140,5 +141,15 @@ public class ArtikelKommandoHandler extends KommandoHandler {
         } catch (ArtikelNichtGefunden e) {
             fehler(e);
         }
+    }
+
+    private void alleEreignisse() throws IOException {
+        List<entities.Ereignis> ereignisse = eshop.getAlleEreignisse();
+        // gleiche writerFor(...)-Begründung wie bei alleArtikel(): sichert die
+        // Polymorphie des artikelTyp/type-Diskriminators in den verschachtelten
+        // Artikel-/Benutzer-Feldern auch beim Root-Listen-Serialisieren ab.
+        String json = mapper.writerFor(new com.fasterxml.jackson.core.type.TypeReference<List<entities.Ereignis>>() {})
+                .writeValueAsString(ereignisse);
+        ok(json);
     }
 }
