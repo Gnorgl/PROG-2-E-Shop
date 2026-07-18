@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// Zuständig nur für Artikel-Kommandos (IAV).
 public class ArtikelKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(
@@ -124,10 +123,6 @@ public class ArtikelKommandoHandler extends KommandoHandler {
 
     private void alleArtikel() throws IOException {
         List<Artikel> artikel = eshop.getArtikelVerwaltung().getAlleArtikel();
-        // writerFor(...) statt writeValueAsString(artikel): Java löscht bei writeValueAsString(Object)
-        // den generischen Typ (List<Artikel> wird zur Laufzeit nur "List"), dadurch findet Jackson
-        // die @JsonTypeInfo-Polymorphie auf Artikel nicht zuverlässig. Mit dem expliziten TypeReference
-        // weiß Jackson sicher, dass die Elemente vom Typ Artikel sind, und schreibt "artikelTyp" mit.
         String json = mapper.writerFor(new com.fasterxml.jackson.core.type.TypeReference<List<Artikel>>() {})
                 .writeValueAsString(artikel);
         ok(json);

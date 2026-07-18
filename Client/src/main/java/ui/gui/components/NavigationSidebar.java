@@ -49,13 +49,11 @@ public class NavigationSidebar extends VBox {
         if (session.istBenutzerEinMitarbeiter()) {
             Button infoBtn = new Button("Warenbestand verwalten");
             Button mitarbeiterAnlegenBtn = new Button("Mitarbeiter anlegen");
-            Button ereignisseBtn = new Button("Ereignisprotokoll");
 
-            addSidebarButtons(infoBtn, mitarbeiterAnlegenBtn, ereignisseBtn);
+            addSidebarButtons(infoBtn, mitarbeiterAnlegenBtn);
 
             infoBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.ArtikelVerwaltungView(eshop, session, guiController)));
             mitarbeiterAnlegenBtn.setOnAction(e -> mainLayout.setCenterView(new EmployeeCreationView(eshop, session, guiController)));
-            ereignisseBtn.setOnAction(e -> mainLayout.setCenterView(new ui.gui.views.EreignisListeView(eshop, session, guiController)));
             //Hier noch die event listener, wenn die anderen views erstellt wurden.
         } else {
             Button shopBtn = new Button("Zum Marktplatz");

@@ -23,12 +23,10 @@ public class ArtikelVerwaltung implements IAV {
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
     private Mitarbeiter currentMitarbeiter;
 
-
     private final File datei = new File("artikel.json");
     private final ObjectMapper mapper = new ObjectMapper();
 
     private long idCounter = 0;
-
 
     public ArtikelVerwaltung() throws IOException {
         datenLaden();
@@ -41,8 +39,6 @@ public class ArtikelVerwaltung implements IAV {
     public void setCurrentMitarbeiter(Mitarbeiter mitarbeiter) {
         this.currentMitarbeiter = mitarbeiter;
     }
-
-
 
     private void datenLaden() throws IOException, IllegalArgumentException {
         if (!datei.exists()) {
@@ -61,8 +57,6 @@ public class ArtikelVerwaltung implements IAV {
         }
     }
 
-
-
     private void safe() throws IOException {
         // Speichert sowohl die Liste als auch den Counter im Container-Array
         Object[] speicherContainer = new Object[]{ this.artikelListe, this.idCounter };
@@ -70,14 +64,6 @@ public class ArtikelVerwaltung implements IAV {
         mapper.writerWithDefaultPrettyPrinter().writeValue(datei, speicherContainer);
     }
 
-
-
-
-    // synchronized: mehrere Client-Threads können gleichzeitig auf artikelListe/idCounter
-    // zugreifen (jeder Client läuft in seinem eigenen Thread, teilt sich aber dieselbe
-    // Eshop-Instanz). Ohne Synchronisierung könnten z.B. zwei gleichzeitige Käufe
-    // desselben Artikels den Bestand falsch berechnen (Lost Update) oder ein gleichzeitiges
-    // Anlegen/Lesen die ArrayList beschädigen (ConcurrentModificationException).
     @Override
     public synchronized boolean legeArtikelAn(String name, int bestand, double preis) throws ArtikelExistiertBereits, ArtikelNullException, IOException {
 
@@ -259,9 +245,6 @@ public class ArtikelVerwaltung implements IAV {
 
     @Override
     public synchronized List<Artikel> getAlleArtikel() {
-        // Kopie statt der internen Liste zurückgeben: sonst könnte ein anderer Thread
-        // die Liste noch während ein Aufrufer sie außerhalb dieser Methode durchläuft
-        // (z.B. beim Serialisieren für den Client) verändern.
         return new ArrayList<>(this.artikelListe.getArtikelImLager());
     }
 

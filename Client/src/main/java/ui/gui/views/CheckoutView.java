@@ -41,7 +41,6 @@ public class CheckoutView extends VBox {
         this.guiController = guiController;
         this.mainLayout = mainLayout;
 
-        // CSS-Klasse für das gesamte Layout setzen (regelt Spacing und Padding)
         this.getStyleClass().add("checkout-view");
 
         initUI();
@@ -160,16 +159,13 @@ public class CheckoutView extends VBox {
 
     private VBox createSummaryBox() {
         VBox box = new VBox(15);
-        // Breite und Padding
         box.getStyleClass().add("summary-box");
 
         Label lblTitel = new Label("Bestellung abschließen");
         lblTitel.getStyleClass().add("summary-title");
 
-        // Container für die Artikel
         summaryArtikelBox = new VBox(8);
 
-        // Zwischensumme für den Checkout hinzugefügt
         HBox rowZwischen = new HBox();
         lblZwischensumme = new Label("€0,00");
         rowZwischen.getChildren().addAll(new Label("Netto-Zwischensumme"), new Region(), lblZwischensumme);
@@ -208,7 +204,6 @@ public class CheckoutView extends VBox {
                 return;
             }
 
-            // Je nach gewählter Zahlungsart Popup zeigen; bricht ab, wenn der Nutzer abbricht
             if (!zahlungAbwickeln()) {
                 return;
             }
@@ -228,14 +223,12 @@ public class CheckoutView extends VBox {
 
             eshop.leeren();
 
-            // Adresse aus den Feldern für die Rechnung zusammenbauen
             String lieferadresse = vornameField.getText() + " " + nachnameField.getText() + "\n" +
                     strasseField.getText() + "\n" +
                     plzField.getText() + " " + stadtField.getText();
 
             zeigeRechnung(rechnung, lieferadresse);
 
-            // Nach Kauf zum Katalog leiten
             mainLayout.setCenterView(new KatalogView(eshop, session, guiController));
 
         } catch (Exception ex) {
@@ -243,9 +236,6 @@ public class CheckoutView extends VBox {
         }
     }
 
-    // Zeigt je nach gewählter Zahlungsmethode ein passendes Popup.
-    // Gibt true zurück, wenn der Bezahlvorgang abgeschlossen wurde und der Kauf weiterlaufen soll,
-    // false wenn der Nutzer abgebrochen hat.
     private boolean zahlungAbwickeln() {
         if (rbKredit.isSelected()) {
             return zeigeKreditkartenDialog();

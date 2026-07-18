@@ -9,8 +9,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// Nimmt Verbindungswünsche von Clients entgegen und startet pro Client
-// einen eigenen ClientRequestProcessor in einem eigenen Thread.
 public class EShopServer {
 
     public static final int DEFAULT_PORT = 8080;
@@ -41,10 +39,6 @@ public class EShopServer {
         }
     }
 
-    // Jede neu ankommende Verbindung ist entweder eine normale Kommando-Verbindung
-    // oder ein reiner Push-Kanal (erste Zeile "SUBSCRIBE"), über den der Server
-    // Clients unaufgefordert über Änderungen informiert (z.B. Bestandsänderungen
-    // durch andere Kunden), damit die GUI ohne Refresh-Button aktuell bleibt.
     private void verbindungBehandeln(Socket socket) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -59,10 +53,7 @@ public class EShopServer {
             if ("SUBSCRIBE".equals(ersteZeile)) {
                 BroadcastManager.getInstanz().registrieren(out);
                 try {
-                    // Der Push-Kanal wird nur zum Senden benutzt; wir lesen trotzdem
-                    // weiter, um zu bemerken, wenn der Client die Verbindung schließt
                     while (in.readLine() != null) {
-                        // absichtlich leer
                     }
                 } finally {
                     BroadcastManager.getInstanz().entfernen(out);

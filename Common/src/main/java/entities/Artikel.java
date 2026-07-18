@@ -8,7 +8,7 @@ import java.io.Serializable;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
-        property = "artikelTyp" // Erzeugt ein Unterscheidungs-Feld im JSON, z.B. "artikelTyp": "massengut"
+        property = "artikelTyp"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Artikel.class, name = "standard"),

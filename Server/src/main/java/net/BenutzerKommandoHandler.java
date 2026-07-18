@@ -15,7 +15,6 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
 
-// Zuständig für alle Benutzer-, Kunden- und Mitarbeiter-Kommandos.
 public class BenutzerKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(

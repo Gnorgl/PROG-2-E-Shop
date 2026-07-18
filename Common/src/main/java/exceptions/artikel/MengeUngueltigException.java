@@ -12,7 +12,6 @@ public class MengeUngueltigException extends VerwaltungsException {
     }
 
     // Für den Client: der Server schickt schon die fertig formatierte Fehlermeldung,
-    // die darf nicht nochmal in "Ungültige Menge! Muss Vielfaches von ... sein." eingesetzt werden
     public static MengeUngueltigException mitFertigerNachricht(String nachricht) {
         return new MengeUngueltigException(nachricht, true);
     }

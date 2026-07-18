@@ -43,9 +43,6 @@ public class CheckOutVerwaltung implements ICV {
         this.orderListe = mapper.convertValue(speicherContainer[1], OrderListe.class);
     }
 
-    // synchronized: orderListe und rechnungsNummerZaehler werden von allen Client-Threads
-    // gemeinsam benutzt (checkOut() beim Kauf, getRechnungenFuerKunde() beim Anzeigen der
-    // Bestellhistorie können gleichzeitig von verschiedenen Kunden aufgerufen werden)
     public synchronized List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
         List<Rechnung> ergebnis = new ArrayList<>();
         for (Rechnung r : orderListe.getAlleRechnungen()) {
@@ -66,7 +63,7 @@ public class CheckOutVerwaltung implements ICV {
         //durchlaufe alle Artikel im Warenkorb und berechne die Summe
         for (Artikel artikel : warenkorbInhalt.keySet()) {
             int menge = warenkorbInhalt.get(artikel);
-            netto += artikel.berechneGesamtpreis(menge); // Polymorphie greift hier perfekt!
+            netto += artikel.berechneGesamtpreis(menge);
         }
         return netto;
     }
@@ -143,7 +140,6 @@ public class CheckOutVerwaltung implements ICV {
                 int menge = Collections.frequency(rechnung.getArtikel(), artikel);
                 double gesamt = artikel.berechneGesamtpreis(menge);
 
-                // Hier passen wir den Namen für den Bon an
                 String anzeigeName = artikel.getBezeichnung();
                 if (artikel instanceof Massengutartikel) {
                     anzeigeName += " (" + ((Massengutartikel) artikel).getPackungsGroesse() + "er Pack)";

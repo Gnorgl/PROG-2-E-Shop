@@ -8,14 +8,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
-// Hält NUR die Verbindung zu genau einem Client (Socket, Streams, die
-// Lese-Schleife) und verteilt jedes eingehende Kommando an den passenden
-// Handler. Enthält selbst keine Fachlogik mehr.
-//
-// in/out und das ggf. schon gelesene erste Kommando werden von EShopServer
-// übergeben: der Server muss die erste Zeile selbst lesen, um zu entscheiden,
-// ob es sich um eine normale Kommando-Verbindung oder einen reinen Push-Kanal
-// (SUBSCRIBE) handelt, bevor er diese Klasse hier überhaupt aufruft.
 public class ClientRequestProcessor implements Runnable {
 
     private final Socket socket;
@@ -35,7 +27,6 @@ public class ClientRequestProcessor implements Runnable {
     @Override
     public void run() {
         try {
-            // Unser Bereich: Artikel, Checkout/Order, Warenkorb.
             List<KommandoHandler> handler = List.of(
                     new ArtikelKommandoHandler(eshop, in, out),
                     new CheckoutKommandoHandler(eshop, in, out),

@@ -31,9 +31,6 @@ public class WarenkorbVerwaltung implements IWV {
         return warenkorbListe;
     }
 
-    // synchronized: der Warenkorb wird aktuell von allen Client-Threads gemeinsam genutzt
-    // (eine WarenkorbVerwaltung pro Eshop-Instanz), deshalb müssen gleichzeitige
-    // Hinzufuegen/Entfernen/Lesen-Zugriffe auf das interne HashMap serialisiert werden.
     public synchronized boolean istLeer() {
         return warenkorbListe.istLeer();
     }
@@ -44,8 +41,6 @@ public class WarenkorbVerwaltung implements IWV {
 
     @Override
     public synchronized HashMap<Artikel, Integer> getAlleWarenkorbArtikel() {
-        // Kopie zurückgeben, damit ein anderer Thread die Map nicht mehr verändern kann,
-        // während der Aufrufer (z.B. beim Senden ans GUI/JSON) noch darüber iteriert
         return new HashMap<>(warenkorbListe.getAlleArtikel());
     }
 
@@ -86,7 +81,6 @@ public class WarenkorbVerwaltung implements IWV {
     }
 
     private void safe() throws IOException {
-        // ID-basiertes Speichern: Wir mappen ArtikelNummer -> Menge
         HashMap<Integer, Integer> speicherMap = new HashMap<>();
         for (Artikel a : warenkorbListe.getAlleArtikel().keySet()) {
             speicherMap.put(a.getArtikelNummer(), warenkorbListe.getAlleArtikel().get(a));

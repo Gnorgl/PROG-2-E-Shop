@@ -31,7 +31,6 @@ public class WarenkorbView extends VBox {
         this.guiController = guiController;
         this.mainLayout = mainLayout;
 
-        // CSS-Klasse für das gesamte Layout setzen
         this.getStyleClass().add("warenkorb-view");
 
         try {
@@ -48,7 +47,6 @@ public class WarenkorbView extends VBox {
     private void initUI() {
         HBox mainContent = new HBox(30);
 
-        // Links Artikelliste
         VBox linksBox = new VBox(15);
 
         Label titleLabel = new Label("Mein Warenkorb");
@@ -85,7 +83,7 @@ public class WarenkorbView extends VBox {
             }
         });
 
-        // 2. Spalte: Bezeichnung (Packungsgröße anhängen)
+        // 2. Spalte: Bezeichnung
         TableColumn<Artikel, String> colBez = new TableColumn<>("Artikel");
         colBez.setCellValueFactory(cellData -> {
             Artikel a = cellData.getValue();
@@ -117,7 +115,6 @@ public class WarenkorbView extends VBox {
                     } catch (java.io.IOException ex) {
                         System.err.println("Fehler beim Entfernen aus dem Warenkorb: " + ex.getMessage());
                     }
-                    // View sofort neu laden, damit die Summen und die Tabelle aktualisiert werden
                     datenLaden();
                 });
             }
@@ -128,7 +125,7 @@ public class WarenkorbView extends VBox {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(btn); // Zeigt den Button in der Zelle an
+                    setGraphic(btn);
                 }
             }
         });
@@ -139,7 +136,6 @@ public class WarenkorbView extends VBox {
         linksBox.getChildren().addAll(titleLabel, warenkorbTable);
         HBox.setHgrow(linksBox, Priority.ALWAYS);
 
-        // Rechts Zusammenfassung Bestellung
         VBox rechtsBox = createSummaryBox();
 
         mainContent.getChildren().addAll(linksBox, rechtsBox);
@@ -174,7 +170,6 @@ public class WarenkorbView extends VBox {
         CustomButton btnZurKasse = new CustomButton("Zur Kasse ➔", CustomButton.ButtonType.PRIMARY);
         btnZurKasse.setMaxWidth(Double.MAX_VALUE);
         btnZurKasse.setOnAction(e -> {
-            // Verhindert das Navigieren zur Kasse, wenn der Korb leer ist
             if (eshop.istLeer()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Dein Warenkorb ist leer!");
                 alert.setHeaderText(null);
@@ -249,7 +244,6 @@ public class WarenkorbView extends VBox {
             String anzeigeName = a.getBezeichnung();
             int anzeigeMenge = mengeStueck;
 
-            // NEU: AnzeigeMenge berechnen
             if (a instanceof entities.Massengutartikel) {
                 int packGroesse = ((entities.Massengutartikel) a).getPackungsGroesse();
                 anzeigeMenge = mengeStueck / packGroesse;

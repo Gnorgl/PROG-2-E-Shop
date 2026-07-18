@@ -78,15 +78,10 @@ public class ArtikelVerwaltungView extends VBox {
         initUI();
         datenLaden();
 
-        // Wenn ein anderer Client (z.B. ein Kunde beim Kauf) den Bestand ändert,
-        // meldet der Server das über den Push-Kanal -> Tabelle automatisch neu laden
         if (eshop instanceof net.EshopClient client) {
             Runnable refreshCallback = this::datenLaden;
             client.aktualisierungAbonnieren(refreshCallback);
 
-            // Sobald diese View aus dem Szenengraph entfernt wird (View-Wechsel),
-            // wieder abmelden - sonst bleibt die Referenz für immer im PushListener
-            // hängen (Memory-Leak + unnötige datenLaden()-Aufrufe auf toter View).
             this.sceneProperty().addListener((obs, alteScene, neueScene) -> {
                 if (neueScene == null) {
                     client.aktualisierungAbmelden(refreshCallback);
@@ -106,7 +101,6 @@ public class ArtikelVerwaltungView extends VBox {
         VBox loeschBox = createLoeschenBereich();
         VBox historieBox = createHistorieBereich();
 
-        // Ein Layout für die Formulare nebeneinander
         HBox formulareBox = new HBox(30);
 
         // Linke Seite: Anlegen & Löschen
@@ -147,7 +141,6 @@ public class ArtikelVerwaltungView extends VBox {
         artikelTable = new TableView<>();
         artikelTable.setPrefHeight(200); // Feste Höhe, damit genug Platz für die Formulare bleibt
 
-        // ("artikelNummer" ruft getArtikelNummer() auf)
         TableColumn<Artikel, Integer> colNr = new TableColumn<>("Nr.");
         colNr.setCellValueFactory(new PropertyValueFactory<>("artikelNummer"));
         colNr.setPrefWidth(50);
@@ -184,7 +177,6 @@ public class ArtikelVerwaltungView extends VBox {
         List<Artikel> alleArtikel = eshop.getAlleArtikel();
         //eshop.getArtikelVerwaltung().getArtikelListe().getArtikelImLager();
         //Hier war vorher getArtikelImLager() das Gleiche wie getAlleArtikel() ?
-        // Baut eine Liste aus dem aktuellen Lagerbestand
         artikelListe = FXCollections.observableArrayList(alleArtikel);
 
         // Wir verpacken die Liste in eine SortedList, damit die Sortierauswahl
