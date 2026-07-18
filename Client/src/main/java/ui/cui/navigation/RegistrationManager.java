@@ -4,7 +4,7 @@ import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import exceptions.user.EmailBereitsVergebenException;
 import logic.Eshop;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 
 import java.util.Scanner;
 

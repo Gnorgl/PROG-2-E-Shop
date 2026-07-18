@@ -1,7 +1,7 @@
 package ui.cui.navigation;
 
 import logic.Eshop;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 
 import java.util.Scanner;
 

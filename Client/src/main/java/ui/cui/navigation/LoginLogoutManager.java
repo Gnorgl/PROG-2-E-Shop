@@ -3,7 +3,7 @@ package ui.cui.navigation;
 import entities.Benutzer;
 import exceptions.user.BenutzerExistiertNichtException;
 import logic.Eshop;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 
 import java.util.Scanner;
 

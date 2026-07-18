@@ -1,7 +1,7 @@
 package ui.cui;
 
 import entities.*;
-import logic.SessionManager;
+import ui.gui.SessionManager;
 import ui.cui.navigation.*;
 import logic.Eshop;
 
