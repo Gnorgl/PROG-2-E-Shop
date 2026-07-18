@@ -2,6 +2,7 @@ package ui.cui;
 
 import entities.*;
 import interfaces.InterfaceEshop;
+import net.EshopClient;
 import ui.gui.SessionManager;
 import ui.cui.navigation.*;
 
@@ -10,6 +11,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class EshopCUI {
+
+    private static final String SERVER_HOST = "localhost";
+    private static final int SERVER_PORT = 8080;
 
     private InterfaceEshop eshop;
     private SessionManager session;
@@ -27,6 +31,9 @@ public class EshopCUI {
     public EshopCUI() throws IOException {
 
         this.session = new SessionManager();
+
+        System.out.println("Verbinde mit EShop-Server auf Port " + SERVER_PORT + "...");
+        this.eshop = new EshopClient(SERVER_HOST, SERVER_PORT);
 
         //Management Klassen:
         this.generalServiceManager = new GeneralServiceManager(eshop, scanner, session);

@@ -50,14 +50,11 @@ public class CheckOutVerwaltungFassade implements ICV {
         }
     }
 
-    // Brutto = Netto + 19% MwSt. - kein extra Server-Aufruf nötig, lässt sich
-    // lokal aus der Nettosumme ableiten.
     @Override
     public double berechneBruttoSumme(Map<Artikel, Integer> warenkorbInhalt) {
         return berechneNettoSumme(warenkorbInhalt) * 1.19;
     }
 
-    // Reine Textformatierung, keine Fachlogik
     @Override
     public String generiereRechnungsText(Rechnung rechnung, String lieferadresse) {
         StringBuilder beleg = new StringBuilder();
@@ -95,7 +92,7 @@ public class CheckOutVerwaltungFassade implements ICV {
         return beleg.toString();
     }
 
-    // Bestellverlauf (Rechnungshistorie eines Kunden).
+    // Bestellverlauf
     @Override
     public List<Rechnung> getRechnungenFuerKunde(Kunde kunde) {
         try {
@@ -110,7 +107,6 @@ public class CheckOutVerwaltungFassade implements ICV {
 
     @Override
     public void rechnungAnzeigen(Rechnung rechnung) {
-        // Reine Anzeige-Funktion
         if (rechnung == null) {
             System.out.println("Keine Rechnung vorhanden!");
             return;

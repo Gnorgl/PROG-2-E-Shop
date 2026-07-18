@@ -128,7 +128,6 @@ public class ArtikelVerwaltungFassade implements IAV {
         }
     }
 
-    // Wandelt eine ServerFehlerException in ArtikelNichtGefunden um (für Methoden, die keine IOException werfen)
     private void werfeArtikelFehlerOhneIO(ServerFehlerException e) throws ArtikelNichtGefunden {
         if ("ArtikelNichtGefunden".equals(e.getExceptionName())) {
             throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());

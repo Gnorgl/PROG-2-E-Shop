@@ -30,14 +30,9 @@ public class EshopClient implements InterfaceEshop {
         this.checkOutVerwaltungFassade = new CheckOutVerwaltungFassade(verbindung);
         this.warenkorbVerwaltungFassade = new WarenkorbVerwaltungFassade(verbindung, artikelVerwaltungFassade);
         this.benutzerVerwaltungFassade = new BenutzerVerwaltungFassade(verbindung);
-        // Zweiter, separater Kanal: der Server meldet hierüber unaufgefordert Änderungen
-        // (z.B. Bestandsänderungen durch andere Clients), damit die GUI sich ohne
-        // Refresh-Button aktualisieren kann.
         this.pushListener = new PushListener(host, port);
     }
 
-    // Views registrieren sich hier (z.B. mit this::datenLaden), um bei jeder
-    // Server-Aktualisierung automatisch neu zu laden.
     public void aktualisierungAbonnieren(Runnable r) {
         pushListener.aktualisierungAbonnieren(r);
     }

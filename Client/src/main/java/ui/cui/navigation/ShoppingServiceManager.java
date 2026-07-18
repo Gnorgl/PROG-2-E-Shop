@@ -240,7 +240,6 @@ public class ShoppingServiceManager {
         }
 
         Kunde kunde = (Kunde) session.getBenutzer();
-        // eshop wird als IAV-Parameter übergeben, damit der Bestand reduziert werden kann
         try {
             Rechnung rechnung = eshop.checkOut(kunde, eshop.getAlleWarenkorbArtikel(), eshop);
             if (rechnung != null) {
@@ -328,9 +327,6 @@ public class ShoppingServiceManager {
         System.out.println("====================================\n");
     }
 
-    // ----- Bestandshistorie -----
-
-    // Gibt die Bestandshistorie formatiert auf der Konsole aus (fängt Fehler ab)
     public void zeigeBestandsHistorie(int artikelNr) {
         try {
             // Berechnung liegt in ArtikelVerwaltung, hier nur noch Ausgabe

@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-// Eine gemeinsame Socket-Verbindung zum Server, die von allen Fassaden (Artikel, Checkout, Warenkorb, ...) benutzt wird.
 public class ServerVerbindung {
 
     private final Socket socket;
@@ -27,8 +26,6 @@ public class ServerVerbindung {
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
 
-    // Für Kommandos, deren "OK"-Antwort KEINE Daten-Zeile hat (z.B. BESTAND_ERHOEHEN).
-    // Wirft bei "ERROR" eine ServerFehlerException mit der Server-Fehlermeldung.
     public synchronized void sendeKommando(String... zeilen) throws IOException, ServerFehlerException {
         for (String zeile : zeilen) {
             out.println(zeile);
@@ -39,7 +36,6 @@ public class ServerVerbindung {
         }
     }
 
-    // Für Kommandos, deren "OK"-Antwort zusätzlich eine Daten-Zeile hat (z.B. ARTIKEL_SUCHE).
     public synchronized String sendeKommandoMitAntwort(String... zeilen) throws IOException, ServerFehlerException {
         for (String zeile : zeilen) {
             out.println(zeile);

@@ -37,7 +37,7 @@ public class BenutzerVerwaltungFassade implements IBV {
             String antwort = verbindung.sendeKommandoMitAntwort("PASSWORD_CHECK", benutzerJson, password);
             return Boolean.parseBoolean(antwort);
         } catch (ServerFehlerException | IOException e) {
-            throw new IllegalArgumentException("Fehler bei der Passwortueberpruefung: " + e.getMessage());
+            throw new IllegalArgumentException("Fehler bei der Passwortüberprüfung: " + e.getMessage());
         }
     }
 

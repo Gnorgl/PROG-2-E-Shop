@@ -1,7 +1,6 @@
 package net;
 
 
-// zur aufrufenden Fassade-Methode, die daraus die passende, im Common-Modul
 
 public class ServerFehlerException extends Exception {
 
@@ -12,7 +11,6 @@ public class ServerFehlerException extends Exception {
         this.rohtext = rohtext == null ? "" : rohtext;
     }
 
-    // z.B. "ArtikelNichtGefunden" aus "ArtikelNichtGefunden: Ein Artikel..."
     public String getExceptionName() {
         int index = rohtext.indexOf(':');
         return index == -1 ? rohtext : rohtext.substring(0, index);

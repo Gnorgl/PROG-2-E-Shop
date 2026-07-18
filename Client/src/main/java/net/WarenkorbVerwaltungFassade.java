@@ -69,7 +69,7 @@ public class WarenkorbVerwaltungFassade implements IWV {
                     Artikel a = artikelVerwaltung.findeArtikel(eintrag.getKey());
                     ergebnis.put(a, eintrag.getValue());
                 } catch (ArtikelNichtGefunden ignored) {
-                    // Artikel wurde zwischenzeitlich gelöscht - überspringen
+                    // Artikel wurde gelöscht
                 }
             }
             return ergebnis;

@@ -28,7 +28,6 @@ public class RegistrationManager {
         String emailMuster = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$";
         boolean emailGueltig = false;
 
-        // Schleife läuft so lange, bis das Format stimmt UND die E-Mail frei ist
         while (!emailGueltig) {
             System.out.print("E-Mail: ");
             email = scanner.nextLine().trim().toLowerCase();
