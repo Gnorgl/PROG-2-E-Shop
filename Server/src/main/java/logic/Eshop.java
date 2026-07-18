@@ -232,6 +232,7 @@ public class Eshop implements InterfaceEshop {
     public WarenkorbVerwaltung getWarenkorbVerwaltung() {
         return warenkorbVerwaltung;
     }
+
     public EreignisVerwaltung getEreignisVerwaltung() { return ereignisVerwaltung; }
 
 }
