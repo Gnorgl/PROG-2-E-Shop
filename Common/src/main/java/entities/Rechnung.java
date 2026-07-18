@@ -1,8 +1,9 @@
 package entities;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Rechnung {
+public class Rechnung implements Serializable {
         private int rechnungsNummer;
         private Kunde kunde;
         private LocalDate datum;

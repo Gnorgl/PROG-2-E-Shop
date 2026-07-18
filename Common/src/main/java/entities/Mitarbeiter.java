@@ -1,6 +1,8 @@
 package entities;
 
-public class Mitarbeiter extends Benutzer{
+import java.io.Serializable;
+
+public class Mitarbeiter extends Benutzer implements Serializable {
 
     public Mitarbeiter() {}
 

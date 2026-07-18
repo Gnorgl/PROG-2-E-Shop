@@ -1,6 +1,8 @@
 package entities;
 
-public class Massengutartikel extends Artikel {
+import java.io.Serializable;
+
+public class Massengutartikel extends Artikel implements Serializable {
     private int packungsGroesse;
 
     public Massengutartikel() {

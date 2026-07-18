@@ -1,6 +1,8 @@
 package entities;
 
-public class Kunde extends Benutzer{
+import java.io.Serializable;
+
+public class Kunde extends Benutzer implements Serializable {
 
     protected String adresse;
 

@@ -3,6 +3,8 @@ package entities;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -13,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Mitarbeiter.class, name = "mitarbeiter")
 })
 
-public abstract class Benutzer {
+public abstract class Benutzer implements Serializable {
     protected String nummer;
     protected String email;
     protected String passwort;

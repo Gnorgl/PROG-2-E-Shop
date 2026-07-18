@@ -1,8 +1,9 @@
 package entities;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Ereignis {
+public class Ereignis implements Serializable {
     private LocalDateTime zeitstempel;
     private int datum; //Jahrestag
     private Artikel artikel;

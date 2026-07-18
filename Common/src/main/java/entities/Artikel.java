@@ -3,6 +3,8 @@ package entities;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -13,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Massengutartikel.class, name = "massengut")
 })
 
-public class Artikel {
+public class Artikel implements Serializable {
     private int artikelNummer;
     private String bezeichnung;
     private int bestand;
