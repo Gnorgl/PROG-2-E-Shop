@@ -106,10 +106,18 @@ public class MeineBestellungenView extends VBox {
 
         javafx.scene.control.TextArea textArea = new javafx.scene.control.TextArea(belegText);
         textArea.setEditable(false);
-        textArea.setWrapText(true);
+        textArea.setWrapText(false);
+        textArea.getStyleClass().add("invoice-text");
+        // Alerts laden das Stylesheet der View nicht automatisch mit (eigenes Fenster),
+        // daher zusätzlich direkt setzen, damit die feste Zeichenbreite der Rechnung
+        // (siehe CheckOutVerwaltung.generiereRechnungsText) auch wirklich monospace
+        // dargestellt wird und Netto/MwSt/Brutto sauber untereinanderstehen.
+        textArea.setStyle("-fx-font-family: 'Courier New', monospace;");
         textArea.setPrefHeight(350);
         textArea.setPrefWidth(450);
 
+        alert.getDialogPane().getStylesheets().add(
+                getClass().getResource("/ui/gui/css/style.css").toExternalForm());
         alert.getDialogPane().setContent(textArea);
         alert.showAndWait();
     }
