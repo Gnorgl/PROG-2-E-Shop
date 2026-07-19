@@ -18,9 +18,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.TreeSet;
 
-// Allgemeine Ereignisübersicht (alle Lagerereignisse: Ein-/Auslagerungen), sortier- und
-// filterbar - siehe Blatt 3, Aufgabe 3: "Liste der (Lager-)Ereignisse ... Möglichkeit bieten,
-// die Ereignisse nach Datum zu sortieren und nach Artikel / Person / Ereignistyp zu filtern."
 public class EreignisListeView extends VBox {
 
     private static final String ALLE = "Alle";
@@ -56,9 +53,6 @@ public class EreignisListeView extends VBox {
         initUI();
         datenLaden();
 
-        // Auch diese Übersicht soll sich automatisch aktualisieren, wenn ein anderer
-        // Client Bestand ändert (Kauf, Ein-/Auslagerung) - gleiches Muster wie bei
-        // ArtikelVerwaltungView/KatalogView, inkl. sauberem Abmelden beim View-Wechsel.
         if (eshop instanceof net.EshopClient client) {
             Runnable refreshCallback = this::datenLaden;
             client.aktualisierungAbonnieren(refreshCallback);
@@ -93,9 +87,6 @@ public class EreignisListeView extends VBox {
         table = new TableView<>();
         VBox.setVgrow(table, Priority.ALWAYS);
 
-        // Zellwert ist der echte LocalDateTime (sortierbar via Comparable), die Anzeige
-        // wird erst in der CellFactory als Text formatiert - so sortiert die Spalte nach
-        // dem tatsächlichen Zeitpunkt und nicht lexikografisch nach dem formatierten String.
         TableColumn<Ereignis, java.time.LocalDateTime> colDatum = new TableColumn<>("Zeitpunkt");
         colDatum.setCellValueFactory(new PropertyValueFactory<>("zeitstempel"));
         colDatum.setCellFactory(col -> new TableCell<>() {
@@ -153,7 +144,7 @@ public class EreignisListeView extends VBox {
         aktualisiereFilter();
     }
 
-    // Baut die Filter-ComboBoxen aus den tatsächlich vorhandenen Werten (statt fest codierter Listen)
+    // Baut die Filter-ComboBoxen aus den vorhandenen Werten
     private void befuelleFilterOptionen() {
         TreeSet<String> artikelNamen = new TreeSet<>();
         TreeSet<String> personen = new TreeSet<>();
