@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/** Ein protokolliertes Lagerereignis, z.B. Bestandsänderung oder Artikelanlage. */
 public class Ereignis implements Serializable {
     private LocalDateTime zeitstempel;
     private int datum; //Jahrestag
@@ -11,8 +12,17 @@ public class Ereignis implements Serializable {
     private Benutzer benutzer; //Kunde oder Mitarbeiter
     private String typ;
 
+    /** Konstruktor ohne Parameter für die Jackson-Deserialisierung. */
     public Ereignis() {}
 
+    /**
+     * Zeitstempel und Jahrestag werden automatisch auf den aktuellen Zeitpunkt gesetzt.
+     *
+     * @param artikel betroffener Artikel
+     * @param anzahl betroffene Stückzahl
+     * @param benutzer auslösender Benutzer
+     * @param typ Ereignistyp
+     */
     public Ereignis(Artikel artikel, int anzahl, Benutzer benutzer, String typ) {
         this.zeitstempel = LocalDateTime.now();
         this.datum = LocalDate.now().getDayOfYear();

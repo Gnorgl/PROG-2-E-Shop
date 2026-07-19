@@ -6,6 +6,7 @@ import interfaces.moduls.IBV;
 import exceptions.user.KundeNichtGefundenException;
 import exceptions.user.MitarbeiterNichtGefundenException;
 
+/** Prüft Login-Daten rollenunabhängig für Kunden und Mitarbeiter. */
 public class BenutzerVerwaltung implements IBV {
     private final KundenVerwaltung kundenVerwaltung;
     private final MitarbeiterVerwaltung mitarbeiterVerwaltung;

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 
+/** Kapselt die Socket-Kommunikation für alle Artikel-bezogenen Server-Kommandos. */
 public class ArtikelVerwaltungFassade implements IAV {
 
     private final ServerVerbindung verbindung;

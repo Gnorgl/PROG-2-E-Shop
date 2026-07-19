@@ -19,6 +19,7 @@ import interfaces.moduls.IAV;
 import interfaces.moduls.ICV;
 import persistence.shop.OrderListe;
 
+/** Führt den Checkout durch: reduziert den Bestand der gekauften Artikel und erzeugt die Rechnung. */
 public class CheckOutVerwaltung implements ICV {
     private int rechnungsNummerZaehler = 1;
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();

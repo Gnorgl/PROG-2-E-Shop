@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
 
+/** Verarbeitet Login-/Registrierungs-Kommandos für Kunden und Mitarbeiter. */
 public class BenutzerKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(

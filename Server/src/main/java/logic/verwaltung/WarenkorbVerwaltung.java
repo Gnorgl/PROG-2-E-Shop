@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+/** Verwaltet den serverseitigen Warenkorb und prüft Mengenänderungen gegen den Lagerbestand. */
 public class WarenkorbVerwaltung implements IWV {
     private final WarenkorbListe warenkorbListe = new WarenkorbListe();
     private final File datei = new File("warenkorb.json");

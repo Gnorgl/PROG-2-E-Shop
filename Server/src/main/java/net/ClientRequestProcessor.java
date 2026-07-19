@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
+/** Verarbeitet die Verbindung eines einzelnen Clients und delegiert Kommandos an die zuständigen Handler. */
 public class ClientRequestProcessor implements Runnable {
 
     private final Socket socket;

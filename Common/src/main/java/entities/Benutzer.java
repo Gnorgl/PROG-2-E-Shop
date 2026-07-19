@@ -15,6 +15,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = Mitarbeiter.class, name = "mitarbeiter")
 })
 
+/** Abstrakte Basisklasse für alle Benutzer des eShops mit Login- und Stammdaten. */
 public abstract class Benutzer implements Serializable {
     protected String nummer;
     protected String email;
@@ -23,8 +24,16 @@ public abstract class Benutzer implements Serializable {
     protected String vorname;
     //....
 
+    /** Konstruktor ohne Parameter für die Jackson-Deserialisierung. */
     public Benutzer() {}
 
+    /**
+     * @param nummer Benutzernummer
+     * @param email E-Mail-Adresse
+     * @param passwort Passwort
+     * @param nachname Nachname
+     * @param vorname Vorname
+     */
     protected Benutzer (String nummer, String email, String passwort, String nachname,String vorname){
         this.nummer = nummer;
         this.email = email;

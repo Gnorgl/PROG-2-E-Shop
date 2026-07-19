@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Verwaltet Kunden-Accounts: Registrierung, Suche und Auflisten. */
 public class KundenVerwaltung implements IKV {
 
     private final File datei = new File("kunden.json");

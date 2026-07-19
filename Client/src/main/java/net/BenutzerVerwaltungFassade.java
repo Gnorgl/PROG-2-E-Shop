@@ -12,6 +12,7 @@ import interfaces.moduls.IBV;
 import java.io.IOException;
 import java.util.List;
 
+/** Kapselt die Socket-Kommunikation für Login/Registrierung. */
 public class BenutzerVerwaltungFassade implements IBV {
 
     private final ServerVerbindung verbindung;

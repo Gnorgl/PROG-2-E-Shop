@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/** Startpunkt des Servers: startet für jede eingehende Verbindung einen eigenen Thread. */
 public class EShopServer {
 
     public static final int DEFAULT_PORT = 8080;

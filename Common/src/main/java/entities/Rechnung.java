@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+/** Eine Rechnung, die beim Checkout erzeugt wird und Kunde, Artikel sowie Summen enthält. */
 public class Rechnung implements Serializable {
         private int rechnungsNummer;
         private Kunde kunde;
@@ -12,8 +13,19 @@ public class Rechnung implements Serializable {
         private double bruttoSumme;
         private List<Artikel> artikel;
 
+        /** Konstruktor ohne Parameter für die Jackson-Deserialisierung. */
         public Rechnung() {}
 
+        /**
+         * Das Rechnungsdatum wird automatisch auf den aktuellen Tag gesetzt.
+         *
+         * @param rechnungsNummer Rechnungsnummer
+         * @param kunde kaufender Kunde
+         * @param artikel gekaufte Artikel
+         * @param nettoSumme Summe ohne Mehrwertsteuer
+         * @param mwstBetrag Mehrwertsteuerbetrag
+         * @param bruttoSumme Gesamtsumme inklusive Mehrwertsteuer
+         */
         public Rechnung(int rechnungsNummer, Kunde kunde, List<Artikel> artikel, double nettoSumme,
                         double mwstBetrag, double bruttoSumme) {
         this.datum = LocalDate.now();

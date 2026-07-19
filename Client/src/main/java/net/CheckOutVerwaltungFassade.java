@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 
+/** Kapselt die Socket-Kommunikation für den Checkout-Vorgang. */
 public class CheckOutVerwaltungFassade implements ICV {
 
     private final ServerVerbindung verbindung;

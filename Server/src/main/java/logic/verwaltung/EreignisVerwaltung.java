@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** Protokolliert Lagerereignisse und liefert Bestandshistorie sowie Ereignisliste. */
 public class EreignisVerwaltung {
     private final File datei = new File("ereignisse.json");
 

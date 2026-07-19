@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Kapselt die Socket-Kommunikation für alle Warenkorb-bezogenen Server-Kommandos. */
 public class WarenkorbVerwaltungFassade implements IWV {
 
     private final ServerVerbindung verbindung;

@@ -2,13 +2,22 @@ package entities;
 
 import java.io.Serializable;
 
+/** Ein Artikel, der nur in Vielfachen einer festen Packungsgröße ein-/ausgelagert werden kann. */
 public class Massengutartikel extends Artikel implements Serializable {
     private int packungsGroesse;
 
+    /** Konstruktor ohne Parameter für die Jackson-Deserialisierung. */
     public Massengutartikel() {
         super();
     }
 
+    /**
+     * @param artikelnummer eindeutige Artikelnummer
+     * @param bezeichnung Bezeichnung des Artikels
+     * @param bestand Lagerbestand in Stück
+     * @param preis Preis pro Packung
+     * @param packungsGroesse Stückzahl pro Packung
+     */
     public Massengutartikel(int artikelnummer, String bezeichnung, int bestand, double preis, int packungsGroesse) {
         super(artikelnummer, bezeichnung, bestand, preis);
         this.packungsGroesse = packungsGroesse;

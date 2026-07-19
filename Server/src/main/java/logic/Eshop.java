@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 
+/** Zentrale Fassade der Server-Anwendungslogik, delegiert an die einzelnen Verwaltungsklassen. */
 public class Eshop implements InterfaceEshop {
     private ArtikelVerwaltung  artikelVerwaltung = new ArtikelVerwaltung();
     private CheckOutVerwaltung checkOutVerwaltung = new CheckOutVerwaltung();

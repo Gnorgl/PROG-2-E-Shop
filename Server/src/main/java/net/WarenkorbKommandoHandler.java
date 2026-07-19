@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 // Zuständig nur für Warenkorb-Kommandos.
+/** Verarbeitet Warenkorb-Kommandos (Hinzufügen, Mengenänderung, Entfernen, Leeren). */
 public class WarenkorbKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(

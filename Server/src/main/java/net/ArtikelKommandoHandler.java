@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/** Verarbeitet alle Artikel-bezogenen Kommandos (Anlegen, Bestand ändern, Suche, Ereignisse). */
 public class ArtikelKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(

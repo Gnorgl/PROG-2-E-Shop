@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
+/** Hält eine Socket-Verbindung zum Server offen, über die dieser unaufgefordert Änderungen meldet. */
 public class PushListener {
     private final List<Runnable> listener = new CopyOnWriteArrayList<>();
     private Socket socket;

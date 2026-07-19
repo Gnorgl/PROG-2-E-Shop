@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Client-seitige Implementierung von InterfaceEshop, delegiert an die einzelnen Fassade-Klassen. */
 public class EshopClient implements InterfaceEshop {
 
     private final ServerVerbindung verbindung;

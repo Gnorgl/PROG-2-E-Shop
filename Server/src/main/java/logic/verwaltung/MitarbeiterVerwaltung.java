@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Verwaltet Mitarbeiter-Accounts: Anlegen, Suche und Auflisten. */
 public class MitarbeiterVerwaltung implements IMV {
     private final File datei = new File("mitarbeiter.json");
     private final ObjectMapper mapper = new ObjectMapper();

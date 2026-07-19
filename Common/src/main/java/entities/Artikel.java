@@ -15,14 +15,22 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = Massengutartikel.class, name = "massengut")
 })
 
+/** Ein Artikel im eShop mit Artikelnummer, Bezeichnung, Lagerbestand und Preis. */
 public class Artikel implements Serializable {
     private int artikelNummer;
     private String bezeichnung;
     private int bestand;
     private double preis;
 
+    /** Konstruktor ohne Parameter für die Jackson-Deserialisierung. */
     public Artikel() {}
 
+    /**
+     * @param artikelNummer eindeutige Artikelnummer
+     * @param bezeichnung Bezeichnung des Artikels
+     * @param bestand Lagerbestand in Stück
+     * @param preis Preis pro Stück
+     */
     public Artikel (int artikelNummer, String bezeichnung, int bestand, double preis) {
         this.artikelNummer = artikelNummer;
         this.bezeichnung = bezeichnung;
@@ -57,10 +65,22 @@ public class Artikel implements Serializable {
         this.preis = preis;
     }
 
+    /**
+     * Prüft, ob eine Stückzahl für diesen Artikel gültig ist.
+     *
+     * @param menge zu prüfende Stückzahl
+     * @return true, wenn menge gültig ist
+     */
     public boolean istMengeGueltig(int menge) {
         return menge > 0;
     }
 
+    /**
+     * Berechnet den Gesamtpreis für eine Stückzahl dieses Artikels.
+     *
+     * @param menge Stückzahl
+     * @return Gesamtpreis
+     */
     public double berechneGesamtpreis(int menge) {
         return preis * menge;
     }

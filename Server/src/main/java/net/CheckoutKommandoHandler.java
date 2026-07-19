@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/** Verarbeitet Checkout-Kommandos (Kaufabschluss, Summenberechnung, Rechnungen). */
 public class CheckoutKommandoHandler extends KommandoHandler {
 
     private static final Set<String> KOMMANDOS = Set.of(

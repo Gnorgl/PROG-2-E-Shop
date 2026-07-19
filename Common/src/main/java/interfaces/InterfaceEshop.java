@@ -5,6 +5,7 @@ import interfaces.moduls.*;
 
 import java.util.List;
 
+/** Zentrale Schnittstelle der Anwendungslogik, gebündelt aus allen fachlichen moduls-Interfaces. */
 public interface InterfaceEshop extends IAV, IBV, ICV, IEV, IKV, IMV, IOV, IWV{
     List<Ereignis> getAlleEreignisse();
     //Kann leer bleiben. Also hier nichts reinschreiben.

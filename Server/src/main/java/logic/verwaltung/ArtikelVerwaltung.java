@@ -18,6 +18,7 @@ import java.util.*;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
+/** Verwaltet den Artikelbestand: Anlegen, Bestandsänderung, Löschen, Suche und Bestandshistorie. */
 public class ArtikelVerwaltung implements IAV {
     private ArtikelListe artikelListe = new ArtikelListe();
     private EreignisVerwaltung ereignisVerwaltung = new EreignisVerwaltung();
