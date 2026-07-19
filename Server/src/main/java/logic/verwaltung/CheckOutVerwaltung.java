@@ -92,11 +92,6 @@ public class CheckOutVerwaltung implements ICV {
                 gekaufteArtikel.add(artikel);
             }
 
-            // Artikelbestand im Lager nach dem Kauf reduzieren. Wichtig: BestandNichtAusreichendException
-            // (und die anderen fachlichen Exceptions) müssen als sie selbst nach oben durchgereicht werden,
-            // nicht in eine generische RuntimeException gewrappt werden - sonst fängt sie der
-            // CheckoutKommandoHandler nicht ab, die Server-Verbindung bricht unkontrolliert ab, und der
-            // Kunde bekommt keine Fehlermeldung ("Kauf wird nicht gestoppt").
             try {
                 artikelVerwaltung.bestandReduzieren(artikel.getArtikelNummer(), menge);
             } catch (ArtikelNichtGefunden | BestandNichtAusreichendException | MengeUngueltigException e) {

@@ -54,7 +54,6 @@ public class WarenkorbView extends VBox {
 
         warenkorbTable = new TableView<>();
 
-        // 1. Spalte: Menge (jetzt mit +/- zum direkten Ändern der Stückzahl)
         TableColumn<Artikel, Void> colMenge = new TableColumn<>("Menge");
         colMenge.setCellFactory(param -> new TableCell<>() {
             private final Button btnMinus = new Button("-");
@@ -83,7 +82,7 @@ public class WarenkorbView extends VBox {
             }
         });
 
-        // 2. Spalte: Bezeichnung
+        // Bezeichnung
         TableColumn<Artikel, String> colBez = new TableColumn<>("Artikel");
         colBez.setCellValueFactory(cellData -> {
             Artikel a = cellData.getValue();
@@ -95,11 +94,11 @@ public class WarenkorbView extends VBox {
         });
         colBez.setPrefWidth(200);
 
-        // 3. Spalte: Einzelpreis
+        // Einzelpreis
         TableColumn<Artikel, Double> colPreis = new TableColumn<>("Einzelpreis (€)");
         colPreis.setCellValueFactory(new PropertyValueFactory<>("preis"));
 
-        // 4. Spalte: Entfernen-Button
+        // Entfernen-Button
         TableColumn<Artikel, Void> colAction = new TableColumn<>("Aktion");
         colAction.setCellFactory(param -> new TableCell<>() {
             private final Button btn = new Button("X");
@@ -232,10 +231,6 @@ public class WarenkorbView extends VBox {
 
         warenkorbListe = javafx.collections.FXCollections.observableArrayList(warenkorbMap.keySet());
         warenkorbTable.setItems(warenkorbListe);
-        // Seit Artikel.equals()/hashCode() auf die Artikelnummer eingeführt wurden, hält die
-        // TableView eine reine Mengenänderung (gleiche Artikel-"Menge" nach equals(), nur der
-        // gemappte Wert dahinter hat sich geändert) für unverändert und ruft updateItem() für
-        // die Menge-Spalte nicht erneut auf. refresh() erzwingt das Neuzeichnen aller Zellen.
         warenkorbTable.refresh();
 
         summaryArtikelBox.getChildren().clear();

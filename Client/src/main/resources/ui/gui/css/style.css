@@ -16,14 +16,14 @@
     -fx-spacing: 15px;
     -fx-padding: 20px;
     -fx-pref-width: 250px;
-    -fx-background-color: #2c3e50; /* Ein schönes, dunkles Admin-Blau */
+    -fx-background-color: #2c3e50;
 }
 
 .sidebar-user-info {
     -fx-spacing: 5px;
     -fx-alignment: center-left;
     -fx-border-color: #34495e;
-    -fx-border-width: 0 0 2px 0; /* Ersetzt die hässlichen Bindestriche durch eine echte Trennlinie */
+    -fx-border-width: 0 0 2px 0;
     -fx-padding: 0 0 15px 0;
 }
 
@@ -59,7 +59,7 @@
 .logout-button {
     -fx-max-width: infinity;
     -fx-padding: 10px;
-    -fx-background-color: #e74c3c; /* Dezentes Rot für den Logout */
+    -fx-background-color: #e74c3c;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 4px;
@@ -146,7 +146,7 @@
 
 /* Hover-Effekt für den Button (wenn man mit der Maus drüber fährt) */
 .shop-button:hover {
-    -fx-background-color: #264653; /* Dunkleres Blau/Grün */
+    -fx-background-color: #264653; /* Dunkleres Blau*/
 }
 
 /* Styling für Fehlermeldungen */
@@ -175,7 +175,7 @@
     -fx-translate-x: -90px;
 }
 
-/* Haupt-Layout des Katalogs (ersetzt setSpacing und setPadding) */
+/* Haupt-Layout des Katalogs*/
 .katalog-view {
     -fx-padding: 20px;
     -fx-spacing: 15px;
@@ -190,7 +190,7 @@
 /* Leisten für Sortierung (Top) und Warenkorb (Bottom) */
 .katalog-bar {
     -fx-spacing: 10px;
-    -fx-alignment: center-left; /* Richtet die Elemente schön mittig auf der Y-Achse aus */
+    -fx-alignment: center-left;
 }
 
 /* Spezifische Breite für das Mengen-Eingabefeld */
@@ -202,7 +202,7 @@
    STYLES FÜR DIE ARTIKELVERWALTUNG
    ========================================================================== */
 
-/* Haupt-Layout der View (ersetzt setSpacing und setPadding im Code) */
+/* Haupt-Layout der View */
 .artikel-verwaltung-view {
     -fx-padding: 25px;
     -fx-spacing: 20px;
@@ -214,7 +214,7 @@
     -fx-font-weight: bold;
 }
 
-/* Überschriften der einzelnen Bereiche (Tabelle, Anlegen, etc.) */
+/* Überschriften der einzelnen Bereiche*/
 .section-header {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -235,7 +235,7 @@
    STYLES FÜR DEN CHECKOUT
    ========================================================================== */
 
-/* Haupt-Layout der Checkout-View (ersetzt setSpacing und setPadding) */
+/* Haupt-Layout der Checkout-View */
 .checkout-view {
     -fx-padding: 20px;
     -fx-spacing: 15px;
@@ -258,7 +258,7 @@
 .summary-box {
     -fx-padding: 20px;
     -fx-pref-width: 300px;
-    -fx-background-color: #f8f9fa; /* Leichter grauer Hintergrund hebt die Kasse hervor */
+    -fx-background-color: #f8f9fa;
     -fx-border-color: #e0e0e0;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
@@ -279,10 +279,8 @@
 .summary-price {
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    /* Optional: -fx-text-fill: #2e7d32; um den Preis grün zu machen */
 }
 
-/* Monospace-Schriftart für das Rechnungs-Popup */
 .invoice-text {
     -fx-font-family: "Courier New", monospace;
 }
@@ -291,13 +289,12 @@
    STYLES FÜR DEN WARENKORB
    ========================================================================== */
 
-/* Haupt-Layout des Warenkorbs (ersetzt setSpacing und setPadding) */
+/* Haupt-Layout des Warenkorbs*/
 .warenkorb-view {
     -fx-padding: 20px;
     -fx-spacing: 15px;
 }
 
-/* Der kleine rote Löschen-Button direkt in der Tabellenzelle */
 .delete-table-btn {
     -fx-background-color: #d9534f;
     -fx-text-fill: white;
@@ -311,7 +308,6 @@
     -fx-background-color: #c9302c;
 }
 
-/* Kleine +/- Buttons zum Ändern der Warenkorb-Stückzahl direkt in der Tabellenzelle */
 .menge-btn {
     -fx-min-width: 24px;
     -fx-max-width: 24px;

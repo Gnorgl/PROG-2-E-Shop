@@ -71,12 +71,6 @@ public class Artikel implements Serializable {
             + bezeichnung + "Bestand: " + bestand + "Preis:  " + preis;
     }
 
-    // Ohne diese Überschreibung gilt Object-Identität: zwei getrennt deserialisierte
-    // Artikel-Instanzen mit derselben Artikelnummer (z.B. nach zwei verschiedenen
-    // Server-Anfragen) galten bisher als "ungleich", wodurch HashMap<Artikel, ...>-
-    // Lookups (Warenkorb, Ereignis-Filter, ...) über mehrere Anfragen hinweg fehlschlugen.
-    // Die Artikelnummer ist laut Aufgabenstellung eindeutig, also ist sie die korrekte
-    // Grundlage für Gleichheit.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

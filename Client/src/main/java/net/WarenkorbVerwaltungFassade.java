@@ -24,7 +24,7 @@ public class WarenkorbVerwaltungFassade implements IWV {
     public void artikelHinzufuegen(Artikel artikel, int menge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         try {
             verbindung.sendeKommando("WARENKORB_HINZUFUEGEN", String.valueOf(artikel.getArtikelNummer()), String.valueOf(menge));
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             werfeWarenkorbFehler(e);
         }
     }
@@ -33,7 +33,7 @@ public class WarenkorbVerwaltungFassade implements IWV {
     public void artikelEntfernen(Artikel artikel) throws IOException {
         try {
             verbindung.sendeKommando("WARENKORB_ENTFERNEN", String.valueOf(artikel.getArtikelNummer()));
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             throw new IOException("Serverfehler: " + e.getMessage());
         }
     }
@@ -42,14 +42,12 @@ public class WarenkorbVerwaltungFassade implements IWV {
     public void artikelMengeAendern(Artikel artikel, int neueMenge) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         try {
             verbindung.sendeKommando("WARENKORB_MENGE_AENDERN", String.valueOf(artikel.getArtikelNummer()), String.valueOf(neueMenge));
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             werfeWarenkorbFehler(e);
         }
     }
 
-    // Wandelt eine ServerFehlerException anhand des mitgeschickten Exception-Namens in die
-    // passende typisierte Exception um (analog zu ArtikelVerwaltungFassade).
-    private void werfeWarenkorbFehler(ServerFehlerException e) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
+    private void werfeWarenkorbFehler(exceptions.ServerFehlerException e) throws IOException, BestandNichtAusreichendException, ArtikelNichtGefunden {
         switch (e.getExceptionName()) {
             case "BestandNichtAusreichendException" -> throw BestandNichtAusreichendException.mitFertigerNachricht(e.getNachricht());
             case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
@@ -61,7 +59,7 @@ public class WarenkorbVerwaltungFassade implements IWV {
     public void leeren() throws IOException {
         try {
             verbindung.sendeKommando("WARENKORB_LEEREN");
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             throw new IOException("Serverfehler: " + e.getMessage());
         }
     }
@@ -93,7 +91,7 @@ public class WarenkorbVerwaltungFassade implements IWV {
                 }
             }
             return ergebnis;
-        } catch (IOException | ServerFehlerException e) {
+        } catch (IOException | exceptions.ServerFehlerException e) {
             throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
         }
     }

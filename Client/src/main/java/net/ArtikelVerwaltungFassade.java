@@ -29,7 +29,7 @@ public class ArtikelVerwaltungFassade implements IAV {
         try {
             verbindung.sendeKommando("ARTIKEL_ANLEGEN", name, String.valueOf(bestand), String.valueOf(preis));
             return true;
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             switch (e.getExceptionName()) {
                 case "ArtikelExistiertBereits" -> throw ArtikelExistiertBereits.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
@@ -43,7 +43,7 @@ public class ArtikelVerwaltungFassade implements IAV {
         try {
             verbindung.sendeKommando("MASSENGUT_ANLEGEN", bezeichnung, String.valueOf(bestand), String.valueOf(preis), String.valueOf(packungsGroesse));
             return true;
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             switch (e.getExceptionName()) {
                 case "ArtikelExistiertBereits" -> throw ArtikelExistiertBereits.mitFertigerNachricht(e.getNachricht());
                 case "MengeUngueltigException" -> throw MengeUngueltigException.mitFertigerNachricht(e.getNachricht());
@@ -57,7 +57,7 @@ public class ArtikelVerwaltungFassade implements IAV {
     public void bestandErhoehen(int nr, int anzahl) throws ArtikelNichtGefunden, MengeUngueltigException, ArtikelNullException, IOException {
         try {
             verbindung.sendeKommando("BESTAND_ERHOEHEN", String.valueOf(nr), String.valueOf(anzahl));
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             switch (e.getExceptionName()) {
                 case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
                 case "MengeUngueltigException" -> throw MengeUngueltigException.mitFertigerNachricht(e.getNachricht());
@@ -71,7 +71,7 @@ public class ArtikelVerwaltungFassade implements IAV {
     public void bestandReduzieren(int nr, int anzahl) throws ArtikelNichtGefunden, BestandNichtAusreichendException, MengeUngueltigException, ArtikelNullException, IOException {
         try {
             verbindung.sendeKommando("BESTAND_REDUZIEREN", String.valueOf(nr), String.valueOf(anzahl));
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             switch (e.getExceptionName()) {
                 case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
                 case "BestandNichtAusreichendException" -> throw new BestandNichtAusreichendException(0, 0);
@@ -86,7 +86,7 @@ public class ArtikelVerwaltungFassade implements IAV {
     public void loeschen(int nr) throws IOException {
         try {
             verbindung.sendeKommando("ARTIKEL_LOESCHEN", String.valueOf(nr));
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             throw new IOException(e.getMessage());
         }
     }
@@ -97,7 +97,7 @@ public class ArtikelVerwaltungFassade implements IAV {
             String json = verbindung.sendeKommandoMitAntwort("BESTANDSHISTORIE", String.valueOf(artikelNr));
             return verbindung.mapper.readValue(json, new TypeReference<Map<LocalDate, Integer>>() {
             });
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             werfeArtikelFehlerOhneIO(e);
             return null; // unerreichbar
         } catch (IOException e) {
@@ -111,7 +111,7 @@ public class ArtikelVerwaltungFassade implements IAV {
             String json = verbindung.sendeKommandoMitAntwort("ALLE_ARTIKEL");
             return verbindung.mapper.readValue(json, new TypeReference<List<Artikel>>() {
             });
-        } catch (IOException | ServerFehlerException e) {
+        } catch (IOException | exceptions.ServerFehlerException e) {
             throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
         }
     }
@@ -121,7 +121,7 @@ public class ArtikelVerwaltungFassade implements IAV {
         try {
             String json = verbindung.sendeKommandoMitAntwort("ARTIKEL_FINDEN", String.valueOf(nr));
             return verbindung.mapper.readValue(json, Artikel.class);
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             werfeArtikelFehlerOhneIO(e);
             return null; // unerreichbar
         } catch (IOException e) {
@@ -129,19 +129,17 @@ public class ArtikelVerwaltungFassade implements IAV {
         }
     }
 
-    // Kein @Override: diese Fassade implementiert nur IAV, nicht IEV. Wird von
-    // EshopClient.getAlleEreignisse() (Override von IEV) aufgerufen.
     public List<Ereignis> getAlleEreignisse() {
         try {
             String json = verbindung.sendeKommandoMitAntwort("ALLE_EREIGNISSE");
             return verbindung.mapper.readValue(json, new TypeReference<List<Ereignis>>() {
             });
-        } catch (IOException | ServerFehlerException e) {
+        } catch (IOException | exceptions.ServerFehlerException e) {
             throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
         }
     }
 
-    private void werfeArtikelFehlerOhneIO(ServerFehlerException e) throws ArtikelNichtGefunden {
+    private void werfeArtikelFehlerOhneIO(exceptions.ServerFehlerException e) throws ArtikelNichtGefunden {
         if ("ArtikelNichtGefunden".equals(e.getExceptionName())) {
             throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
         }

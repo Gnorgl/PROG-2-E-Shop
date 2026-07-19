@@ -179,8 +179,6 @@ public class ArtikelVerwaltungView extends VBox {
         //Hier war vorher getArtikelImLager() das Gleiche wie getAlleArtikel() ?
         artikelListe = FXCollections.observableArrayList(alleArtikel);
 
-        // Wir verpacken die Liste in eine SortedList, damit die Sortierauswahl
-        // greift (analog zu KatalogView)
         sortedListe = new SortedList<>(artikelListe);
         artikelTable.setItems(sortedListe);
 

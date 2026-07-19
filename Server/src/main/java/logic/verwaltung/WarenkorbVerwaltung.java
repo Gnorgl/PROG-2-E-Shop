@@ -81,10 +81,6 @@ public class WarenkorbVerwaltung implements IWV {
         safe();
     }
 
-    // Verhindert, dass mehr Stück im Warenkorb landen, als im Lager tatsächlich vorhanden
-    // sind. Fragt den aktuellen Bestand frisch bei der ArtikelVerwaltung ab (nicht das
-    // ggf. veraltete Artikel-Objekt aus dem Aufrufer), damit gleichzeitige Änderungen durch
-    // andere Clients (Kauf, Einlagerung) korrekt berücksichtigt werden.
     private void pruefeGegenLagerbestand(Artikel artikel, int gewuenschteMenge) throws ArtikelNichtGefunden, BestandNichtAusreichendException {
         Artikel aktuellerArtikel = artikelVerwaltung.findeArtikel(artikel.getArtikelNummer());
         if (gewuenschteMenge > aktuellerArtikel.getBestand()) {

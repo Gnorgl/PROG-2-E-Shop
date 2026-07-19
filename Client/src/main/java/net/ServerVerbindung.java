@@ -26,17 +26,17 @@ public class ServerVerbindung {
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
 
-    public synchronized void sendeKommando(String... zeilen) throws IOException, ServerFehlerException {
+    public synchronized void sendeKommando(String... zeilen) throws IOException, exceptions.ServerFehlerException {
         for (String zeile : zeilen) {
             out.println(zeile);
         }
         String status = liesZeile();
         if (!"OK".equals(status)) {
-            throw new ServerFehlerException(liesZeile());
+            throw new exceptions.ServerFehlerException(liesZeile());
         }
     }
 
-    public synchronized String sendeKommandoMitAntwort(String... zeilen) throws IOException, ServerFehlerException {
+    public synchronized String sendeKommandoMitAntwort(String... zeilen) throws IOException, exceptions.ServerFehlerException {
         for (String zeile : zeilen) {
             out.println(zeile);
         }
@@ -45,7 +45,7 @@ public class ServerVerbindung {
         if ("OK".equals(status)) {
             return zweiteZeile;
         }
-        throw new ServerFehlerException(zweiteZeile);
+        throw new exceptions.ServerFehlerException(zweiteZeile);
     }
 
     private String liesZeile() throws IOException {

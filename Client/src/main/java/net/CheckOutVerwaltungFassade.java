@@ -32,7 +32,7 @@ public class CheckOutVerwaltungFassade implements ICV {
 
             String json = verbindung.sendeKommandoMitAntwort("CHECKOUT", kundeJson, warenkorbJson);
             return verbindung.mapper.readValue(json, Rechnung.class);
-        } catch (ServerFehlerException e) {
+        } catch (exceptions.ServerFehlerException e) {
             switch (e.getExceptionName()) {
                 case "ArtikelNichtGefunden" -> throw ArtikelNichtGefunden.mitFertigerNachricht(e.getNachricht());
                 case "ArtikelNullException" -> throw new ArtikelNullException();
@@ -49,7 +49,7 @@ public class CheckOutVerwaltungFassade implements ICV {
             String warenkorbJson = verbindung.mapper.writeValueAsString(zuNrMap(warenkorbInhalt));
             String antwort = verbindung.sendeKommandoMitAntwort("NETTOSUMME", warenkorbJson);
             return Double.parseDouble(antwort);
-        } catch (IOException | ServerFehlerException e) {
+        } catch (IOException | exceptions.ServerFehlerException e) {
             throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
         }
     }
@@ -104,7 +104,7 @@ public class CheckOutVerwaltungFassade implements ICV {
             String json = verbindung.sendeKommandoMitAntwort("BESTELLVERLAUF", kundeJson);
             return verbindung.mapper.readValue(json, new TypeReference<List<Rechnung>>() {
             });
-        } catch (IOException | ServerFehlerException e) {
+        } catch (IOException | exceptions.ServerFehlerException e) {
             throw new RuntimeException("Fehler bei der Kommunikation mit dem Server: " + e.getMessage(), e);
         }
     }

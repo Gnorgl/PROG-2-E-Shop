@@ -140,9 +140,6 @@ public class ArtikelKommandoHandler extends KommandoHandler {
 
     private void alleEreignisse() throws IOException {
         List<entities.Ereignis> ereignisse = eshop.getAlleEreignisse();
-        // gleiche writerFor(...)-Begründung wie bei alleArtikel(): sichert die
-        // Polymorphie des artikelTyp/type-Diskriminators in den verschachtelten
-        // Artikel-/Benutzer-Feldern auch beim Root-Listen-Serialisieren ab.
         String json = mapper.writerFor(new com.fasterxml.jackson.core.type.TypeReference<List<entities.Ereignis>>() {})
                 .writeValueAsString(ereignisse);
         ok(json);

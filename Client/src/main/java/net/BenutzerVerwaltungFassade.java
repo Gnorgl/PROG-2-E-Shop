@@ -25,7 +25,7 @@ public class BenutzerVerwaltungFassade implements IBV {
         try {
             String json = verbindung.sendeKommandoMitAntwort("BENUTZER_CHECK", email);
             return verbindung.mapper.readValue(json, Benutzer.class);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new BenutzerExistiertNichtException(email);
         }
     }
@@ -36,7 +36,7 @@ public class BenutzerVerwaltungFassade implements IBV {
             String benutzerJson = verbindung.mapper.writeValueAsString(benutzer);
             String antwort = verbindung.sendeKommandoMitAntwort("PASSWORD_CHECK", benutzerJson, password);
             return Boolean.parseBoolean(antwort);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new IllegalArgumentException("Fehler bei der Passwortüberprüfung: " + e.getMessage());
         }
     }
@@ -46,7 +46,7 @@ public class BenutzerVerwaltungFassade implements IBV {
         try {
             String antwort = verbindung.sendeKommandoMitAntwort("EMAIL_VERGEBEN", email);
             return Boolean.parseBoolean(antwort);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             return false;
         }
     }
@@ -57,7 +57,7 @@ public class BenutzerVerwaltungFassade implements IBV {
                     "KUNDE_REGISTRIEREN", email, passwort, nachname, vorname, adresse
             );
             return Boolean.parseBoolean(antwort);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new EmailBereitsVergebenException(email);
         }
     }
@@ -66,7 +66,7 @@ public class BenutzerVerwaltungFassade implements IBV {
         try {
             String json = verbindung.sendeKommandoMitAntwort("MITARBEITER_ANLEGEN", passwort, nachname, vorname);
             return verbindung.mapper.readValue(json, Mitarbeiter.class);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new RuntimeException("Mitarbeiter konnte nicht angelegt werden: " + e.getMessage());
         }
     }
@@ -75,7 +75,7 @@ public class BenutzerVerwaltungFassade implements IBV {
         try {
             String json = verbindung.sendeKommandoMitAntwort("GET_KUNDE", email);
             return verbindung.mapper.readValue(json, Kunde.class);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new KundeNichtGefundenException(email);
         }
     }
@@ -84,7 +84,7 @@ public class BenutzerVerwaltungFassade implements IBV {
         try {
             String json = verbindung.sendeKommandoMitAntwort("GET_MITARBEITER", email);
             return verbindung.mapper.readValue(json, Mitarbeiter.class);
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new MitarbeiterNichtGefundenException(email);
         }
     }
@@ -94,7 +94,7 @@ public class BenutzerVerwaltungFassade implements IBV {
             String json = verbindung.sendeKommandoMitAntwort("GET_ALLE_KUNDEN");
             return verbindung.mapper.readValue(json,
                     verbindung.mapper.getTypeFactory().constructCollectionType(List.class, Kunde.class));
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new RuntimeException("Fehler beim Laden der Kunden: " + e.getMessage());
         }
     }
@@ -104,7 +104,7 @@ public class BenutzerVerwaltungFassade implements IBV {
             String json = verbindung.sendeKommandoMitAntwort("GET_ALLE_MITARBEITER");
             return verbindung.mapper.readValue(json,
                     verbindung.mapper.getTypeFactory().constructCollectionType(List.class, Mitarbeiter.class));
-        } catch (ServerFehlerException | IOException e) {
+        } catch (exceptions.ServerFehlerException | IOException e) {
             throw new RuntimeException("Fehler beim Laden der Mitarbeiter: " + e.getMessage());
         }
     }
