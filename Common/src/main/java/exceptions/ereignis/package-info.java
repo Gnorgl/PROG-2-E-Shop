@@ -1,2 +1,2 @@
-/** Fachliche Exceptions rund um die Ereignisprotokollierung. */
+/** Exceptions rund um die Ereignisprotokollierung. */
 package exceptions.ereignis;
